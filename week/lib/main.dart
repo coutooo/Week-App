@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'feed.dart';
+import 'Screens/LoginForm.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Week App'),
+      home: LoginForm(),
     );
   }
 }
