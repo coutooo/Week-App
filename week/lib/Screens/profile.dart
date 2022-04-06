@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import '../widgets/profileWidget.dart';
+import '../models/user.dart';
+import '../widgets/numbersWidget.dart';
+
+import 'package:week/utils/user_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -13,6 +18,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = UserPreferences.myUser;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -59,7 +65,58 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         body: ListView(
           physics: BouncingScrollPhysics(),
-          children: [],
+          children: [
+            ProfileWidget(
+              imagePath: user.imagePath,
+              onClicked: () async {},
+            ),
+            const SizedBox(
+              height: 24,
+            ),
+            buildName(user),
+            const SizedBox(
+              height: 24,
+            ),
+            NumbersWidget(),
+            const SizedBox(
+              height: 48,
+            ),
+            buildAbout(user),
+          ],
         ));
   }
+
+  Widget buildName(User user) => Column(
+        children: [
+          Text(
+            user.name,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          ),
+          const SizedBox(
+            height: 4,
+          ),
+          Text(
+            user.email,
+            style: const TextStyle(color: Colors.grey),
+          )
+        ],
+      );
+
+  Widget buildAbout(User user) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 48),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'About',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              user.about,
+              style: const TextStyle(fontSize: 16, height: 1.4),
+            ),
+          ],
+        ),
+      );
 }

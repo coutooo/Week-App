@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../feed.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'feed.dart';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -32,7 +33,7 @@ class _LoginFormState extends State<LoginForm> {
                 ),
                 SizedBox(height: 10.0),
                 Image.asset(
-                  "images/logo.png",
+                  "assets/images/logo.png",
                   height: 100.0,
                   width: 100.0,
                 ),
