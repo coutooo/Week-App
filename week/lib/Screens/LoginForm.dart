@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import '../feed.dart';
 
 class LoginForm extends StatefulWidget {
-
   @override
   State<LoginForm> createState() => _LoginFormState();
 }
@@ -20,10 +20,15 @@ class _LoginFormState extends State<LoginForm> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 50.0,),
-                Text('Login',style: TextStyle(fontWeight: FontWeight.bold, 
-                color: Color.fromARGB(255, 235, 64, 147), 
-                fontSize: 50.0),
+                SizedBox(
+                  height: 50.0,
+                ),
+                Text(
+                  'Login',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 235, 64, 147),
+                      fontSize: 50.0),
                 ),
                 SizedBox(height: 10.0),
                 Image.asset(
@@ -34,10 +39,9 @@ class _LoginFormState extends State<LoginForm> {
                 Text(
                   'Sample Code',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold, 
-                    color: Colors.black38, 
-                    fontSize: 50.0
-                    ),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black38,
+                      fontSize: 50.0),
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 10.0),
@@ -59,7 +63,14 @@ class _LoginFormState extends State<LoginForm> {
 
                     // https://youtu.be/OvE00_oz7yM?t=1147  tou aqui
                   ),
-                )
+                ),
+                FloatingActionButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: ((context) => FeedPage())));
+                  },
+                  child: const Icon(Icons.add),
+                ),
               ],
             ),
           ),
