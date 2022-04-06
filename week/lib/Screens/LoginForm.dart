@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'feed.dart';
+import '../screens/editProfilePage.dart';
 
 class LoginForm extends StatefulWidget {
   @override

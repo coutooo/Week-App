@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 class ProfileWidget extends StatelessWidget {
   final String imagePath;
+  final bool isEditing;
   final VoidCallback onClicked;
 
   const ProfileWidget({
     Key? key,
     required this.imagePath,
+    this.isEditing = false,
     required this.onClicked,
   }) : super(key: key);
 
@@ -51,8 +53,8 @@ class ProfileWidget extends StatelessWidget {
         child: buildCircle(
           color: color,
           all: 8,
-          child: const Icon(
-            Icons.edit,
+          child: Icon(
+            isEditing ? Icons.add_a_photo : Icons.edit,
             color: Colors.white,
             size: 20,
           ),

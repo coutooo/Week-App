@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'Screens/feed.dart';
-import 'Screens/LoginForm.dart';
+import 'screens/feed.dart';
+import 'screens/loginForm.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();

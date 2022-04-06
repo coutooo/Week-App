@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:week/Screens/editProfilePage.dart';
 import 'dart:io';
 import '../widgets/profileWidget.dart';
 import '../models/user.dart';
@@ -33,7 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Navigator.pop(context);
             },
           ),
-          actions: <Widget>[
+          actions: [
             IconButton(
               color: Colors.black,
               icon: const Icon(
@@ -68,7 +69,10 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             ProfileWidget(
               imagePath: user.imagePath,
-              onClicked: () async {},
+              onClicked: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => EditProfilePage()));
+              },
             ),
             const SizedBox(
               height: 24,
