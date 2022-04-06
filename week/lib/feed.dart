@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'profile.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({Key? key}) : super(key: key);
@@ -18,41 +19,31 @@ class _FeedPageState extends State<FeedPage> {
         centerTitle: true,
         backgroundColor: Colors.purple,
         automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.people),
+          tooltip: 'Show Snackbar',
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Showing your friends')));
+          },
+        ),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.add_alert),
-            tooltip: 'Show Snackbar',
+            icon: const Icon(Icons.portrait),
+            tooltip: 'Profile',
             onPressed: () {
+              /*
               ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('This is a snackbar')));
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.navigate_next),
-            tooltip: 'Go to the next page',
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute<void>(
-                builder: (BuildContext context) {
-                  return Scaffold(
-                    appBar: AppBar(
-                      title: const Text('Next page'),
-                    ),
-                    body: const Center(
-                      child: Text(
-                        'This is the next page',
-                        style: TextStyle(fontSize: 24),
-                      ),
-                    ),
-                  );
-                },
-              ));
+                  const SnackBar(content: Text('This is a snackbar')));*/
+              Navigator.push(context,
+                  MaterialPageRoute(builder: ((context) => ProfilePage())));
             },
           ),
         ],
       ),
       body: const Center(
         child: Text(
-          'This is the home page',
+          'This is your feed page',
           style: TextStyle(fontSize: 24),
         ),
       ),
