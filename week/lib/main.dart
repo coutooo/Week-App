@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'feed.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,7 +8,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -59,8 +59,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: ((context) => FeedPage())));
+        },
         child: const Icon(Icons.add),
       ),
     );
