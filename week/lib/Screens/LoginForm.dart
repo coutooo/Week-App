@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:week/Comm/genTextFormField.dart';
+import 'package:week/Screens/SignupForm.dart';
 import 'feed.dart';
 import '../screens/editProfilePage.dart';
 
@@ -8,11 +10,15 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+
+  final _conUserId = TextEditingController();
+  final _conPassword = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login and SignUp'),
+        title: Text('Login'),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -42,27 +48,48 @@ class _LoginFormState extends State<LoginForm> {
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black38,
-                      fontSize: 50.0),
+                      fontSize: 20.0),
+                ),
+                genTextFormField(
+                  _conUserId, 
+                  'User ID', 
+                  Icons.person, 
+                  false),
+                SizedBox(height: 5.0),
+                genTextFormField(
+                  _conPassword,   // verificar aqui se é este ou o conuserid
+                  'Password', 
+                  Icons.lock, 
+                  true),
+                  //https://youtu.be/OvE00_oz7yM?t=2742
+                Container(
+                  margin: EdgeInsets.all(30.0),
+                  width: double.infinity,
+                  child: FlatButton(
+                    child: Text(
+                      'Login',
+                      style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {},
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 10.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        borderSide: BorderSide(color: Colors.transparent),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Does not have account? '),
+                      FlatButton(
+                        textColor: Colors.blue,
+                        child: Text('Signup'),
+                        onPressed: () { 
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => SignupForm()));
+                        },
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        borderSide: BorderSide(color: Colors.blue),
-                      ),
-                      prefixIcon: Icon(Icons.person),
-                      hintText: 'User Name',
-                      fillColor: Colors.grey[200],
-                      filled: true,
-                    ),
-
-                    // https://youtu.be/OvE00_oz7yM?t=1147  tou aqui
+                    ],
                   ),
                 ),
                 FloatingActionButton(
