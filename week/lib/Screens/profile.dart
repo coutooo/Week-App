@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:week/Screens/editProfilePage.dart';
+import 'package:week/screens/editProfilePage.dart';
 import 'dart:io';
 import '../widgets/profileWidget.dart';
 import '../models/user.dart';
 import '../widgets/numbersWidget.dart';
-
+import 'package:week/screens/settingsPage.dart';
 import 'package:week/utils/user_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -42,24 +42,11 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               tooltip: 'Settings',
               onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => SettingsPage()));
                 /*
               ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('This is a snackbar')));*/
-                Navigator.push(context, MaterialPageRoute<void>(
-                  builder: (BuildContext context) {
-                    return Scaffold(
-                      appBar: AppBar(
-                        title: const Text('Next page'),
-                      ),
-                      body: const Center(
-                        child: Text(
-                          'This is the next page',
-                          style: TextStyle(fontSize: 24),
-                        ),
-                      ),
-                    );
-                  },
-                ));
               },
             ),
           ],
