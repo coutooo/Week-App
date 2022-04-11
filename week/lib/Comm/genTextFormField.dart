@@ -5,9 +5,14 @@ class genTextFormField extends StatelessWidget {
   String hintName;
   IconData icon;
   bool isobscureText;
+  TextInputType inputType;
 
   genTextFormField(
-    this.controller,this.hintName,this.icon,this.isobscureText);
+    this.controller,
+    this.hintName,
+    this.icon,
+    this.isobscureText,
+    this.inputType);
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +21,7 @@ class genTextFormField extends StatelessWidget {
                   child: TextFormField(
                     controller: controller,
                     obscureText: isobscureText,
+                    keyboardType: inputType,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(30.0)),

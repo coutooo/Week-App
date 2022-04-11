@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:week/Comm/genLoginSignupHeader.dart';
 import 'package:week/Comm/genTextFormField.dart';
 import 'package:week/Screens/SignupForm.dart';
 import 'feed.dart';
@@ -27,41 +28,20 @@ class _LoginFormState extends State<LoginForm> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 50.0,
-                ),
-                Text(
-                  'Login',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 235, 64, 147),
-                      fontSize: 50.0),
-                ),
-                SizedBox(height: 10.0),
-                Image.asset(
-                  "assets/images/logo.png",
-                  height: 100.0,
-                  width: 100.0,
-                ),
-                Text(
-                  'Sample Code',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black38,
-                      fontSize: 20.0),
-                ),
+                genLoginSignupHeader('Login'),
                 genTextFormField(
                   _conUserId, 
                   'User ID', 
                   Icons.person, 
-                  false),
+                  false,
+                  TextInputType.text),
                 SizedBox(height: 5.0),
                 genTextFormField(
-                  _conPassword,   // verificar aqui se é este ou o conuserid
+                  _conPassword,
                   'Password', 
                   Icons.lock, 
-                  true),
-                  //https://youtu.be/OvE00_oz7yM?t=2742
+                  true,
+                  TextInputType.text),
                 Container(
                   margin: EdgeInsets.all(30.0),
                   width: double.infinity,
@@ -70,7 +50,9 @@ class _LoginFormState extends State<LoginForm> {
                       'Login',
                       style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => FeedPage()));
+                      },
                   ),
                   decoration: BoxDecoration(
                     color: Colors.blue,
@@ -91,13 +73,6 @@ class _LoginFormState extends State<LoginForm> {
                       ),
                     ],
                   ),
-                ),
-                FloatingActionButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: ((context) => FeedPage())));
-                  },
-                  child: const Icon(Icons.add),
                 ),
               ],
             ),

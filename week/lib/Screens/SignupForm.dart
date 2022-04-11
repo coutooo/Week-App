@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:week/Comm/genLoginSignupHeader.dart';
 import 'package:week/Screens/LoginForm.dart';
+import 'package:week/Comm/genTextFormField.dart';
 
 class SignupForm extends StatefulWidget {
 
@@ -8,6 +10,13 @@ class SignupForm extends StatefulWidget {
 }
 
 class _SignupFormState extends State<SignupForm> {
+
+  final _conUserId = TextEditingController();
+  final _conUserName = TextEditingController();
+  final _conEmail = TextEditingController();
+  final _conPassword = TextEditingController();
+  final _conCPassword = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,131 +29,41 @@ class _SignupFormState extends State<SignupForm> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 50.0,
-                ),
-                Text(
-                  'Login',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 235, 64, 147),
-                      fontSize: 50.0),
-                ),
-                SizedBox(height: 10.0),
-                Image.asset(
-                  "assets/images/logo.png",
-                  height: 100.0,
-                  width: 100.0,
-                ),
-                Text(
-                  'Sample Code',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black38,
-                      fontSize: 20.0),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                  margin: EdgeInsets.only(top: 20.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        borderSide: BorderSide(color: Colors.transparent),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        borderSide: BorderSide(color: Colors.blue),
-                      ),
-                      prefixIcon: Icon(Icons.person),
-                      hintText: 'User ID',
-                      fillColor: Colors.grey[200],
-                      filled: true,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                  margin: EdgeInsets.only(top: 5.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        borderSide: BorderSide(color: Colors.transparent),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        borderSide: BorderSide(color: Colors.blue),
-                      ),
-                      prefixIcon: Icon(Icons.person_outline),
-                      hintText: 'User Name',
-                      fillColor: Colors.grey[200],
-                      filled: true,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                  margin: EdgeInsets.only(top: 5.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        borderSide: BorderSide(color: Colors.transparent),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        borderSide: BorderSide(color: Colors.blue),
-                      ),
-                      prefixIcon: Icon(Icons.email),
-                      hintText: 'Email',
-                      fillColor: Colors.grey[200],
-                      filled: true,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                  margin: EdgeInsets.only(top: 5.0),
-                  child: TextFormField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        borderSide: BorderSide(color: Colors.transparent),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        borderSide: BorderSide(color: Colors.blue),
-                      ),
-                      prefixIcon: Icon(Icons.lock),
-                      hintText: 'Password',
-                      fillColor: Colors.grey[200],
-                      filled: true,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                  margin: EdgeInsets.only(top: 5.0),
-                  child: TextFormField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        borderSide: BorderSide(color: Colors.transparent),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        borderSide: BorderSide(color: Colors.blue),
-                      ),
-                      prefixIcon: Icon(Icons.lock),
-                      hintText: 'Confirm Password',
-                      fillColor: Colors.grey[200],
-                      filled: true,
-                    ),
-                  ),
-                ),
+                genLoginSignupHeader('Signup'),
+                genTextFormField(
+                  _conUserId, 
+                  'User ID', 
+                  Icons.person, 
+                  false,
+                  TextInputType.text),
+                SizedBox(height: 5.0),
+                genTextFormField(
+                  _conUserName,
+                  'User Name', 
+                  Icons.person_outline, 
+                  false,
+                  TextInputType.name),
+                SizedBox(height: 5.0),
+                genTextFormField(
+                  _conEmail,
+                  'Email', 
+                  Icons.email, 
+                  false,
+                  TextInputType.emailAddress),
+                SizedBox(height: 5.0),
+                genTextFormField(
+                  _conPassword,
+                  'Password', 
+                  Icons.lock, 
+                  true,
+                  TextInputType.text),
+                SizedBox(height: 5.0),
+                genTextFormField(
+                  _conCPassword,
+                  'Confirm Password', 
+                  Icons.lock, 
+                  true,
+                  TextInputType.text),
                 Container(
                   margin: EdgeInsets.all(30.0),
                   width: double.infinity,
@@ -169,7 +88,8 @@ class _SignupFormState extends State<SignupForm> {
                         textColor: Colors.blue,
                         child: Text('Sign In'),
                         onPressed: () { 
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => LoginForm()));
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => LoginForm()),
+                          (Route<dynamic> route) => false);
                         },
                       ),
                     ],
