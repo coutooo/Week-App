@@ -35,7 +35,7 @@ class _LoginFormState extends State<LoginForm> {
                   Icons.person, 
                   false,
                   TextInputType.text),
-                SizedBox(height: 5.0),
+                SizedBox(height: 10.0),
                 genTextFormField(
                   _conPassword,
                   'Password', 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'comHelper.dart';
+
 class genTextFormField extends StatelessWidget {
   TextEditingController controller;
   String hintName;
@@ -22,6 +24,15 @@ class genTextFormField extends StatelessWidget {
                     controller: controller,
                     obscureText: isobscureText,
                     keyboardType: inputType,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter $hintName';
+                      }
+                      if (hintName == "Email" && !validateEmail(value)) {
+                        return 'Please Enter Valid Email';
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(30.0)),
@@ -33,6 +44,7 @@ class genTextFormField extends StatelessWidget {
                       ),
                       prefixIcon: Icon(icon),
                       hintText: hintName,
+                      labelText: hintName,
                       fillColor: Colors.grey[200],
                       filled: true,
                     ),
