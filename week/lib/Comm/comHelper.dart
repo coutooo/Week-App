@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:toast/toast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 alertDialog(BuildContext context, String msg) {
-  Toast.show(msg, context, duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+  Fluttertoast.showToast(
+        msg: msg,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black87,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
 }
 
 validateEmail(String email) {
