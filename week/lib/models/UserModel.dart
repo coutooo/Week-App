@@ -16,13 +16,16 @@ class UserModel {
     return map;
   }
 
-  UserModel.fromMap(Map<String, dynamic> map) {
-    user_id = map['user_id'];
-    user_name = map['user_name'];
-    email = map['email'];
-    password = map['password'];
+  static UserModel?fromMap(Map<String, dynamic> map) {
+    var user_id = map['user_id'];
+    var user_name = map['user_name'];
+    var email = map['email'];
+    var password = map['password'];
   }
 }
+
+
+
 
 
 // https://youtu.be/8sC9paqJJjI?t=324    tou aqui

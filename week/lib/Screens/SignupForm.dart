@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:week/Comm/comHelper.dart';
 import 'package:week/Comm/genLoginSignupHeader.dart';
+import 'package:week/DatabaseHandler/DbHelper.dart';
 import 'package:week/Screens/LoginForm.dart';
 import 'package:week/Comm/genTextFormField.dart';
+
+import '../models/UserModel.dart';
 
 class SignupForm extends StatefulWidget {
 
@@ -18,9 +21,15 @@ class _SignupFormState extends State<SignupForm> {
   final _conEmail = TextEditingController();
   final _conPassword = TextEditingController();
   final _conCPassword = TextEditingController();
+  var dbHelper;
 
-  signUp(){
-    final form = _formKey.currentState;
+  @override
+  void initState() {
+    super.initState();
+    dbHelper = DbHelper();
+  }
+
+  signUp() async{
 
     String uid = _conUserId.text;
     String uname = _conUserName.text;
@@ -28,8 +37,24 @@ class _SignupFormState extends State<SignupForm> {
     String passwd = _conPassword.text;
     String cpasswd = _conCPassword.text;
 
-    if(form!.validate()){
-      alertDialog(context, "ok");
+    if(_formKey.currentState!.validate()){
+      if (passwd != cpasswd)
+      {
+        alertDialog(context, 'Password Mismatch');
+      } else {
+        _formKey.currentState!.save();
+
+        UserModel uModel = UserModel(uid, uname, email, passwd);
+        await dbHelper.saveData(uModel).then((userData) {
+          alertDialog(context, "Successfully Saved");
+
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => LoginForm()));
+        }).catchError((error) {
+          print(error);
+          alertDialog(context, "Error: Data Save Fail");
+        });
+      }
     }
 
     if(uid.isEmpty)

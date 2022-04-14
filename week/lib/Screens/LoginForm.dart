@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:week/Comm/comHelper.dart';
 import 'package:week/Comm/genLoginSignupHeader.dart';
 import 'package:week/Comm/genTextFormField.dart';
+import 'package:week/Screens/HomeForm.dart';
 import 'package:week/Screens/SignupForm.dart';
-import 'feed.dart';
-import '../screens/editProfilePage.dart';
+import '../DatabaseHandler/DbHelper.dart';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -11,9 +12,44 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  final _formKey = new GlobalKey<FormState>();
 
   final _conUserId = TextEditingController();
   final _conPassword = TextEditingController();
+
+  var dbHelper;
+
+  @override
+  void initState() {
+    super.initState();
+    dbHelper = DbHelper();
+  }
+  
+  login() async {
+    String uid = _conUserId.text;
+    String passwd = _conPassword.text;
+
+    if (uid.isEmpty) {
+      alertDialog(context, "Please Enter User ID");
+    } else if(passwd.isEmpty){
+      alertDialog(context, "Please Enter Password");
+    } else {
+      await dbHelper.getLoginUser(uid,passwd).then((userData){
+        print(userData.email);
+        if (userData != null) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => HomeForm()),
+                (Route<dynamic> route) => false);
+        } else {
+          alertDialog(context, "Error: User Not Found");
+        }
+      }).catchError((error){
+        print(error);
+        alertDialog(context, "Error: Login Fail");
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +86,7 @@ class _LoginFormState extends State<LoginForm> {
                       'Login',
                       style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => FeedPage()));
-                      },
+                      onPressed: login,
                   ),
                   decoration: BoxDecoration(
                     color: Colors.blue,

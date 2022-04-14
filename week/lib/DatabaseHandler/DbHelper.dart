@@ -3,6 +3,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'dart:io' as io;
 
+import '../models/UserModel.dart';
+
 class DbHelper {
   static Database? _db;
 
@@ -39,8 +41,27 @@ class DbHelper {
         " PRIMARY KEY ($C_UserID)"
         ")");
   }
-}
 
+  Future<int?> saveData(UserModel user) async {
+    var dbClient = await db;
+    var res = await dbClient?.insert(Table_User, user.toMap());
+    return res;
+  }
+
+  Future<UserModel?> getLoginUser(String userId, String password) async {
+    var dbClient = await db;
+    var res = await dbClient!.rawQuery("SELECT * FROM $Table_User WHERE "
+        "$C_UserID = '$userId' AND "
+        "$C_Password = '$password'");
+
+    print(res);
+    if (res.length > 0) {
+      return UserModel.fromMap(res.first);
+    }
+
+    return null;
+  }
+}
 
 
 //https://youtu.be/olnurZylCzc?t=716
