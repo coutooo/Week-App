@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/Comm/comHelper.dart';
 import 'package:week/Comm/genLoginSignupHeader.dart';
 import 'package:week/Comm/genTextFormField.dart';
 import 'package:week/Screens/HomeForm.dart';
 import 'package:week/Screens/SignupForm.dart';
+import 'package:week/models/UserModel.dart';
 import '../DatabaseHandler/DbHelper.dart';
 
 class LoginForm extends StatefulWidget {
@@ -12,6 +14,8 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  Future<SharedPreferences> _pref = SharedPreferences.getInstance();
+
   final _formKey = new GlobalKey<FormState>();
 
   final _conUserId = TextEditingController();
@@ -34,18 +38,31 @@ class _LoginFormState extends State<LoginForm> {
     } else if(passwd.isEmpty){
       alertDialog(context, "Please Enter Password");
     } else {
-      await dbHelper.getLoginUser(uid,passwd).then((userData){
-        //falta o if (UserData != null)...
-        print(userData); // corrigir o getLoginuser ta a returnar null
-        Navigator.pushAndRemoveUntil(
-        context, MaterialPageRoute(builder: (_)=> HomeForm()),
-        (Route<dynamic> route) => false);
-
+      await dbHelper.getLoginUser(uid, passwd).then((userData){
+        if (userData != null) {
+          setSP(userData).whenComplete(() {
+            Navigator.pushAndRemoveUntil(
+                context, 
+                MaterialPageRoute(builder: (_) => HomeForm()),
+                (Route<dynamic> route) => false);
+          });
+        } else {
+          alertDialog(context, "Error: User Not Found");
+        }
       }).catchError((error){
         print(error);
         alertDialog(context, "Error: Login Fail");
       });
     }
+  }
+
+  Future setSP(UserModel user) async {
+    final SharedPreferences sp = await _pref;
+
+    sp.setString("user_id", user.user_id);
+    sp.setString("user_name", user.user_name);
+    sp.setString("email", user.email);
+    sp.setString("password", user.password);
   }
 
   @override
@@ -67,14 +84,16 @@ class _LoginFormState extends State<LoginForm> {
                   'User ID', 
                   Icons.person, 
                   false,
-                  TextInputType.text),
+                  TextInputType.text,
+                  false),
                 SizedBox(height: 10.0),
                 genTextFormField(
                   _conPassword,
                   'Password', 
                   Icons.lock, 
                   true,
-                  TextInputType.text),
+                  TextInputType.text,
+                  false),
                 Container(
                   margin: EdgeInsets.all(30.0),
                   width: double.infinity,

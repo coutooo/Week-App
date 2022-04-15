@@ -1,6 +1,7 @@
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:week/models/user.dart';
 import 'dart:io' as io;
 
 import '../models/UserModel.dart';
@@ -54,12 +55,18 @@ class DbHelper {
         "$C_UserID = '$userId' AND "
         "$C_Password = '$password'");
 
-    print(res);
     if (res.length > 0) {
       return UserModel.fromMap(res.first);
     }
 
     return null;
+  }
+
+  Future<int> updateUser(UserModel user) async{
+    var dbClient = await db;
+    var res = await dbClient!.update(Table_User, user.toMap(),
+        where: '$C_UserID = ?', whereArgs: [user.user_id]);
+    return res;
   }
 }
 

@@ -8,13 +8,15 @@ class genTextFormField extends StatelessWidget {
   IconData icon;
   bool isobscureText;
   TextInputType inputType;
+  bool readonly;
 
   genTextFormField(
     this.controller,
     this.hintName,
     this.icon,
     this.isobscureText,
-    this.inputType);
+    this.inputType,
+    this.readonly);
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,7 @@ class genTextFormField extends StatelessWidget {
                     controller: controller,
                     obscureText: isobscureText,
                     keyboardType: inputType,
+                    enabled: !readonly,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter $hintName';

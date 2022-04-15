@@ -21,6 +21,8 @@ class UserModel {
     var user_name = map['user_name'];
     var email = map['email'];
     var password = map['password'];
+
+    return UserModel(user_id, user_name, email, password);
   }
 }
 
