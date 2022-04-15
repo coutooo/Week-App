@@ -35,15 +35,12 @@ class _LoginFormState extends State<LoginForm> {
       alertDialog(context, "Please Enter Password");
     } else {
       await dbHelper.getLoginUser(uid,passwd).then((userData){
-        print(userData.email);
-        if (userData != null) {
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => HomeForm()),
-                (Route<dynamic> route) => false);
-        } else {
-          alertDialog(context, "Error: User Not Found");
-        }
+        //falta o if (UserData != null)...
+        print(userData); // corrigir o getLoginuser ta a returnar null
+        Navigator.pushAndRemoveUntil(
+        context, MaterialPageRoute(builder: (_)=> HomeForm()),
+        (Route<dynamic> route) => false);
+
       }).catchError((error){
         print(error);
         alertDialog(context, "Error: Login Fail");
