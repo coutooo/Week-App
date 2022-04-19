@@ -5,6 +5,7 @@ import 'package:week/Comm/genLoginSignupHeader.dart';
 import 'package:week/Comm/genTextFormField.dart';
 import 'package:week/Screens/HomeForm.dart';
 import 'package:week/Screens/SignupForm.dart';
+import 'package:week/Screens/feed.dart';
 import 'package:week/models/UserModel.dart';
 import 'package:week/screens/profile.dart';
 import '../DatabaseHandler/DbHelper.dart';
@@ -44,8 +45,8 @@ class _LoginFormState extends State<LoginForm> {
         if (userData != null) {
           setSP(userData).whenComplete(() {
             Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => HomeForm()),
+                context, 
+                MaterialPageRoute(builder: (_) => FeedPage()),
                 (Route<dynamic> route) => false);
           });
         } else {
@@ -70,6 +71,10 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Login'),
+        backgroundColor: Color.fromARGB(255, 100, 6, 113),
+      ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Container(
@@ -94,7 +99,7 @@ class _LoginFormState extends State<LoginForm> {
                     onPressed: login,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: Color.fromARGB(255, 100, 6, 113),
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
@@ -102,13 +107,12 @@ class _LoginFormState extends State<LoginForm> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('Don\'t have an account? '),
-                      TextButton(
-                        style: TextButton.styleFrom(primary: Colors.blue),
-                        child: const Text('Signup'),
-                        onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => SignupForm()));
+                      Text('Don\'t have an account? '),
+                      FlatButton(
+                        textColor: Color.fromARGB(255, 100, 6, 113),
+                        child: Text('Signup'),
+                        onPressed: () { 
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => SignupForm()));
                         },
                       ),
                       ElevatedButton(
