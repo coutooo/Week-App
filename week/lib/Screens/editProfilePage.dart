@@ -58,35 +58,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
             Navigator.pop(context);
           },
         ),
-        actions: <Widget>[
-          IconButton(
-            color: Colors.black,
-            icon: const Icon(
-              Icons.more_horiz,
-            ),
-            tooltip: 'Settings',
-            onPressed: () {
-              /*
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('This is a snackbar')));*/
-              Navigator.push(context, MaterialPageRoute<void>(
-                builder: (BuildContext context) {
-                  return Scaffold(
-                    appBar: AppBar(
-                      title: const Text('Next page'),
-                    ),
-                    body: const Center(
-                      child: Text(
-                        'This is the next page',
-                        style: TextStyle(fontSize: 24),
-                      ),
-                    ),
-                  );
-                },
-              ));
-            },
-          ),
-        ],
       ),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 32),

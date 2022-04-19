@@ -27,7 +27,7 @@ class _HomeFormState extends State<HomeForm> {
     super.initState();
     getUserData();
 
-    dbHelper = DbHelper();
+    dbHelper = DbHelper.instance;
   }
 
   Future<void> getUserData() async{

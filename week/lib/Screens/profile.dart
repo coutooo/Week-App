@@ -6,6 +6,7 @@ import '../models/user.dart';
 import '../widgets/numbersWidget.dart';
 import 'package:week/screens/settingsPage.dart';
 import 'package:week/utils/user_preferences.dart';
+import '../utils/outfit_widget.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -73,6 +74,10 @@ class _ProfilePageState extends State<ProfilePage> {
               height: 48,
             ),
             buildAbout(user),
+            const SizedBox(
+              height: 48,
+            ),
+            OutfitWidget()
           ],
         ));
   }

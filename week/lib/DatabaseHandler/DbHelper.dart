@@ -5,12 +5,16 @@ import 'package:week/models/user.dart';
 import 'dart:io' as io;
 
 import '../models/UserModel.dart';
+import '../models/posts_model.dart';
 
 class DbHelper {
   static Database? _db;
+  static final DbHelper instance = DbHelper.initDb();
+  DbHelper.initDb();
 
-  static const DB_Name = 'users.db';
+  static const DB_Name = 'app.db';
   static const String Table_User = 'user';
+  static const String tablePhotos = 'photo';
   static const int Version = 1;
 
   static const String C_UserID = 'user_id';
@@ -27,12 +31,14 @@ class DbHelper {
 
     return _db;
   }
+
   initDb() async {
     io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, DB_Name);
     var db = await openDatabase(path, version: Version, onCreate: _onCreate);
     return db;
-}
+  }
+
   _onCreate(Database db, int intVersion) async {
     await db.execute("CREATE TABLE $Table_User ("
         " $C_UserID TEXT, "
@@ -41,6 +47,9 @@ class DbHelper {
         " $C_Password TEXT, "
         " PRIMARY KEY ($C_UserID)"
         ")");
+
+    await db.execute(
+        "CREATE TABLE photo (id INTEGER PRIMARY KEY, albumId INTEGER, photoId INTEGER, caption TEXT, image TEXT, date TEXT)");
   }
 
   Future<int?> saveData(UserModel user) async {
@@ -62,11 +71,24 @@ class DbHelper {
     return null;
   }
 
-  Future<int> updateUser(UserModel user) async{
+  Future<int> updateUser(UserModel user) async {
     var dbClient = await db;
     var res = await dbClient!.update(Table_User, user.toMap(),
         where: '$C_UserID = ?', whereArgs: [user.user_id]);
     return res;
+  }
+
+  // photos db
+  Future<Photo?> photo(String date) async {
+    var dbClient = await db;
+    final List<Map<String, dynamic>> photo =
+        await dbClient!.query("photo WHERE date = '$date'");
+
+    if (photo.isNotEmpty) {
+      return Photo.fromMap(photo.first);
+    }
+
+    return null;
   }
 }
 
