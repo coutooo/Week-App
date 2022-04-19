@@ -5,11 +5,12 @@ import 'package:week/Comm/genLoginSignupHeader.dart';
 import 'package:week/Comm/genTextFormField.dart';
 import 'package:week/Screens/HomeForm.dart';
 import 'package:week/Screens/SignupForm.dart';
-import 'package:week/Screens/feed.dart';
+import 'package:week/screens/feed.dart';
 import 'package:week/models/UserModel.dart';
 import 'package:week/screens/profile.dart';
 import '../DatabaseHandler/DbHelper.dart';
 import 'feed.dart';
+import 'dart:async';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -45,7 +46,7 @@ class _LoginFormState extends State<LoginForm> {
         if (userData != null) {
           setSP(userData).whenComplete(() {
             Navigator.pushAndRemoveUntil(
-                context, 
+                context,
                 MaterialPageRoute(builder: (_) => FeedPage()),
                 (Route<dynamic> route) => false);
           });
@@ -111,8 +112,9 @@ class _LoginFormState extends State<LoginForm> {
                       FlatButton(
                         textColor: Color.fromARGB(255, 100, 6, 113),
                         child: Text('Signup'),
-                        onPressed: () { 
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => SignupForm()));
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (_) => SignupForm()));
                         },
                       ),
                       ElevatedButton(

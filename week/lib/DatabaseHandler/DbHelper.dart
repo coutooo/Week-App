@@ -77,7 +77,6 @@ class DbHelper {
         where: '$C_UserID = ?', whereArgs: [user.user_id]);
     return res;
   }
-<<<<<<< HEAD
 
   // photos db
   Future<Photo?> photo(String date) async {
@@ -91,9 +90,7 @@ class DbHelper {
 
     return null;
   }
-}
-=======
->>>>>>> f5f3b090b9ffc21dc71ff2b18f4eabb1b27c41a8
+
 
   Future<int> deleteUser(String user_id) async {
     var dbClient = await db;
