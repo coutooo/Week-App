@@ -19,7 +19,7 @@ class genLoginSignupHeader extends StatelessWidget {
             headerName,
             style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 235, 64, 147),
+                color: Color.fromARGB(255, 100, 6, 113),
                 fontSize: 50.0),
           ),
           SizedBox(height: 10.0),
@@ -29,7 +29,7 @@ class genLoginSignupHeader extends StatelessWidget {
             width: 100.0,
           ),
           Text(
-            'Sample Code',
+            'Week',
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.black38,

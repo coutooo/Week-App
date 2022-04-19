@@ -5,6 +5,7 @@ import 'package:week/Comm/genLoginSignupHeader.dart';
 import 'package:week/Comm/genTextFormField.dart';
 import 'package:week/Screens/HomeForm.dart';
 import 'package:week/Screens/SignupForm.dart';
+import 'package:week/Screens/feed.dart';
 import 'package:week/models/UserModel.dart';
 import '../DatabaseHandler/DbHelper.dart';
 
@@ -43,7 +44,7 @@ class _LoginFormState extends State<LoginForm> {
           setSP(userData).whenComplete(() {
             Navigator.pushAndRemoveUntil(
                 context, 
-                MaterialPageRoute(builder: (_) => HomeForm()),
+                MaterialPageRoute(builder: (_) => FeedPage()),
                 (Route<dynamic> route) => false);
           });
         } else {
@@ -70,6 +71,7 @@ class _LoginFormState extends State<LoginForm> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Login'),
+        backgroundColor: Color.fromARGB(255, 100, 6, 113),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -105,7 +107,7 @@ class _LoginFormState extends State<LoginForm> {
                       onPressed: login,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: Color.fromARGB(255, 100, 6, 113),
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
@@ -115,7 +117,7 @@ class _LoginFormState extends State<LoginForm> {
                     children: [
                       Text('Does not have account? '),
                       FlatButton(
-                        textColor: Colors.blue,
+                        textColor: Color.fromARGB(255, 100, 6, 113),
                         child: Text('Signup'),
                         onPressed: () { 
                           Navigator.push(context, MaterialPageRoute(builder: (_) => SignupForm()));

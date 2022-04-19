@@ -68,9 +68,11 @@ class DbHelper {
         where: '$C_UserID = ?', whereArgs: [user.user_id]);
     return res;
   }
+
+  Future<int> deleteUser(String user_id) async {
+    var dbClient = await db;
+    var res = await dbClient!
+        .delete(Table_User, where: '$C_UserID = ?', whereArgs: [user_id]);
+    return res;
+  }
 }
-
-
-//https://youtu.be/olnurZylCzc?t=716
-//https://www.youtube.com/watch?v=8sC9paqJJjI
-//https://www.youtube.com/watch?v=8uwMxnWwCgM

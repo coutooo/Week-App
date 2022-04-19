@@ -17,7 +17,7 @@ class _FeedPageState extends State<FeedPage> {
           'Week',
         ),
         centerTitle: true,
-        backgroundColor: Colors.purple,
+        backgroundColor: Color.fromARGB(255, 100, 6, 113),
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(Icons.people),

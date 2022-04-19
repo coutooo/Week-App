@@ -43,7 +43,7 @@ class genTextFormField extends StatelessWidget {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(color: Color.fromARGB(255, 100, 6, 113)),
                       ),
                       prefixIcon: Icon(icon),
                       hintText: hintName,

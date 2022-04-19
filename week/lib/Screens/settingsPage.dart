@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:week/Screens/HomeForm.dart';
+import 'package:week/Screens/feed.dart';
 
 import '../widgets/profileWidget.dart';
 import '../models/user.dart';
@@ -90,11 +92,8 @@ class _SettingsPageState extends State<SettingsPage> {
           const SizedBox(
             height: 10,
           ),
-          buildAccountOption(context, 'Change Password'),
-          buildAccountOption(context, 'Content Settings'),
-          buildAccountOption(context, 'Social'),
+          buildAccountOption(context, 'Account Settings'),
           buildAccountOption(context, 'Language'),
-          buildAccountOption(context, 'Privacy and Security'),
           const SizedBox(
             height: 40,
           ),
@@ -176,27 +175,10 @@ class _SettingsPageState extends State<SettingsPage> {
   GestureDetector buildAccountOption(BuildContext context, String title) {
     return GestureDetector(
         onTap: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text(title),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Text('Option 1'),
-                      Text('Option 2'),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Close'))
-                  ],
-                );
-              });
+          Navigator.pushAndRemoveUntil(
+            context, 
+            MaterialPageRoute(builder: (_) => HomeForm()),
+            (Route<dynamic> route) => false);
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
