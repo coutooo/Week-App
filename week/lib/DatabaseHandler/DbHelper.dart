@@ -14,6 +14,7 @@ class DbHelper {
 
   static const DB_Name = 'app.db';
   static const String Table_User = 'user';
+  static const String tableFollowers = 'follower';
   static const String tablePhotos = 'photo';
   static const int Version = 1;
 
@@ -21,6 +22,8 @@ class DbHelper {
   static const String C_UserName = 'user_name';
   static const String C_Email = 'email';
   static const String C_Password = 'password';
+
+  static const String followerID = "";
 
   Future<Database?> get db async {
     if (_db != null) {
@@ -47,6 +50,13 @@ class DbHelper {
         " $C_Password TEXT, "
         " PRIMARY KEY ($C_UserID)"
         ")");
+
+    await db.execute("CREATE TABLE $tableFollowers ("
+        " $C_UserID TEXT, "
+        " $followerID TEXT,"
+        " date TEXT,"
+        " PRIMARY KEY ($C_UserID)"
+    ")");
 
     await db.execute(
         "CREATE TABLE photo (id INTEGER PRIMARY KEY, albumId INTEGER, photoId INTEGER, caption TEXT, image TEXT, date TEXT)");
