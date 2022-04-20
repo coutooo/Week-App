@@ -7,15 +7,18 @@ import 'dart:io' as io;
 import '../models/UserModel.dart';
 import '../models/posts_model.dart';
 
+//https://docs.google.com/document/d/1dWfVb4_8pQdX5RpuxDcfvnejCCUxqhnqpXJjzThzb6A/edit
+
 class DbHelper {
   static Database? _db;
   static final DbHelper instance = DbHelper.initDb();
   DbHelper.initDb();
 
-  static const DB_Name = 'app.db';
+  static const DB_Name = 'app2.db';
   static const String Table_User = 'user';
   static const String tableFollowers = 'follower';
   static const String tablePhotos = 'photo';
+  static const String tableOutfit = 'outfit';
   static const int Version = 1;
 
   static const String C_UserID = 'user_id';
@@ -56,10 +59,42 @@ class DbHelper {
         " $followerID TEXT,"
         " date TEXT,"
         " PRIMARY KEY ($C_UserID)"
-    ")");
+        ")");
 
-    await db.execute(
-        "CREATE TABLE photo (id INTEGER PRIMARY KEY, albumId INTEGER, photoId INTEGER, caption TEXT, image TEXT, date TEXT)");
+    await db.execute("CREATE TABLE $tableOutfit ("
+        " $C_UserID TEXT, "
+        " photoID INTEGER,"
+        " date TEXT,"
+        " clothType TEXT,"
+        " season TEXT,"
+        " brand TEXT,"
+        " store TEXT,"
+        " PRIMARY KEY ($C_UserID)"
+        ")");
+
+    await db.execute("CREATE TABLE publication ("
+        "publicationID INTEGER PRIMARY KEY,"
+        "albumId INTEGER, "
+        "$C_UserID TEXT," 
+        "caption TEXT,"
+        "image TEXT, "
+        "date TEXT,"
+        ")");
+
+    await db.execute("CREATE TABLE likes ("
+        "$C_UserID PRIMARY KEY,"
+        "publicationID INTEGER,"
+        "liked INTEGER,"   // 0 -> no like 1 -> like
+        "FOREIGN KEY(publicationID) REFERENCES publication(publicationID)" 
+        ")");
+
+    await db.execute("CREATE TABLE comments ("
+        "commentID INTEGER PRIMARY KEY,"
+        "publicationID INTEGER," 
+        "commentText TEXT,"
+        "FOREIGN KEY(publicationID) REFERENCES publication(publicationID)"
+        ")");
+    
   }
 
   Future<int?> saveData(UserModel user) async {
