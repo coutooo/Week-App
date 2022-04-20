@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/post_model.dart';
+import '../screens/postScreen.dart';
 
 class PostWidget extends StatefulWidget {
   final int index;
@@ -62,22 +63,33 @@ class _PostWidgetState extends State<PostWidget> {
                             icon: const Icon(
                               Icons.more_horiz,
                             ))),
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      width: double.infinity,
-                      height: 400,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Colors.black45,
-                                offset: Offset(0, 5),
-                                blurRadius: 8)
-                          ],
-                          image: DecorationImage(
-                              image: AssetImage(posts[widget.index].imageUrl),
-                              fit: BoxFit.fitWidth)),
-                    ),
+                    InkWell(
+                        onDoubleTap: () => print('Like Post'),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => PostScreen(
+                                        post: posts[widget.index],
+                                      )));
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.all(10),
+                          width: double.infinity,
+                          height: 400,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.black45,
+                                    offset: Offset(0, 5),
+                                    blurRadius: 8)
+                              ],
+                              image: DecorationImage(
+                                  image:
+                                      AssetImage(posts[widget.index].imageUrl),
+                                  fit: BoxFit.fitWidth)),
+                        )),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
@@ -104,7 +116,15 @@ class _PostWidgetState extends State<PostWidget> {
                               Row(
                                 children: [
                                   IconButton(
-                                    onPressed: () => print('Comment'),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => PostScreen(
+                                              post: posts[widget.index],
+                                            ),
+                                          ));
+                                    },
                                     icon: const Icon(Icons.chat),
                                     iconSize: 30,
                                   ),
