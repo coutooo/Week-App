@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/Screens/HomeForm.dart';
+import 'package:week/Screens/LoginForm.dart';
 import 'package:week/Screens/feed.dart';
 
 import '../widgets/profileWidget.dart';
@@ -38,6 +40,18 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       valNotify3 = newValue3;
     });
+  }
+
+  signout() async{
+
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    sp.remove("user_id");
+    sp.remove("user_name");
+    sp.remove("email");
+    sp.remove("password");
+  
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext ctx) => LoginForm()));
   }
 
   @override
@@ -132,7 +146,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20))),
-              onPressed: () {},
+              onPressed: signout,
               child: const Text(
                 'SIGN OUT',
                 style: TextStyle(

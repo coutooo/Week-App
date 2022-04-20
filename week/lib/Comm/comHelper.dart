@@ -18,7 +18,3 @@ validateEmail(String email) {
       r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
   return emailReg.hasMatch(email);
 }
-
-
-// https://www.youtube.com/watch?v=8sC9paqJJjI
-// https://www.youtube.com/watch?v=8uwMxnWwCgM
