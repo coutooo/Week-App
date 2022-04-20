@@ -12,6 +12,14 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidgetState extends State<PostWidget> {
+  bool liked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    liked = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -64,7 +72,11 @@ class _PostWidgetState extends State<PostWidget> {
                               Icons.more_horiz,
                             ))),
                     InkWell(
-                        onDoubleTap: () => print('Like Post'),
+                        onDoubleTap: () {
+                          setState(() {
+                            liked = !liked;
+                          });
+                        },
                         onTap: () {
                           Navigator.push(
                               context,
@@ -100,8 +112,14 @@ class _PostWidgetState extends State<PostWidget> {
                               Row(
                                 children: [
                                   IconButton(
-                                    onPressed: () => print('Like Post'),
-                                    icon: const Icon(Icons.favorite_border),
+                                    onPressed: () {
+                                      setState(() {
+                                        liked = !liked;
+                                      });
+                                    },
+                                    icon: liked
+                                        ? Icon(Icons.favorite_outlined)
+                                        : Icon(Icons.favorite_border),
                                     iconSize: 30,
                                   ),
                                   const Text(

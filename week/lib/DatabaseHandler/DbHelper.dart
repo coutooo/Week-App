@@ -75,26 +75,25 @@ class DbHelper {
     await db.execute("CREATE TABLE publication ("
         "publicationID INTEGER PRIMARY KEY,"
         "albumId INTEGER, "
-        "$C_UserID TEXT," 
+        "$C_UserID TEXT,"
         "caption TEXT,"
         "image TEXT, "
-        "date TEXT,"
+        "date TEXT"
         ")");
 
     await db.execute("CREATE TABLE likes ("
         "$C_UserID PRIMARY KEY,"
         "publicationID INTEGER,"
-        "liked INTEGER,"   // 0 -> no like 1 -> like
-        "FOREIGN KEY(publicationID) REFERENCES publication(publicationID)" 
+        "liked INTEGER," // 0 -> no like 1 -> like
+        "FOREIGN KEY(publicationID) REFERENCES publication(publicationID)"
         ")");
 
     await db.execute("CREATE TABLE comments ("
         "commentID INTEGER PRIMARY KEY,"
-        "publicationID INTEGER," 
+        "publicationID INTEGER,"
         "commentText TEXT,"
         "FOREIGN KEY(publicationID) REFERENCES publication(publicationID)"
         ")");
-    
   }
 
   Future<int?> saveData(UserModel user) async {
@@ -127,7 +126,7 @@ class DbHelper {
   Future<Photo?> photo(String date) async {
     var dbClient = await db;
     final List<Map<String, dynamic>> photo =
-        await dbClient!.query("photo WHERE date = '$date'");
+        await dbClient!.query("publication WHERE date = '$date'");
 
     if (photo.isNotEmpty) {
       return Photo.fromMap(photo.first);
@@ -135,7 +134,6 @@ class DbHelper {
 
     return null;
   }
-
 
   Future<int> deleteUser(String user_id) async {
     var dbClient = await db;
