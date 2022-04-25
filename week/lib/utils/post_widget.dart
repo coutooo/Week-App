@@ -98,9 +98,12 @@ class _PostWidgetState extends State<PostWidget> {
                                     blurRadius: 8)
                               ],
                               image: DecorationImage(
-                                  image:
-                                      AssetImage(posts[widget.index].imageUrl),
-                                  fit: BoxFit.fitWidth)),
+                                image: AssetImage(posts[widget.index].imageUrl),
+                                fit: BoxFit.fitWidth,
+                                colorFilter: ColorFilter.mode(
+                                    Colors.black.withOpacity(0.2),
+                                    BlendMode.darken),
+                              )),
                         )),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),

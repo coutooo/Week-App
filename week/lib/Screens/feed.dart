@@ -14,6 +14,7 @@ class _FeedPageState extends State<FeedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: const Color(0xFFEDF0F6),
         appBar: AppBar(
           title: const Text(
             'Week',
@@ -110,7 +111,8 @@ class _FeedPageState extends State<FeedPage> {
                 )),
             BottomNavigationBarItem(
               icon: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
                 child: FlatButton(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   shape: RoundedRectangleBorder(
