@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:week/DatabaseHandler/DbHelper.dart';
+import 'package:week/models/posts_model.dart';
 import 'package:week/models/user.dart';
 import 'package:week/utils/user_preferences.dart';
 import 'dart:io';
@@ -18,12 +20,36 @@ class _AddPostScreenState extends State<AddPostScreen> {
   User user = UserPreferences.myUser;
 
   File? img;
+
+  var dbHelper;
+
+  @override
+  void initState() {
+    super.initState();
+    dbHelper = DbHelper.instance;
+  }
+
   Future pickImage(ImageSource source) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
       if (image == null) return;
       //final imageTemporary = File(image.path);
       final imagePermanet = await saveImagePermanently(image.path);
+      var bytes = await File(image.path).readAsBytes();
+
+      var img64 = Photo.base64String(bytes.buffer.asUint8List());
+      Photo photo = Photo(user_id: UserPreferences.myUser.name, image: img64);
+      dbHelper.insertPhoto(photo);
+
+      DateTime dateTime = DateTime.now();
+
+      Publication publication = Publication(
+          user_id: UserPreferences.myUser.name,
+          photoId: await dbHelper.getLastPhotoID(),
+          date: dateTime.toString());
+
+      dbHelper.insertPublication(publication);
+
       setState(() => img = imagePermanet);
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
@@ -119,7 +145,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     image: DecorationImage(
                                         image: img != null
                                             ? FileImage(img!) as ImageProvider
-                                            : AssetImage(
+                                            : const AssetImage(
                                                 'assets/images/placeholder.jpg'),
                                         fit: BoxFit.fitWidth)),
                               )),

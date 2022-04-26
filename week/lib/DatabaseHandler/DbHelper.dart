@@ -14,7 +14,7 @@ class DbHelper {
   static final DbHelper instance = DbHelper.initDb();
   DbHelper.initDb();
 
-  static const DB_Name = 'app2.db';
+  static const DB_Name = 'app3.db';
   static const String Table_User = 'user';
   static const String tableFollowers = 'follower';
   static const String tablePhotos = 'photo';
@@ -73,12 +73,18 @@ class DbHelper {
         ")");
 
     await db.execute("CREATE TABLE publication ("
-        "publicationID INTEGER PRIMARY KEY,"
-        "albumId INTEGER, "
+        " publicationID INTEGER PRIMARY KEY AUTOINCREMENT,"
+        " $C_UserID TEXT,"
+        " photoID INTEGER,"
+        " date TEXT,"
+        " FOREIGN KEY(photoID) REFERENCES photo(photoID)"
+        ")");
+
+    await db.execute("CREATE TABLE photo ("
+        "photoID INTEGER PRIMARY KEY,"
         "$C_UserID TEXT,"
-        "caption TEXT,"
-        "image TEXT, "
-        "date TEXT"
+        "image TEXT,"
+        "FOREIGN KEY($C_UserID) REFERENCES $Table_User($C_UserID)"
         ")");
 
     await db.execute("CREATE TABLE likes ("
@@ -133,6 +139,34 @@ class DbHelper {
     }
 
     return null;
+  }
+
+  void insertPhoto(Photo photo) async {
+    await _db!.insert(
+      'photo',
+      photo.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<int?> getLastPhotoID() async {
+    final List<Map<String, dynamic>> photo = await _db!.rawQuery(
+        "SELECT * FROM photo WHERE photoID=(SELECT max(photoID) FROM photo)");
+
+    if (photo.isNotEmpty) {
+      int res = photo.first['photoID'];
+      return res;
+    }
+
+    return -1;
+  }
+
+  void insertPublication(Publication publication) async {
+    await _db!.insert(
+      'publication',
+      publication.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<int> deleteUser(String user_id) async {
