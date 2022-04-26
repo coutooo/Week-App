@@ -101,7 +101,7 @@ class _PostWidgetState extends State<PostWidget> {
                                 image: AssetImage(posts[widget.index].imageUrl),
                                 fit: BoxFit.fitWidth,
                                 colorFilter: ColorFilter.mode(
-                                    Colors.black.withOpacity(0.2),
+                                    Colors.black.withOpacity(0.7),
                                     BlendMode.darken),
                               )),
                         )),
