@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({Key? key}) : super(key: key);
@@ -18,15 +19,28 @@ class AddPostScreen extends StatefulWidget {
 
 class _AddPostScreenState extends State<AddPostScreen> {
   User user = UserPreferences.myUser;
+  Future<SharedPreferences> _pref = SharedPreferences.getInstance();
+  final _conUserId = TextEditingController();
 
   File? img;
 
   var dbHelper;
 
+  bool isButtonClickable = false;
+
   @override
   void initState() {
     super.initState();
+    getUserData();
     dbHelper = DbHelper.instance;
+  }
+
+  Future<void> getUserData() async {
+    final SharedPreferences sp = await _pref;
+
+    setState(() {
+      _conUserId.text = sp.getString("user_id")!;
+    });
   }
 
   Future pickImage(ImageSource source) async {
@@ -35,22 +49,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
       if (image == null) return;
       //final imageTemporary = File(image.path);
       final imagePermanet = await saveImagePermanently(image.path);
-      var bytes = await File(image.path).readAsBytes();
 
-      var img64 = Photo.base64String(bytes.buffer.asUint8List());
-      Photo photo = Photo(user_id: UserPreferences.myUser.name, image: img64);
-      dbHelper.insertPhoto(photo);
-
-      DateTime dateTime = DateTime.now();
-
-      Publication publication = Publication(
-          user_id: UserPreferences.myUser.name,
-          photoId: await dbHelper.getLastPhotoID(),
-          date: dateTime.toString());
-
-      dbHelper.insertPublication(publication);
-
-      setState(() => img = imagePermanet);
+      setState(() {
+        img = imagePermanet;
+        isButtonClickable = true;
+      });
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
     }
@@ -62,6 +65,24 @@ class _AddPostScreenState extends State<AddPostScreen> {
     final image = File('${directory.path}/$name');
 
     return File(imagePath).copy(image.path);
+  }
+
+  Future publish() async {
+    var bytes = await File(img!.path).readAsBytes();
+
+    var img64 = Photo.base64String(bytes.buffer.asUint8List());
+    Photo photo = Photo(user_id: _conUserId.text, image: img64);
+    dbHelper.insertPhoto(photo);
+
+    DateTime dateTime = DateTime.now();
+
+    Publication publication = Publication(
+        user_id: _conUserId.text,
+        photoId: await dbHelper.getLastPhotoID(),
+        date: dateTime.toString());
+
+    dbHelper.insertPublication(publication);
+    print('Publication published');
   }
 
   @override
@@ -189,6 +210,35 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             SizedBox(width: 15),
                             Text(
                               'Pick Camera',
+                              style: TextStyle(fontSize: 20),
+                            )
+                          ],
+                        )))),
+            SizedBox(
+                width: 240,
+                height: 48,
+                child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: ElevatedButton(
+                        onPressed: () {
+                          if (isButtonClickable) {
+                            publish();
+                            Navigator.pop(context);
+                          } else {
+                            const snackBar = SnackBar(
+                              content: Text('Please select a photo'),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(primary: Colors.purple),
+                        child: Row(
+                          children: const [
+                            Icon(Icons.camera_alt_outlined),
+                            SizedBox(width: 15),
+                            Text(
+                              'Publish',
                               style: TextStyle(fontSize: 20),
                             )
                           ],
