@@ -69,6 +69,7 @@ class DbHelper {
         " season TEXT,"
         " brand TEXT,"
         " store TEXT,"
+        " color TEXT,"
         " PRIMARY KEY ($C_UserID)"
         ")");
 

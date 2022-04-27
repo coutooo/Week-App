@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
 import 'package:week/models/posts_model.dart';
 import 'package:week/models/user.dart';
+import 'package:week/utils/list_widget.dart';
 import 'package:week/utils/user_preferences.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
@@ -175,10 +176,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     ),
                   ],
                 )),
-            SizedBox(
-                width: 240,
-                height: 48,
-                child: Padding(
+            Container(
+              height: 400,
+              child: ListWidget(),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(25)),
+            ),
+            Row(
+              children: [
+                Padding(
                     padding: const EdgeInsets.all(5),
                     child: ElevatedButton(
                         onPressed: () => pickImage(ImageSource.gallery),
@@ -196,11 +203,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   TextStyle(color: Colors.black, fontSize: 20),
                             )
                           ],
-                        )))),
-            SizedBox(
-                width: 240,
-                height: 48,
-                child: Padding(
+                        ))),
+                Padding(
                     padding: const EdgeInsets.all(5),
                     child: ElevatedButton(
                         onPressed: () => pickImage(ImageSource.camera),
@@ -213,7 +217,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                               style: TextStyle(fontSize: 20),
                             )
                           ],
-                        )))),
+                        ))),
+              ],
+            ),
             SizedBox(
                 width: 240,
                 height: 48,
