@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
 import 'package:week/models/posts_model.dart';
 import 'package:week/models/user.dart';
-import 'package:week/utils/list_widget.dart';
+import 'package:week/utils/action_button.dart';
+import 'package:week/utils/expandable_fab.dart';
+import 'package:week/utils/list_item_widget.dart';
 import 'package:week/utils/user_preferences.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
@@ -10,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:week/models/outfit_model.dart';
 
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({Key? key}) : super(key: key);
@@ -178,79 +181,90 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 )),
             Container(
               height: 400,
-              child: ListWidget(),
+              child: listWidget(context),
               width: double.infinity,
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(25)),
             ),
-            Row(
-              children: [
-                Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: ElevatedButton(
-                        onPressed: () => pickImage(ImageSource.gallery),
-                        style: ElevatedButton.styleFrom(primary: Colors.white),
-                        child: Row(
-                          children: const [
-                            Icon(
-                              Icons.image_outlined,
-                              color: Colors.black,
-                            ),
-                            SizedBox(width: 15),
-                            Text(
-                              'Pick Gallery',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 20),
-                            )
-                          ],
-                        ))),
-                Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: ElevatedButton(
-                        onPressed: () => pickImage(ImageSource.camera),
-                        child: Row(
-                          children: const [
-                            Icon(Icons.camera_alt_outlined),
-                            SizedBox(width: 15),
-                            Text(
-                              'Pick Camera',
-                              style: TextStyle(fontSize: 20),
-                            )
-                          ],
-                        ))),
-              ],
-            ),
-            SizedBox(
-                width: 240,
-                height: 48,
-                child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: ElevatedButton(
-                        onPressed: () {
-                          if (isButtonClickable) {
-                            publish();
-                            Navigator.pop(context);
-                          } else {
-                            const snackBar = SnackBar(
-                              content: Text('Please select a photo'),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(primary: Colors.purple),
-                        child: Row(
-                          children: const [
-                            Icon(Icons.camera_alt_outlined),
-                            SizedBox(width: 15),
-                            Text(
-                              'Publish',
-                              style: TextStyle(fontSize: 20),
-                            )
-                          ],
-                        )))),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget listWidget(BuildContext context) {
+    final listKey = GlobalKey<AnimatedListState>();
+    final List<Clothing> items = [];
+
+    void insertItem(String uid, String photoid, String date, String clothType,
+        String brand, String season, String store, String color) {
+      final newIndex = items.length;
+
+      final newItem = Clothing(
+          user_id: uid,
+          photoID: photoid,
+          date: date,
+          clothType: clothType,
+          brand: brand,
+          season: season,
+          store: store,
+          color: color);
+      items.insert(newIndex, newItem);
+      listKey.currentState!.insertItem(newIndex);
+    }
+
+    void removeItem(int index) {
+      final removedItem = items[index];
+      items.removeAt(index);
+      listKey.currentState!.removeItem(
+          index,
+          (context, animation) => ListItemWidget(
+              item: removedItem, animation: animation, onClicked: () {}));
+    }
+
+    return Scaffold(
+      body: AnimatedList(
+          key: listKey,
+          initialItemCount: items.length,
+          itemBuilder: (context, index, animation) => ListItemWidget(
+                item: items[index],
+                animation: animation,
+                onClicked: () => removeItem(index),
+              )),
+      floatingActionButton: ExpandableFab(
+        distance: 112.0,
+        children: [
+          ActionButton(
+            onPressed: () => insertItem('10', '11', 'asd', 'top', 'zara',
+                'spring', 'zara aveiro', 'white'),
+            icon: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+          ),
+          ActionButton(
+            onPressed: () => pickImage(ImageSource.gallery),
+            icon: const Icon(Icons.insert_photo),
+          ),
+          ActionButton(
+            onPressed: () => pickImage(ImageSource.camera),
+            icon: const Icon(Icons.camera),
+          ),
+          ActionButton(
+            onPressed: () {
+              if (isButtonClickable) {
+                publish();
+                Navigator.pop(context);
+              } else {
+                const snackBar = SnackBar(
+                  content: Text('Please select a photo'),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+            },
+            icon: const Icon(Icons.done),
+          ),
+        ],
       ),
     );
   }
