@@ -78,6 +78,7 @@ class _PostWidgetState extends State<PostWidget> {
                           });
                         },
                         onTap: () {
+                          
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -100,9 +101,6 @@ class _PostWidgetState extends State<PostWidget> {
                               image: DecorationImage(
                                 image: AssetImage(posts[widget.index].imageUrl),
                                 fit: BoxFit.fitWidth,
-                                colorFilter: ColorFilter.mode(
-                                    Colors.black.withOpacity(0.7),
-                                    BlendMode.darken),
                               )),
                         )),
                     Padding(

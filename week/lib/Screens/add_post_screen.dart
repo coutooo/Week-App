@@ -46,7 +46,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
     print(id.toString());
     setState(() {
       _conUserId.text = sp.getString("user_id")!;
-      photoID = id.toInt() + 1;
+      photoID = id.toInt();
     });
   }
 
@@ -78,18 +78,25 @@ class _AddPostScreenState extends State<AddPostScreen> {
     var bytes = await File(img!.path).readAsBytes();
 
     var img64 = Photo.base64String(bytes.buffer.asUint8List());
-    Photo photo = Photo(user_id: _conUserId.text, image: img64);
+    Photo photo = Photo(user_id: _conUserId.text, image: img!.path);
     dbHelper.insertPhoto(photo);
 
     DateTime dateTime = DateTime.now();
-
+    var pid = await dbHelper.getLastPhotoID();
     Publication publication = Publication(
         user_id: _conUserId.text,
-        photoId: await dbHelper.getLastPhotoID(),
+        photoId: pid.toString(),
         date: dateTime.toString());
 
     dbHelper.insertPublication(publication);
+    if (items.isNotEmpty) {
+      for (var i = 0; i < items.length; i++) {
+        dbHelper.insertClothing(items[i]);
+        print('inserted: ' + i.toString());
+      }
+    }
     print('Publication published');
+    print('uid: ' + _conUserId.text + '\nPhotoID: ' + pid.toString());
   }
 
   final listKey = GlobalKey<AnimatedListState>();

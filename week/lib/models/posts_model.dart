@@ -4,10 +4,12 @@ import 'package:flutter/widgets.dart';
 
 class Photo {
   final String user_id;
+  String? photoId;
   final String image;
 
-  const Photo({
+  Photo({
     required this.user_id,
+    this.photoId,
     required this.image,
   });
 
@@ -23,13 +25,11 @@ class Photo {
 
   static Photo? fromMap(Map<String, dynamic> map) {
     var user_id = map['user_id'];
-    var photoId = map['photoId'];
+    var photoId = map['photoID'];
     var image = map['image'];
 
-    return Photo(user_id: user_id, image: image);
+    return Photo(user_id: user_id, photoId: photoId.toString(), image: image);
   }
-
-  
 
   static Image imageFromBase64String(String base64String) {
     return Image.memory(base64Decode(base64String));
@@ -47,13 +47,16 @@ class Photo {
   // each Photo when using the print statement.
   @override
   String toString() {
+    if (photoId != null) {
+      return 'Photo{user_id: $user_id, photoID: $photoId , image: $image}';
+    }
     return 'Photo{user_id: $user_id, image: $image}';
   }
 }
 
 class Publication {
   final String user_id;
-  final int photoId;
+  final String photoId;
   final String date;
 
   const Publication({
@@ -68,15 +71,16 @@ class Publication {
 
   static Publication fromJson(Map<String, Object?> json) => Publication(
       user_id: json['user_id'] as String,
-      photoId: json['photoId'] as int,
+      photoId: json['photoId'] as String,
       date: json['date'] as String);
 
-  static Publication? fromMap(Map<String, dynamic> map) {
+  static Publication fromMap(Map<String, dynamic> map) {
     var user_id = map['user_id'];
-    var photoId = map['photoId'];
+    var photoId = map['photoID'];
     var date = map['date'];
 
-    return Publication(user_id: user_id, photoId: photoId, date: date);
+    return Publication(
+        user_id: user_id, photoId: photoId.toString(), date: date);
   }
 
   Image imageFromBase64String(String base64String) {

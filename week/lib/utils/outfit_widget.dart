@@ -1,4 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:week/models/outfit_model.dart';
+import 'package:week/models/user.dart';
+import 'package:week/utils/list_item_widget.dart';
+import 'package:week/utils/user_preferences.dart';
 import 'package:weekday_selector/weekday_selector.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -13,11 +20,21 @@ class OutfitWidget extends StatefulWidget {
 }
 
 class _OutfitWidgetState extends State<OutfitWidget> {
+  User user = UserPreferences.myUser;
+  Future<SharedPreferences> _pref = SharedPreferences.getInstance();
+  final _conUserId = TextEditingController();
   late List<bool> values;
+
   late int count;
-  late Photo photo;
+  var photo;
   bool flag = true;
   bool clicked = false;
+  var initialDay;
+  var pid;
+
+  final listKey = GlobalKey<AnimatedListState>();
+  List<Clothing> items = [];
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   var commentWidgets = <Widget>[];
 
@@ -27,27 +44,98 @@ class _OutfitWidgetState extends State<OutfitWidget> {
   void initState() {
     super.initState();
     dbHelper = DbHelper.instance;
+    getUserData();
 
     values = List.filled(7, false);
     DateTime dateTime = DateTime.now();
     var date = DateTime.parse(dateTime.toString());
     var currentWeekDay = 0;
     if (date.weekday != 7) {
-      currentWeekDay = date.weekday - 1;
+      currentWeekDay = date.weekday;
     }
     values[currentWeekDay] = true;
     count = currentWeekDay;
     clicked = false;
-
-    getPhotos(dateTime.toString());
+    initialDay = currentWeekDay;
+    getPhotos(dateTime, 1);
+    getList();
   }
 
-  Future getPhotos(String dateTime) async {
-    var res;
-    res = await dbHelper.photo(dateTime);
+  Future<void> getUserData() async {
+    final SharedPreferences sp = await _pref;
+    setState(() {
+      _conUserId.text = sp.getString("user_id")!;
+    });
+  }
+
+  Future getPhotos(DateTime dateTime, int duration) async {
+    var currDate = DateFormat("yyyy-MM-dd").format(dateTime);
+    final nextDay = dateTime.add(Duration(days: duration));
+    var res = await dbHelper.photoToday(
+        currDate, DateFormat("yyyy-MM-dd").format(nextDay));
     if (res != null) {
+      var bytes = await File(res.image).readAsBytes();
+
+      var img64 = Photo.base64String(bytes.buffer.asUint8List());
+      print("Photo ID: " + res.photoId.toString());
+      setState(() {
+        photo = img64;
+        pid = res.photoId;
+      });
+      getList();
       flag = false;
-      photo = res;
+      print('Got a photo today');
+    } else {
+      photo = null;
+      pid = null;
+      print('No photos today!!!!!!');
+    }
+  }
+
+  Future getPhotos2(DateTime dateTime, int duration) async {
+    if (duration >= 0) {
+      print('diff: ' + duration.toString());
+      var goalDay = dateTime.subtract(Duration(days: duration));
+      var currDate = DateFormat("yyyy-MM-dd").format(goalDay);
+      final nextDay = goalDay.add(const Duration(days: 1));
+      var res = await dbHelper.photoToday(
+          currDate, DateFormat("yyyy-MM-dd").format(nextDay));
+      if (res != null) {
+        var bytes = await File(res.image).readAsBytes();
+
+        var img64 = Photo.base64String(bytes.buffer.asUint8List());
+        setState(() {
+          photo = img64;
+          pid = res.photoId;
+        });
+        getList();
+        flag = false;
+        print('Got a photo today');
+      } else {
+        setState(() {
+          photo = null;
+          pid = null;
+        });
+        print('No photos today');
+      }
+    } else {
+      setState(() {
+        photo = null;
+        pid = null;
+      });
+    }
+  }
+
+  void getList() async {
+    if (pid != null) {
+      print('getting list');
+      var res = await dbHelper.getClothing(_conUserId.text, pid);
+      if (res != null) {
+        print('got clothes: ' + res.length.toString());
+        setState(() {
+          items = res;
+        });
+      }
     }
   }
 
@@ -61,22 +149,39 @@ class _OutfitWidgetState extends State<OutfitWidget> {
             setState(() {
               final index = day % 7;
               if (index != count) {
+                var diff = initialDay - index;
                 values[count] = false;
                 values[index] = !values[index];
                 count = index;
-                getPhotos(DateTime.now().toString());
+                print('here');
+                getPhotos2(DateTime.now(), diff);
               }
             });
           },
           values: values,
         ),
-        buildOutfit(context),
+        buildOutfit(context, photo),
+        Container(
+          height: 400,
+          child: items.isNotEmpty
+              ? AnimatedList(
+                  key: listKey,
+                  initialItemCount: items.length,
+                  itemBuilder: (context, index, animation) => ListItemWidget(
+                        item: items[index],
+                        animation: animation,
+                        onClicked: () => {},
+                      ))
+              : const Text('No clothing pieces'),
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(25)),
+        ),
       ],
     ));
   }
 
   void addTag(BuildContext context, TapUpDetails details) {
-    print('${details.globalPosition}');
     final RenderBox box = context.findRenderObject() as RenderBox;
     final Offset localOffset = box.globalToLocal(details.globalPosition);
     var btn = Positioned(
@@ -121,12 +226,12 @@ class _OutfitWidgetState extends State<OutfitWidget> {
     });
   }
 
-  Widget buildOutfit(BuildContext context) {
+  Widget buildOutfit(BuildContext context, var photo) {
     return Stack(
       children: <Widget>[
-            GestureDetector(
-                onTapUp: (TapUpDetails details) => addTag(context, details),
-                child: clicked
+        GestureDetector(
+            //onTapUp: (TapUpDetails details) => addTag(context, details),
+            child: /*clicked
                     ? Container(
                         margin: const EdgeInsets.all(10.0),
                         width: double.infinity,
@@ -134,27 +239,33 @@ class _OutfitWidgetState extends State<OutfitWidget> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25.0),
                             image: DecorationImage(
-                              image: flag
-                                  ? AssetImage('assets/images/placeholder.jpg')
-                                  : AssetImage('assets/images/modelo2.jpg'),
+                              image: photo != null
+                                  ? Image.memory(
+                                          Photo.dataFromBase64String(photo))
+                                      .image
+                                  : AssetImage('assets/images/placeholder.jpg'),
                               fit: BoxFit.fitWidth,
                               opacity: 100,
                             )))
-                    : Container(
-                        margin: const EdgeInsets.all(10.0),
-                        width: double.infinity,
-                        height: 400.0,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25.0),
-                            image: DecorationImage(
-                              image: flag
-                                  ? AssetImage('assets/images/placeholder.jpg')
-                                  : AssetImage('assets/images/modelo2.jpg'),
-                              fit: BoxFit.fitWidth,
-                              opacity: 1,
-                            )))),
-          ] +
-          commentWidgets,
+                    :*/
+                Container(
+                    margin: const EdgeInsets.all(10.0),
+                    width: double.infinity,
+                    height: 400.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25.0),
+                        image: DecorationImage(
+                          image: photo != null
+                              ? Image.memory(Photo.dataFromBase64String(photo))
+                                  .image
+                              : const AssetImage(
+                                  'assets/images/placeholder.jpg'),
+                          fit: BoxFit.fitWidth,
+                          opacity: 1,
+                        )))),
+      ] /*+
+          commentWidgets*/
+      ,
     );
   }
 

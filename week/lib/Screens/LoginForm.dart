@@ -114,7 +114,7 @@ class _LoginFormState extends State<LoginForm> {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (_) => SignupForm()));
                         },
-                      ),
+                      ), /*
                       ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
@@ -126,7 +126,7 @@ class _LoginFormState extends State<LoginForm> {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => FeedPage()));
                           },
-                          child: const Text('Feed'))
+                          child: const Text('Feed'))*/
                     ],
                   ),
                 ),

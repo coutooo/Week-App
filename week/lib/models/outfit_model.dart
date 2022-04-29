@@ -46,9 +46,9 @@ class Clothing {
       store: json['store'] as String,
       color: json['color'] as String);
 
-  static Clothing? fromMap(Map<String, dynamic> map) {
+  static Clothing fromMap(Map<String, dynamic> map) {
     var user_id = map['user_id'];
-    var photoId = map['photoId'];
+    var photoId = map['photoID'];
     var date = map['date'];
     var clothType = map['clothType'];
     var brand = map['brand'];
@@ -58,7 +58,7 @@ class Clothing {
 
     return Clothing(
         user_id: user_id,
-        photoID: photoId,
+        photoID: photoId.toString(),
         date: date,
         clothType: clothType,
         brand: brand,

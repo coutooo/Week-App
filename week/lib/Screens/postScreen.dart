@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:week/DatabaseHandler/DbHelper.dart';
 import 'package:week/models/comment_model.dart';
 import 'package:week/models/post_model.dart';
+import 'package:week/models/user.dart';
 import 'package:week/utils/comment_widget.dart';
+import 'package:week/utils/user_preferences.dart';
 
 class PostScreen extends StatefulWidget {
   final Post post;
@@ -12,13 +16,30 @@ class PostScreen extends StatefulWidget {
 }
 
 class _PostScreenState extends State<PostScreen> {
+  User user = UserPreferences.myUser;
+  Future<SharedPreferences> _pref = SharedPreferences.getInstance();
+  final _conUserId = TextEditingController();
+
   bool liked = false;
+  bool showList = false;
+  var dbHelper;
 
   @override
   void initState() {
     super.initState();
+    dbHelper = DbHelper.instance;
     liked = false;
+    getUserData();
   }
+
+  Future<void> getUserData() async {
+    final SharedPreferences sp = await _pref;
+    setState(() {
+      _conUserId.text = sp.getString("user_id")!;
+    });
+  }
+
+  void getList() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -93,12 +114,21 @@ class _PostScreenState extends State<PostScreen> {
                                               ))))
                                 ]),
                             InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    showList = !showList;
+                                    getList();
+                                  });
+                                },
                                 onDoubleTap: () {
                                   setState(() {
                                     liked = !liked;
                                   });
                                 },
-                                child: Container(
+                                child: /*showList
+                                    ? Container()
+                                    :*/
+                                    Container(
                                   margin: const EdgeInsets.all(10),
                                   width: double.infinity,
                                   height: 400,

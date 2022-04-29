@@ -1,8 +1,6 @@
-
 import 'package:flutter/material.dart';
 
 class genLoginSignupHeader extends StatelessWidget {
-
   String headerName;
 
   genLoginSignupHeader(this.headerName);
@@ -15,18 +13,10 @@ class genLoginSignupHeader extends StatelessWidget {
           SizedBox(
             height: 50.0,
           ),
-          Text(
-            headerName,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 100, 6, 113),
-                fontSize: 50.0),
-          ),
-          SizedBox(height: 10.0),
           Image.asset(
             "assets/images/logo.png",
-            height: 100.0,
-            width: 100.0,
+            height: 200.0,
+            width: 200.0,
           ),
           Text(
             'Week',

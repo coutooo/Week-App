@@ -25,11 +25,11 @@ class ListItemWidget extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12), color: Colors.white),
         child: ListTile(
-          contentPadding: EdgeInsets.all(16),
-          leading: Icon(Icons.insert_emoticon),
+          contentPadding: const EdgeInsets.all(16),
+          leading: const Icon(Icons.insert_emoticon),
           title: Text(
             item.clothType,
-            style: TextStyle(fontSize: 20, color: Colors.black),
+            style: const TextStyle(fontSize: 20, color: Colors.black),
           ),
           trailing: IconButton(
               onPressed: onClicked,
