@@ -15,7 +15,7 @@ class DbHelper {
   static final DbHelper instance = DbHelper.initDb();
   DbHelper.initDb();
 
-  static const DB_Name = 'app8.db';
+  static const DB_Name = 'app10.db';
   static const String Table_User = 'user';
   static const String tableFollowers = 'follower';
   static const String tablePhotos = 'photo';
@@ -52,6 +52,8 @@ class DbHelper {
         " $C_UserName TEXT, "
         " $C_Email TEXT,"
         " $C_Password TEXT, "
+        " imagePath TEXT, "
+        " about TEXT, "
         " PRIMARY KEY ($C_UserID)"
         ")");
 

@@ -9,7 +9,6 @@ import 'package:week/models/user.dart';
 import '../Comm/genTextFormField.dart';
 
 class HomeForm extends StatefulWidget {
-
   @override
   State<HomeForm> createState() => _HomeFormState();
 }
@@ -27,14 +26,14 @@ class _HomeFormState extends State<HomeForm> {
   final _conPassword = TextEditingController();
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     getUserData();
 
     dbHelper = DbHelper.instance;
   }
 
-  Future<void> getUserData() async{
+  Future<void> getUserData() async {
     final SharedPreferences sp = await _pref;
 
     setState(() {
@@ -46,32 +45,30 @@ class _HomeFormState extends State<HomeForm> {
     });
   }
 
-  update() async{
+  update() async {
     String uid = _conUserId.text;
     String uname = _conUserName.text;
     String email = _conEmail.text;
     String passwd = _conPassword.text;
 
-
-    if(_formKey.currentState!.validate()){
+    if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      UserModel user = UserModel(uid, uname, email, passwd);
-      await dbHelper.updateUser(user).then((value){
-        if(value == 1){
+      UserModel user = UserModel(uid, uname, email, passwd, null, null);
+      await dbHelper.updateUser(user).then((value) {
+        if (value == 1) {
           alertDialog(context, "Successfully Updated");
 
-          updateSP(user,true).whenComplete((){
+          updateSP(user, true).whenComplete(() {
             Navigator.pushAndRemoveUntil(
-              context, 
-              MaterialPageRoute(builder: (_) => LoginForm()),
+                context,
+                MaterialPageRoute(builder: (_) => LoginForm()),
                 (Route<dynamic> route) => false);
           });
-
         } else {
           alertDialog(context, "Update Error");
         }
-      }).catchError((error){
+      }).catchError((error) {
         print(error);
         alertDialog(context, "Error");
       });
@@ -98,13 +95,10 @@ class _HomeFormState extends State<HomeForm> {
   Future updateSP(UserModel? user, bool add) async {
     final SharedPreferences sp = await _pref;
 
-
-    if(add){
-    
+    if (add) {
       sp.setString("user_name", user!.user_name);
       sp.setString("email", user.email);
       sp.setString("password", user.password);
-
     } else {
       sp.remove('user_id');
       sp.remove('user_name');
@@ -131,37 +125,17 @@ class _HomeFormState extends State<HomeForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   //update
-                  genTextFormField(
-                    _conUserId, 
-                    'User ID', 
-                    Icons.person, 
-                    false,
-                    TextInputType.text,
-                    true),
+                  genTextFormField(_conUserId, 'User ID', Icons.person, false,
+                      TextInputType.text, true),
                   SizedBox(height: 10.0),
-                  genTextFormField(
-                    _conUserName, 
-                    'User Name', 
-                    Icons.person_outline, 
-                    false,
-                    TextInputType.name,
-                    false),
+                  genTextFormField(_conUserName, 'User Name',
+                      Icons.person_outline, false, TextInputType.name, false),
                   SizedBox(height: 10.0),
-                  genTextFormField(
-                    _conEmail, 
-                    'Email', 
-                    Icons.email, 
-                    false,
-                    TextInputType.emailAddress,
-                    false),
+                  genTextFormField(_conEmail, 'Email', Icons.email, false,
+                      TextInputType.emailAddress, false),
                   SizedBox(height: 10.0),
-                  genTextFormField(
-                    _conPassword, 
-                    'Password', 
-                    Icons.lock, 
-                    true,
-                    TextInputType.text,
-                    false),
+                  genTextFormField(_conPassword, 'Password', Icons.lock, true,
+                      TextInputType.text, false),
                   SizedBox(height: 10.0),
                   Container(
                     margin: EdgeInsets.all(30.0),
@@ -170,8 +144,8 @@ class _HomeFormState extends State<HomeForm> {
                       child: Text(
                         'Update',
                         style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: update,
+                      ),
+                      onPressed: update,
                     ),
                     decoration: BoxDecoration(
                       color: Color.fromARGB(255, 100, 6, 113),
@@ -180,13 +154,8 @@ class _HomeFormState extends State<HomeForm> {
                   ),
 
                   // delete
-                  genTextFormField(
-                    _conDelUserId, 
-                    'User ID', 
-                    Icons.person, 
-                    false,
-                    TextInputType.text,
-                    true),
+                  genTextFormField(_conDelUserId, 'User ID', Icons.person,
+                      false, TextInputType.text, true),
                   SizedBox(height: 10.0),
                   Container(
                     margin: EdgeInsets.all(30.0),
@@ -195,8 +164,8 @@ class _HomeFormState extends State<HomeForm> {
                       child: Text(
                         'Delete',
                         style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: delete,
+                      ),
+                      onPressed: delete,
                     ),
                     decoration: BoxDecoration(
                       color: Color.fromARGB(255, 100, 6, 113),
