@@ -85,7 +85,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
     var pid = await dbHelper.getLastPhotoID();
     Publication publication = Publication(
         user_id: _conUserId.text,
-        photoId: pid.toString(),
+        photoId: photoID.toString(),
         date: dateTime.toString());
 
     dbHelper.insertPublication(publication);
@@ -96,7 +96,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
       }
     }
     print('Publication published');
-    print('uid: ' + _conUserId.text + '\nPhotoID: ' + pid.toString());
+    print('uid: ' + _conUserId.text + '\nPhotoID: ' + photoID.toString());
   }
 
   final listKey = GlobalKey<AnimatedListState>();

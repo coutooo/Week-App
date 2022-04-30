@@ -149,6 +149,7 @@ class _OutfitWidgetState extends State<OutfitWidget> {
             setState(() {
               final index = day % 7;
               if (index != count) {
+                items = <Clothing>[];
                 var diff = initialDay - index;
                 values[count] = false;
                 values[index] = !values[index];
