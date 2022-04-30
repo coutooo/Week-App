@@ -5,7 +5,6 @@ import 'package:week/models/user.dart';
 import 'package:week/utils/action_button.dart';
 import 'package:week/utils/expandable_fab.dart';
 import 'package:week/utils/list_item_widget.dart';
-import 'package:week/utils/user_preferences.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,14 +21,14 @@ class AddPostScreen extends StatefulWidget {
 }
 
 class _AddPostScreenState extends State<AddPostScreen> {
-  User user = UserPreferences.myUser;
   Future<SharedPreferences> _pref = SharedPreferences.getInstance();
   final _conUserId = TextEditingController();
   var photoID;
 
   File? img;
-
+  var user;
   var dbHelper;
+  bool loading = true;
 
   bool isButtonClickable = false;
 
@@ -42,11 +41,15 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   Future<void> getUserData() async {
     final SharedPreferences sp = await _pref;
-    int id = await dbHelper.getLastPhotoID();
+    final res = await dbHelper.getLoginUser(
+        sp.getString("user_id")!, sp.getString("password")!);
+    String id = await dbHelper.getLastPhotoID();
     print(id.toString());
     setState(() {
       _conUserId.text = sp.getString("user_id")!;
-      photoID = id.toInt();
+      photoID = id;
+      user = res;
+      loading = false;
     });
   }
 
@@ -84,9 +87,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
     DateTime dateTime = DateTime.now();
     var pid = await dbHelper.getLastPhotoID();
     Publication publication = Publication(
-        user_id: _conUserId.text,
-        photoId: photoID.toString(),
-        date: dateTime.toString());
+        user_id: _conUserId.text, photoId: pid, date: dateTime.toString());
 
     dbHelper.insertPublication(publication);
     if (items.isNotEmpty) {
@@ -221,148 +222,158 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFEDF0F6),
-      body: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
-        child: Column(
-          children: [
-            Container(
-                padding: const EdgeInsets.only(top: 40),
-                width: double.infinity,
-                height: 600,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(25)),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+    return loading
+        ? const Center(child: CircularProgressIndicator())
+        : Scaffold(
+            backgroundColor: const Color(0xFFEDF0F6),
+            body: SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  Container(
+                      padding: const EdgeInsets.only(top: 40),
+                      width: double.infinity,
+                      height: 600,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25)),
                       child: Column(
                         children: [
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Column(
                               children: [
-                                IconButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  iconSize: 30,
-                                  icon: const Icon(Icons.arrow_back),
-                                  color: Colors.black,
-                                ),
-                                Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.8,
-                                    child: ListTile(
-                                      leading: Container(
-                                        width: 50,
-                                        height: 50,
-                                        decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: Colors.black45,
-                                                  offset: Offset(0, 2),
-                                                  blurRadius: 6)
-                                            ]),
-                                        child: CircleAvatar(
-                                            child: ClipOval(
-                                          child: Image(
-                                            height: 50,
-                                            width: 50,
-                                            image: AssetImage(user.imagePath),
-                                            fit: BoxFit.cover,
-                                          ),
-                                        )),
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        iconSize: 30,
+                                        icon: const Icon(Icons.arrow_back),
+                                        color: Colors.black,
                                       ),
-                                      title: Text(
-                                        user.name,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ))
-                              ]),
-                          InkWell(
-                              onTap: () {
-                                setState(() {});
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.all(10),
-                                width: double.infinity,
-                                height: 400,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                          color: Colors.black45,
-                                          offset: Offset(0, 5),
-                                          blurRadius: 8)
-                                    ],
-                                    image: DecorationImage(
-                                        image: img != null
-                                            ? FileImage(img!) as ImageProvider
-                                            : const AssetImage(
-                                                'assets/images/placeholder.jpg'),
-                                        fit: BoxFit.fitWidth)),
-                              )),
+                                      Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.8,
+                                          child: ListTile(
+                                            leading: Container(
+                                              width: 50,
+                                              height: 50,
+                                              decoration: const BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        color: Colors.black45,
+                                                        offset: Offset(0, 2),
+                                                        blurRadius: 6)
+                                                  ]),
+                                              child: CircleAvatar(
+                                                  child: ClipOval(
+                                                child: Image(
+                                                  height: 50,
+                                                  width: 50,
+                                                  image: FileImage(
+                                                      File(user.imagePath)),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              )),
+                                            ),
+                                            title: Text(
+                                              user.user_name,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ))
+                                    ]),
+                                InkWell(
+                                    onTap: () {
+                                      setState(() {});
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.all(10),
+                                      width: double.infinity,
+                                      height: 400,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          boxShadow: const [
+                                            BoxShadow(
+                                                color: Colors.black45,
+                                                offset: Offset(0, 5),
+                                                blurRadius: 8)
+                                          ],
+                                          image: DecorationImage(
+                                              image: img != null
+                                                  ? FileImage(img!)
+                                                      as ImageProvider
+                                                  : const AssetImage(
+                                                      'assets/images/placeholder.jpg'),
+                                              fit: BoxFit.fitWidth)),
+                                    )),
+                              ],
+                            ),
+                          ),
                         ],
-                      ),
-                    ),
-                  ],
-                )),
-            Container(
-              height: 400,
-              child: AnimatedList(
-                  key: listKey,
-                  initialItemCount: items.length,
-                  itemBuilder: (context, index, animation) => ListItemWidget(
-                        item: items[index],
-                        animation: animation,
-                        onClicked: () => removeItem(index),
                       )),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(25)),
+                  Container(
+                    height: 400,
+                    child: AnimatedList(
+                        key: listKey,
+                        initialItemCount: items.length,
+                        itemBuilder: (context, index, animation) =>
+                            ListItemWidget(
+                              item: items[index],
+                              animation: animation,
+                              onClicked: () => removeItem(index),
+                            )),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(25)),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: ExpandableFab(
-        distance: 112.0,
-        children: [
-          ActionButton(
-            onPressed: () {
-              _showMyDialog(context);
-            },
-            icon: const Icon(
-              Icons.add,
-              color: Colors.white,
+            floatingActionButton: ExpandableFab(
+              distance: 112.0,
+              children: [
+                ActionButton(
+                  onPressed: () {
+                    _showMyDialog(context);
+                  },
+                  icon: const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                ),
+                ActionButton(
+                  onPressed: () => pickImage(ImageSource.gallery),
+                  icon: const Icon(Icons.insert_photo),
+                ),
+                ActionButton(
+                  onPressed: () => pickImage(ImageSource.camera),
+                  icon: const Icon(Icons.camera),
+                ),
+                ActionButton(
+                  onPressed: () {
+                    if (isButtonClickable) {
+                      publish();
+                      Navigator.pop(context);
+                    } else {
+                      const snackBar = SnackBar(
+                        content: Text('Please select a photo'),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
+                  },
+                  icon: const Icon(Icons.done),
+                ),
+              ],
             ),
-          ),
-          ActionButton(
-            onPressed: () => pickImage(ImageSource.gallery),
-            icon: const Icon(Icons.insert_photo),
-          ),
-          ActionButton(
-            onPressed: () => pickImage(ImageSource.camera),
-            icon: const Icon(Icons.camera),
-          ),
-          ActionButton(
-            onPressed: () {
-              if (isButtonClickable) {
-                publish();
-                Navigator.pop(context);
-              } else {
-                const snackBar = SnackBar(
-                  content: Text('Please select a photo'),
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
-            },
-            icon: const Icon(Icons.done),
-          ),
-        ],
-      ),
-    );
+          );
   }
 
   Widget listWidget(BuildContext context, String uid, int photoID) {

@@ -20,7 +20,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  //User user = UserPreferences.myUser;
+  
   Future<SharedPreferences> _pref = SharedPreferences.getInstance();
   final _conUserId = TextEditingController();
   final _conUserName = TextEditingController();

@@ -80,7 +80,7 @@ class _OutfitWidgetState extends State<OutfitWidget> {
       print("Photo ID: " + res.photoId.toString());
       setState(() {
         photo = img64;
-        pid = res.photoId;
+        pid = (int.parse(res.photoId) - 1).toString();
       });
       getList();
       flag = false;
@@ -106,7 +106,7 @@ class _OutfitWidgetState extends State<OutfitWidget> {
         var img64 = Photo.base64String(bytes.buffer.asUint8List());
         setState(() {
           photo = img64;
-          pid = res.photoId;
+          pid = (int.parse(res.photoId) - 1).toString();
         });
         getList();
         flag = false;
@@ -150,12 +150,14 @@ class _OutfitWidgetState extends State<OutfitWidget> {
               final index = day % 7;
               if (index != count) {
                 items = <Clothing>[];
+                pid = null;
                 var diff = initialDay - index;
                 values[count] = false;
                 values[index] = !values[index];
                 count = index;
                 print('here');
                 getPhotos2(DateTime.now(), diff);
+                getList();
               }
             });
           },

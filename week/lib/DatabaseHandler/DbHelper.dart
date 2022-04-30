@@ -183,15 +183,23 @@ class DbHelper {
     );
   }
 
-  Future<int?> getLastPhotoID() async {
+  Future<String?> getLastPhotoID() async {
+    /*
     final List<Map<String, dynamic>> id =
         await _db!.rawQuery("SELECT last_insert_rowid()");
 
     if (id.isNotEmpty) {
       return int.parse(id.first['last_insert_rowid()'].toString());
+    }*/
+
+    final List<Map<String, dynamic>> id =
+        await _db!.rawQuery("SELECT MAX(photoID) AS max_id FROM photo");
+
+    if (id.isNotEmpty) {
+      return id.first['max_id'].toString();
     }
 
-    return -1;
+    return null;
   }
 
   void insertPublication(Publication publication) async {
