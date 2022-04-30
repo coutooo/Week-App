@@ -69,10 +69,12 @@ class _OutfitWidgetState extends State<OutfitWidget> {
   }
 
   Future getPhotos(DateTime dateTime, int duration) async {
+    final SharedPreferences sp = await _pref;
+
     var currDate = DateFormat("yyyy-MM-dd").format(dateTime);
     final nextDay = dateTime.add(Duration(days: duration));
-    var res = await dbHelper.photoToday(
-        currDate, DateFormat("yyyy-MM-dd").format(nextDay));
+    var res = await dbHelper.photoToday(sp.getString("user_id")!, currDate,
+        DateFormat("yyyy-MM-dd").format(nextDay));
     if (res != null) {
       var bytes = await File(res.image).readAsBytes();
 
@@ -99,7 +101,7 @@ class _OutfitWidgetState extends State<OutfitWidget> {
       var currDate = DateFormat("yyyy-MM-dd").format(goalDay);
       final nextDay = goalDay.add(const Duration(days: 1));
       var res = await dbHelper.photoToday(
-          currDate, DateFormat("yyyy-MM-dd").format(nextDay));
+          _conUserId.text, currDate, DateFormat("yyyy-MM-dd").format(nextDay));
       if (res != null) {
         var bytes = await File(res.image).readAsBytes();
 

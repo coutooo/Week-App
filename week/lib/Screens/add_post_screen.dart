@@ -275,8 +275,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                                 child: Image(
                                                   height: 50,
                                                   width: 50,
-                                                  image: FileImage(
-                                                      File(user.imagePath)),
+                                                  image: user.imagePath == null
+                                                      ? AssetImage(
+                                                              'assets/images/flutter_logo.png')
+                                                          as ImageProvider
+                                                      : FileImage(
+                                                          File(user.imagePath)),
                                                   fit: BoxFit.cover,
                                                 ),
                                               )),

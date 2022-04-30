@@ -21,7 +21,7 @@ class UserModel {
     return map;
   }
 
-  static UserModel? fromMap(Map<String, dynamic> map) {
+  static UserModel fromMap(Map<String, dynamic> map) {
     var user_id = map['user_id'];
     var user_name = map['user_name'];
     var email = map['email'];

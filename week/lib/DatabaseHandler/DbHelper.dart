@@ -92,7 +92,7 @@ class DbHelper {
         ")");
 
     await db.execute("CREATE TABLE likes ("
-        "$C_UserID PRIMARY KEY,"
+        "$C_UserID TEXT PRIMARY KEY,"
         "publicationID INTEGER,"
         "liked INTEGER," // 0 -> no like 1 -> like
         "FOREIGN KEY(publicationID) REFERENCES publication(publicationID)"
@@ -146,10 +146,11 @@ class DbHelper {
   }
 
   // photos db
-  Future<Photo?> photoToday(String date, String nextDay) async {
+  Future<Photo?> photoToday(String uid, String date, String nextDay) async {
     var dbClient = await db;
+    print('userid: ' + uid);
     final List<Map<String, dynamic>> pub = await dbClient!.rawQuery(
-        "SELECT * FROM publication WHERE date >= date('$date') and date < date('$nextDay')");
+        "SELECT * FROM publication WHERE $C_UserID = ('$uid') and date >= date('$date') and date < date('$nextDay')");
 
     final List<Map<String, dynamic>> t =
         await dbClient.rawQuery("SELECT * FROM photo");
@@ -181,6 +182,40 @@ class DbHelper {
       photo.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
+
+  Future<List<UserModel>?> getFollowers(String uid) async {
+    final List<Map<String, dynamic>> users = await _db!
+        .rawQuery("SELECT * FROM $tableFollowers WHERE $C_UserID=('$uid')");
+
+    if (users.isNotEmpty) {
+      print('got users');
+      var list = <UserModel>[];
+      for (var user in users) {
+        print(UserModel.fromMap(user).toString());
+        list.add(UserModel.fromMap(user));
+      }
+      return list;
+    }
+
+    return null;
+  }
+
+  Future<List<UserModel>?> getRandomUsers(String uid) async {
+    final List<Map<String, dynamic>> users = await _db!.rawQuery(
+        "SELECT * FROM $Table_User WHERE $C_UserID!='$uid' ORDER BY RANDOM() LIMIT 5");
+
+    if (users.isNotEmpty) {
+      print('got users!!!');
+      var list = <UserModel>[];
+      for (var user in users) {
+        print(UserModel.fromMap(user).toString());
+        list.add(UserModel.fromMap(user));
+      }
+      return list;
+    }
+
+    return null;
   }
 
   Future<String?> getLastPhotoID() async {
@@ -221,10 +256,10 @@ class DbHelper {
   Future<List<Clothing>?> getClothing(String uid, String pid) async {
     var dbClient = await db;
     final List<Map<String, dynamic>> clothing = await dbClient!.rawQuery(
-        "SELECT * FROM $tableOutfit WHERE $C_UserID = $uid and photoID = $pid");
+        "SELECT * FROM $tableOutfit WHERE ($C_UserID=('$uid') and photoID=($pid))");
 
     final List<Map<String, dynamic>> t = await dbClient
-        .rawQuery("SELECT * FROM $tableOutfit WHERE $C_UserID = $uid");
+        .rawQuery("SELECT * FROM $tableOutfit WHERE $C_UserID = '$uid'");
 
     for (var item in t) {
       print(Clothing.fromMap(item).toString());

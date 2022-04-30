@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 class ProfileWidget extends StatelessWidget {
   final String? imagePath;
   final bool isEditing;
+  final bool? isVisiting;
   final VoidCallback onClicked;
 
   const ProfileWidget({
     Key? key,
     this.imagePath,
     this.isEditing = false,
+    this.isVisiting = false,
     required this.onClicked,
   }) : super(key: key);
 
@@ -25,7 +27,7 @@ class ProfileWidget extends StatelessWidget {
           Positioned(
             bottom: 0,
             right: 4,
-            child: buildEditIcon(color),
+            child: isVisiting == true ? const SizedBox() : buildEditIcon(color),
           ),
         ],
       ),

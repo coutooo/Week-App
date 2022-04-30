@@ -1,25 +1,23 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
-import 'package:week/screens/editProfilePage.dart';
-import 'dart:io';
-import '../utils/bottom_nav_bar_widget.dart';
-import '../widgets/profileWidget.dart';
-import '../models/user.dart';
-import '../widgets/numbersWidget.dart';
-import 'package:week/screens/settingsPage.dart';
-import '../utils/outfit_widget.dart';
-import '../utils/bottom_nav_bar_widget.dart';
-import '../models/UserModel.dart';
+import 'package:week/models/UserModel.dart';
+import 'package:week/utils/bottom_nav_bar_widget.dart';
+import 'package:week/utils/outfit_widget.dart';
+import 'package:week/widgets/numbersWidget.dart';
+import 'package:week/widgets/profileWidget.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+class VisitingProfile extends StatefulWidget {
+  final UserModel user;
+  const VisitingProfile({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<VisitingProfile> createState() => _VisitingProfileState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _VisitingProfileState extends State<VisitingProfile> {
   Future<SharedPreferences> _pref = SharedPreferences.getInstance();
   final _conUserId = TextEditingController();
   final _conUserName = TextEditingController();
@@ -28,7 +26,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   File? image;
   var dbHelper;
-  var user;
 
   bool loading = true;
 
@@ -48,15 +45,12 @@ class _ProfilePageState extends State<ProfilePage> {
       _conUserName.text = sp.getString("user_name")!;
       _conEmail.text = sp.getString("email")!;
       _conPassword.text = sp.getString("password")!;
-      user = res;
       loading = false;
-      print("got an user: " + user.toString());
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    //final user = UserPreferences.myUser;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -71,22 +65,6 @@ class _ProfilePageState extends State<ProfilePage> {
             Navigator.pop(context);
           },
         ),
-        actions: [
-          IconButton(
-            color: Colors.black,
-            icon: const Icon(
-              Icons.more_horiz,
-            ),
-            tooltip: 'Settings',
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => SettingsPage()));
-              /*
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('This is a snackbar')));*/
-            },
-          ),
-        ],
       ),
       body: ListView(
         physics: BouncingScrollPhysics(),
@@ -94,19 +72,15 @@ class _ProfilePageState extends State<ProfilePage> {
             ? [Center(child: CircularProgressIndicator())]
             : [
                 ProfileWidget(
-                  imagePath: user.imagePath ?? 'assets/images/flutter_logo.png',
-                  onClicked: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => EditProfilePage(
-                              user: user,
-                            )));
-                    loading = true;
-                  },
+                  imagePath:
+                      widget.user.imagePath ?? 'assets/images/flutter_logo.png',
+                  onClicked: () {},
+                  isVisiting: true,
                 ),
                 const SizedBox(
                   height: 24,
                 ),
-                buildName(user),
+                buildName(widget.user),
                 const SizedBox(
                   height: 24,
                 ),
@@ -114,7 +88,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(
                   height: 48,
                 ),
-                buildAbout(user),
+                buildAbout(widget.user),
                 const SizedBox(
                   height: 48,
                 ),
