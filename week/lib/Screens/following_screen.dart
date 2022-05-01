@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
+import 'package:week/models/UserModel.dart';
+import 'package:week/models/follower_model.dart';
 import 'package:week/utils/bottom_nav_bar_widget.dart';
 import 'dart:io';
 
@@ -22,6 +24,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
   var dbHelper;
   var user;
   var list;
+  var listF;
 
   @override
   void initState() {
@@ -50,17 +53,24 @@ class _FollowingScreenState extends State<FollowingScreen> {
 
     var res = await dbHelper.getFollowers(sp.getString("user_id")!);
     if (res != null) {
+      var followersInfo = <UserModel>[];
+      listF = res;
+      for (var i = 0; i < res.length; i++) {
+        followersInfo.add(await dbHelper.getUserInfo(res[i].user_id));
+      }
+
       setState(() {
-        list = res;
+        list = followersInfo;
         loading = false;
       });
     }
   }
 
   void unfollow(int index) async {
-    await dbHelper.unfollow(list[index]);
+    await dbHelper.unfollow(listF[index]);
     setState(() {
       list.removeAt(index);
+      listF.removeAt(index);
     });
   }
 
@@ -98,15 +108,14 @@ class _FollowingScreenState extends State<FollowingScreen> {
                     itemBuilder: (BuildContext context, int index) {
                       if (index == 0) {
                         return const SizedBox(width: 10);
-                      } /*
+                      }
                       final imgPath = list[index - 1].imagePath;
-                      var t;
+                      /*var t;
                       if (imgPath == null) {
                         t = const AssetImage('assets/images/flutter_logo.png');
                       } else {
-                        t = FileImage(File(imgPath.toString()));
+                        t = Image.file(File(imgPath.toString()));
                       }*/
-                      var t = AssetImage('assets/images/flutter_logo.png');
 
                       return Card(
                           child: InkWell(
@@ -118,9 +127,20 @@ class _FollowingScreenState extends State<FollowingScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             ListTile(
-                              leading: Icon(Icons.abc),
-                              title: Text(list[index - 1].followerID),
-                              subtitle: Text(list[index - 1].date),
+                              leading: ClipOval(
+                                child: Image(
+                                  height: 60,
+                                  width: 60,
+                                  image: imgPath == null
+                                      ? AssetImage(
+                                              'assets/images/flutter_logo.png')
+                                          as ImageProvider
+                                      : FileImage(File(imgPath.toString())),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              title: Text(list[index - 1].user_name),
+                              subtitle: Text(list[index - 1].about),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,

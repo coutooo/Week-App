@@ -127,6 +127,18 @@ class DbHelper {
     return null;
   }
 
+  Future<UserModel?> getUserInfo(String userId) async {
+    var dbClient = await db;
+    var res = await dbClient!.rawQuery("SELECT * FROM $Table_User WHERE "
+        "$C_UserID = '$userId'");
+
+    if (res.length > 0) {
+      return UserModel.fromMap(res.first);
+    }
+
+    return null;
+  }
+
   Future<int> updateUser(UserModel user) async {
     var dbClient = await db;
     var res = await dbClient!.update(Table_User, user.toMap(),
