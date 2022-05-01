@@ -43,11 +43,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
     final SharedPreferences sp = await _pref;
     final res = await dbHelper.getLoginUser(
         sp.getString("user_id")!, sp.getString("password")!);
-    String id = await dbHelper.getLastPhotoID();
-    print(id.toString());
+
     setState(() {
       _conUserId.text = sp.getString("user_id")!;
-      photoID = id;
+      photoID = 0;
       user = res;
       loading = false;
     });
@@ -65,7 +64,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
         isButtonClickable = true;
       });
     } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
+      debugPrint('Failed to pick image: $e');
     }
   }
 
@@ -92,12 +91,13 @@ class _AddPostScreenState extends State<AddPostScreen> {
     dbHelper.insertPublication(publication);
     if (items.isNotEmpty) {
       for (var i = 0; i < items.length; i++) {
+        items[i].photoID = pid;
         dbHelper.insertClothing(items[i]);
-        print('inserted: ' + i.toString());
+        debugPrint('inserted: ' + i.toString());
       }
     }
-    print('Publication published');
-    print('uid: ' + _conUserId.text + '\nPhotoID: ' + photoID.toString());
+    debugPrint('Publication published');
+    debugPrint('uid: ' + _conUserId.text + '\nPhotoID: ' + photoID.toString());
   }
 
   final listKey = GlobalKey<AnimatedListState>();

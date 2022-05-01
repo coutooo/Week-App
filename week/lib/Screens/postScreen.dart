@@ -1,15 +1,28 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
-import 'package:week/models/comment_model.dart';
-import 'package:week/models/post_model.dart';
+import 'package:week/models/UserModel.dart';
+import 'package:week/models/outfit_model.dart';
+import 'package:week/models/posts_model.dart';
 import 'package:week/models/user.dart';
 import 'package:week/utils/comment_widget.dart';
+import 'package:week/utils/list_item_widget.dart';
 import 'package:week/utils/user_preferences.dart';
 
 class PostScreen extends StatefulWidget {
-  final Post post;
-  PostScreen({required this.post});
+  final UserModel user;
+  final UserModel currentUser;
+  final Publication pub;
+  final Photo photo;
+  const PostScreen(
+      {Key? key,
+      required this.user,
+      required this.pub,
+      required this.photo,
+      required this.currentUser})
+      : super(key: key);
 
   @override
   State<PostScreen> createState() => _PostScreenState();
@@ -24,12 +37,16 @@ class _PostScreenState extends State<PostScreen> {
   bool showList = false;
   var dbHelper;
 
+  final listKey = GlobalKey<AnimatedListState>();
+  List<Clothing> items = [];
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
     dbHelper = DbHelper.instance;
-    liked = false;
     getUserData();
+    getList();
   }
 
   Future<void> getUserData() async {
@@ -39,7 +56,17 @@ class _PostScreenState extends State<PostScreen> {
     });
   }
 
-  void getList() async {}
+  void getList() async {
+    debugPrint('getting list');
+    var res =
+        await dbHelper.getClothing(widget.user.user_id, widget.photo.photoId);
+    if (res != null) {
+      debugPrint('got clothes: ' + res.length.toString());
+      setState(() {
+        items = res;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,19 +119,25 @@ class _PostScreenState extends State<PostScreen> {
                                             child: Image(
                                               height: 50,
                                               width: 50,
-                                              image: AssetImage(
-                                                  widget.post.authorImageUrl),
+                                              image: widget.user.imagePath ==
+                                                      null
+                                                  ? const AssetImage(
+                                                          'assets/images/flutter_logo.png')
+                                                      as ImageProvider
+                                                  : FileImage(File(widget
+                                                      .user.imagePath
+                                                      .toString())),
                                               fit: BoxFit.cover,
                                             ),
                                           )),
                                         ),
                                         title: Text(
-                                          widget.post.authorName,
+                                          widget.user.user_name,
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         subtitle: Text(
-                                          widget.post.timeAgo,
+                                          widget.user.email,
                                         ), /*
                                           trailing: IconButton(
                                               color: Colors.black,
@@ -142,8 +175,8 @@ class _PostScreenState extends State<PostScreen> {
                                             blurRadius: 8)
                                       ],
                                       image: DecorationImage(
-                                          image:
-                                              AssetImage(widget.post.imageUrl),
+                                          image: FileImage(File(
+                                              widget.photo.image.toString())),
                                           fit: BoxFit.fitWidth)),
                                 )),
                             Padding(
@@ -195,8 +228,12 @@ class _PostScreenState extends State<PostScreen> {
                                     ],
                                   ),
                                   IconButton(
-                                    onPressed: () => print('Save Post'),
-                                    icon: const Icon(Icons.bookmark_border),
+                                    onPressed: () {
+                                      setState(() {
+                                        showList = !showList;
+                                      });
+                                    },
+                                    icon: const Icon(Icons.more),
                                     iconSize: 30,
                                   ),
                                 ],
@@ -210,24 +247,43 @@ class _PostScreenState extends State<PostScreen> {
               const SizedBox(
                 height: 10,
               ),
-              Container(
-                width: double.infinity,
-                height: 600,
-                decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30))),
-                child: Column(
-                  children: [
-                    CommentWidget(index: 0),
-                    CommentWidget(index: 1),
-                    CommentWidget(index: 2),
-                    CommentWidget(index: 3),
-                    CommentWidget(index: 4)
-                  ],
-                ),
-              )
+              showList
+                  ? Container(
+                      height: 400,
+                      child: items.isNotEmpty
+                          ? AnimatedList(
+                              key: listKey,
+                              initialItemCount: items.length,
+                              itemBuilder: (context, index, animation) =>
+                                  ListItemWidget(
+                                    item: items[index],
+                                    animation: animation,
+                                    onClicked: () => {},
+                                  ))
+                          : const Text('No clothing pieces'),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25)),
+                    )
+                  : Container(
+                      width: double.infinity,
+                      height: 600,
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30))),
+                      child: Column(
+                        children: [
+                          CommentWidget(index: 0),
+                          CommentWidget(index: 1),
+                          CommentWidget(index: 2),
+                          CommentWidget(index: 3),
+                          CommentWidget(index: 4)
+                        ],
+                      ),
+                    )
             ],
           ),
         ),
@@ -283,7 +339,12 @@ class _PostScreenState extends State<PostScreen> {
                             child: Image(
                               height: 48.0,
                               width: 48.0,
-                              image: AssetImage(widget.post.authorImageUrl),
+                              image: widget.user.imagePath == null
+                                  ? const AssetImage(
+                                          'assets/images/flutter_logo.png')
+                                      as ImageProvider
+                                  : FileImage(
+                                      File(widget.user.imagePath.toString())),
                               fit: BoxFit.cover,
                             ),
                           ),

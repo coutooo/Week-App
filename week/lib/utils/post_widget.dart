@@ -1,18 +1,20 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:week/models/UserModel.dart';
 import 'package:week/models/posts_model.dart';
-
-import '../models/post_model.dart';
 import '../screens/postScreen.dart';
 
 class PostWidget extends StatefulWidget {
   final UserModel user;
+  final UserModel currentUser;
   final Publication pub;
   final Photo photo;
   const PostWidget(
-      {Key? key, required this.user, required this.pub, required this.photo})
+      {Key? key,
+      required this.user,
+      required this.pub,
+      required this.photo,
+      required this.currentUser})
       : super(key: key);
 
   @override
@@ -26,7 +28,7 @@ class _PostWidgetState extends State<PostWidget> {
   void initState() {
     super.initState();
     liked = false;
-    debugPrint(widget.photo.image.toString());
+    debugPrint(widget.photo.photoId.toString());
   }
 
   @override
@@ -62,7 +64,8 @@ class _PostWidgetState extends State<PostWidget> {
                               height: 50,
                               width: 50,
                               image: widget.user.imagePath == null
-                                  ? AssetImage('assets/images/flutter_logo.png')
+                                  ? const AssetImage(
+                                          'assets/images/flutter_logo.png')
                                       as ImageProvider
                                   : FileImage(
                                       File(widget.user.imagePath.toString())),
@@ -90,13 +93,14 @@ class _PostWidgetState extends State<PostWidget> {
                           });
                         },
                         onTap: () {
-                          /*
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (_) => PostScreen(
-                                        post: posts[widget.index],
-                                      )));*/
+                                      user: widget.user,
+                                      pub: widget.pub,
+                                      photo: widget.photo,
+                                      currentUser: widget.currentUser)));
                         },
                         child: Container(
                           margin: const EdgeInsets.all(10),

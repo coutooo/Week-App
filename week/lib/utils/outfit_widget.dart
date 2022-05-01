@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/models/outfit_model.dart';
@@ -8,7 +7,6 @@ import 'package:week/utils/list_item_widget.dart';
 import 'package:week/utils/user_preferences.dart';
 import 'package:weekday_selector/weekday_selector.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import '../DatabaseHandler/DbHelper.dart';
 import '../models/posts_model.dart';
 
@@ -82,7 +80,7 @@ class _OutfitWidgetState extends State<OutfitWidget> {
       print("Photo ID: " + res.photoId.toString());
       setState(() {
         photo = img64;
-        pid = (int.parse(res.photoId) - 1).toString();
+        pid = res.photoId;
       });
       getList();
       flag = false;
@@ -108,7 +106,7 @@ class _OutfitWidgetState extends State<OutfitWidget> {
         var img64 = Photo.base64String(bytes.buffer.asUint8List());
         setState(() {
           photo = img64;
-          pid = (int.parse(res.photoId) - 1).toString();
+          pid = res.photoId;
         });
         getList();
         flag = false;

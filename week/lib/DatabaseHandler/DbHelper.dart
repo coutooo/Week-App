@@ -17,7 +17,7 @@ class DbHelper {
   static final DbHelper instance = DbHelper.initDb();
   DbHelper.initDb();
 
-  static const DB_Name = 'app12.db';
+  static const DB_Name = 'app14.db';
   static const String Table_User = 'user';
   static const String tableFollowers = 'follower';
   static const String tablePhotos = 'photo';
@@ -321,20 +321,20 @@ class DbHelper {
   Future<List<Clothing>?> getClothing(String uid, String pid) async {
     var dbClient = await db;
     final List<Map<String, dynamic>> clothing = await dbClient!.rawQuery(
-        "SELECT * FROM $tableOutfit WHERE ($C_UserID=('$uid') and photoID=($pid))");
-
+        "SELECT * FROM $tableOutfit WHERE ($C_UserID=('$uid') and photoID=('$pid'))");
+    debugPrint('uid: ' + uid + ' pid: ' + pid);
     final List<Map<String, dynamic>> t = await dbClient
         .rawQuery("SELECT * FROM $tableOutfit WHERE $C_UserID = '$uid'");
 
     for (var item in t) {
-      print(Clothing.fromMap(item).toString());
+      debugPrint(Clothing.fromMap(item).toString());
     }
 
     if (clothing.isNotEmpty) {
-      print('got clothing');
+      debugPrint('got clothing');
       var list = <Clothing>[];
       for (var item in clothing) {
-        print(Clothing.fromMap(item).toString());
+        debugPrint(Clothing.fromMap(item).toString());
         list.add(Clothing.fromMap(item));
       }
       return list;

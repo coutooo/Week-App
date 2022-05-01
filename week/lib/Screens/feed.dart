@@ -26,7 +26,7 @@ class _FeedPageState extends State<FeedPage> {
   final _conPassword = TextEditingController();
 
   var dbHelper;
-  var user;
+  var currentUser;
   var stories;
   var pubs = [];
   var pubsInfo = [];
@@ -52,10 +52,10 @@ class _FeedPageState extends State<FeedPage> {
       _conUserName.text = sp.getString("user_name")!;
       _conEmail.text = sp.getString("email")!;
       _conPassword.text = sp.getString("password")!;
-      user = res;
+      currentUser = res;
       stories = res2;
       loading = false;
-      debugPrint("got an user: " + user.toString());
+      debugPrint("got an user: " + currentUser.toString());
     });
   }
 
@@ -132,79 +132,89 @@ class _FeedPageState extends State<FeedPage> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : ListView(
-              physics: AlwaysScrollableScrollPhysics(),
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 100.0,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: stories == null ? 0 : stories.length + 1,
-                    itemBuilder: (BuildContext context, int index) {
-                      if (index == 0) {
-                        return const SizedBox(width: 10);
-                      }
-                      final imgPath = stories[index - 1].imagePath;
-                      return Container(
-                        margin: const EdgeInsets.all(10),
-                        width: 60,
-                        height: 60,
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black45,
-                                  offset: Offset(0, 2),
-                                  blurRadius: 6)
-                            ]),
-                        child: CircleAvatar(
-                            child: GestureDetector(
-                          onTapUp: (details) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: ((context) => VisitingProfile(
-                                        idVisiting: _conUserId.text,
-                                        user: stories[index - 1]))));
-                          },
-                          child: ClipOval(
-                            child: Image(
-                              height: 60,
-                              width: 60,
-                              image: imgPath == null
-                                  ? AssetImage('assets/images/flutter_logo.png')
-                                      as ImageProvider
-                                  : FileImage(File(imgPath.toString())),
-                              fit: BoxFit.cover,
+          : RefreshIndicator(
+              child: ListView(
+                physics: AlwaysScrollableScrollPhysics(),
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 100.0,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: stories == null ? 0 : stories.length + 1,
+                      itemBuilder: (BuildContext context, int index) {
+                        if (index == 0) {
+                          return const SizedBox(width: 10);
+                        }
+                        final imgPath = stories[index - 1].imagePath;
+                        return Container(
+                          margin: const EdgeInsets.all(10),
+                          width: 60,
+                          height: 60,
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black45,
+                                    offset: Offset(0, 2),
+                                    blurRadius: 6)
+                              ]),
+                          child: CircleAvatar(
+                              child: GestureDetector(
+                            onTapUp: (details) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) => VisitingProfile(
+                                          idVisiting: _conUserId.text,
+                                          user: stories[index - 1]))));
+                            },
+                            child: ClipOval(
+                              child: Image(
+                                height: 60,
+                                width: 60,
+                                image: imgPath == null
+                                    ? AssetImage(
+                                            'assets/images/flutter_logo.png')
+                                        as ImageProvider
+                                    : FileImage(File(imgPath.toString())),
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ),
-                        )),
-                      );
-                    },
+                          )),
+                        );
+                      },
+                    ),
                   ),
-                ),
-                Container(
-                  width: double.infinity,
-                  height: 700.0,
-                  child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: pubs.length + 1,
-                    itemBuilder: (BuildContext context, int index) {
-                      if (index == 0) {
-                        return const SizedBox(width: 10);
-                      }
+                  Container(
+                    width: double.infinity,
+                    height: 600.0,
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: pubs.length + 1,
+                      itemBuilder: (BuildContext context, int index) {
+                        if (index == 0) {
+                          return const SizedBox(width: 10);
+                        }
 
-                      return PostWidget(
+                        return PostWidget(
                           user: pubsInfo[index - 1],
                           pub: pubs[index - 1],
-                          photo: photos[index - 1]);
-                    },
+                          photo: photos[index - 1],
+                          currentUser: currentUser,
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+              onRefresh: _onRefresh),
       bottomNavigationBar: BottomNavBar(),
     );
+  }
+
+  Future<void> _onRefresh() {
+    getPosts();
+    return Future.delayed(Duration(seconds: 2));
   }
 }

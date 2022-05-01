@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 
 class Clothing {
   final String user_id;
-  final String photoID;
+  String photoID;
   final String date;
   final String clothType;
   final String brand;
@@ -12,7 +12,7 @@ class Clothing {
   final String store;
   final String color;
 
-  const Clothing({
+  Clothing({
     required this.user_id,
     required this.photoID,
     required this.date,
