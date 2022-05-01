@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
 import 'package:week/utils/bottom_nav_bar_widget.dart';
+import 'dart:io';
 
 class FollowingScreen extends StatefulWidget {
   const FollowingScreen({Key? key}) : super(key: key);
@@ -40,6 +41,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
       _conEmail.text = sp.getString("email")!;
       _conPassword.text = sp.getString("password")!;
       user = res;
+      loading = false;
       print("got an user: " + user.toString());
     });
   }
@@ -77,7 +79,39 @@ class _FollowingScreenState extends State<FollowingScreen> {
             )
           : ListView(
               physics: AlwaysScrollableScrollPhysics(),
-              children: [],
+              children: [
+                Center(
+                  child: Card(
+                      child: InkWell(
+                    splashColor: Colors.blue.withAlpha(30),
+                    onTap: () {
+                      debugPrint('Card tapped.');
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListTile(
+                          leading:
+                              Image.asset('assets/images/flutter_logo.png'),
+                          title: Text('The Enchanted Nightingale'),
+                          subtitle: Text(
+                              'Music by Julie Gable. Lyrics by Sidney Stein.'),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              child: const Text('Unfollow'),
+                              onPressed: () {/* ... */},
+                            ),
+                            const SizedBox(width: 8),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )),
+                )
+              ],
             ),
       bottomNavigationBar: BottomNavBar(),
     );
