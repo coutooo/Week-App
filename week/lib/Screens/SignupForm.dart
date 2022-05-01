@@ -71,6 +71,7 @@ class _SignupFormState extends State<SignupForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 100, 6, 113),
         title: Text('Signup'),
       ),
       body: Form(
@@ -108,7 +109,7 @@ class _SignupFormState extends State<SignupForm> {
                       onPressed: signUp,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.blue,
+                      color: Color.fromARGB(255, 100, 6, 113),
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                   ),
@@ -118,7 +119,7 @@ class _SignupFormState extends State<SignupForm> {
                       children: [
                         Text('Do you have an account? '),
                         FlatButton(
-                          textColor: Colors.blue,
+                          textColor: Color.fromARGB(255, 100, 6, 113),
                           child: Text('Sign In'),
                           onPressed: () {
                             Navigator.pushAndRemoveUntil(

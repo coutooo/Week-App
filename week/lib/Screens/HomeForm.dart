@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/Comm/comHelper.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
 import 'package:week/Screens/LoginForm.dart';
+import 'package:week/Screens/settingsPage.dart';
 import 'package:week/models/UserModel.dart';
 import 'package:week/models/user.dart';
 
@@ -113,6 +114,16 @@ class _HomeFormState extends State<HomeForm> {
       appBar: AppBar(
         title: Text('Update Account'),
         backgroundColor: Color.fromARGB(255, 100, 6, 113),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_rounded,
+            color: Colors.black,
+          ),
+          tooltip: 'Go back',
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Form(
         key: _formKey,
