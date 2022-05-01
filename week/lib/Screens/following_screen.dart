@@ -41,7 +41,6 @@ class _FollowingScreenState extends State<FollowingScreen> {
       _conEmail.text = sp.getString("email")!;
       _conPassword.text = sp.getString("password")!;
       user = res;
-      loading = false;
       print("got an user: " + user.toString());
     });
   }
@@ -49,10 +48,20 @@ class _FollowingScreenState extends State<FollowingScreen> {
   void getList() async {
     final SharedPreferences sp = await _pref;
 
-    list = await dbHelper.getFollowers(sp.getString("user_id")!);
-    if (list != null) {
-      loading = false;
+    var res = await dbHelper.getFollowers(sp.getString("user_id")!);
+    if (res != null) {
+      setState(() {
+        list = res;
+        loading = false;
+      });
     }
+  }
+
+  void unfollow(int index) async {
+    await dbHelper.unfollow(list[index]);
+    setState(() {
+      list.removeAt(index);
+    });
   }
 
   @override
@@ -80,37 +89,57 @@ class _FollowingScreenState extends State<FollowingScreen> {
           : ListView(
               physics: AlwaysScrollableScrollPhysics(),
               children: [
-                Center(
-                  child: Card(
-                      child: InkWell(
-                    splashColor: Colors.blue.withAlpha(30),
-                    onTap: () {
-                      debugPrint('Card tapped.');
-                    },
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ListTile(
-                          leading:
-                              Image.asset('assets/images/flutter_logo.png'),
-                          title: Text('The Enchanted Nightingale'),
-                          subtitle: Text(
-                              'Music by Julie Gable. Lyrics by Sidney Stein.'),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                Container(
+                  width: double.infinity,
+                  height: 150.0,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: list.length + 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == 0) {
+                        return const SizedBox(width: 10);
+                      } /*
+                      final imgPath = list[index - 1].imagePath;
+                      var t;
+                      if (imgPath == null) {
+                        t = const AssetImage('assets/images/flutter_logo.png');
+                      } else {
+                        t = FileImage(File(imgPath.toString()));
+                      }*/
+                      var t = AssetImage('assets/images/flutter_logo.png');
+
+                      return Card(
+                          child: InkWell(
+                        splashColor: Colors.blue.withAlpha(30),
+                        onTap: () {
+                          debugPrint('Card tapped.');
+                        },
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            TextButton(
-                              child: const Text('Unfollow'),
-                              onPressed: () {/* ... */},
+                            ListTile(
+                              leading: Icon(Icons.abc),
+                              title: Text(list[index - 1].followerID),
+                              subtitle: Text(list[index - 1].date),
                             ),
-                            const SizedBox(width: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                TextButton(
+                                  child: const Text('Unfollow'),
+                                  onPressed: () {
+                                    unfollow(index - 1);
+                                  },
+                                ),
+                                const SizedBox(width: 8),
+                              ],
+                            ),
                           ],
                         ),
-                      ],
-                    ),
-                  )),
-                )
+                      ));
+                    },
+                  ),
+                ),
               ],
             ),
       bottomNavigationBar: BottomNavBar(),

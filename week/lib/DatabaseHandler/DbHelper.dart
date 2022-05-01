@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:week/models/follower_model.dart';
 import 'package:week/models/outfit_model.dart';
 import 'package:week/models/user.dart';
 import 'dart:io' as io;
@@ -15,7 +17,7 @@ class DbHelper {
   static final DbHelper instance = DbHelper.initDb();
   DbHelper.initDb();
 
-  static const DB_Name = 'app10.db';
+  static const DB_Name = 'app11.db';
   static const String Table_User = 'user';
   static const String tableFollowers = 'follower';
   static const String tablePhotos = 'photo';
@@ -27,7 +29,7 @@ class DbHelper {
   static const String C_Email = 'email';
   static const String C_Password = 'password';
 
-  static const String followerID = "";
+  static const String followerID = "followerID";
 
   Future<Database?> get db async {
     if (_db != null) {
@@ -184,16 +186,42 @@ class DbHelper {
     );
   }
 
-  Future<List<UserModel>?> getFollowers(String uid) async {
+  Future<bool> follow(FollowerModel fmodel) async {
+    print("The user: " +
+        fmodel.user_id +
+        " wants to follow: " +
+        fmodel.followerID);
+    int rowInserted = await _db!.insert(
+      tableFollowers,
+      fmodel.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
+    if (rowInserted != -1) {
+      debugPrint('Row inserted');
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void unfollow(FollowerModel fmodel) async {
+    var dbClient = await db;
+    await dbClient!.delete(tableFollowers,
+        where: '$C_UserID = ? and $followerID = ?',
+        whereArgs: [fmodel.user_id, fmodel.followerID]);
+  }
+
+  Future<List<FollowerModel>?> getFollowers(String uid) async {
     final List<Map<String, dynamic>> users = await _db!
         .rawQuery("SELECT * FROM $tableFollowers WHERE $C_UserID=('$uid')");
 
     if (users.isNotEmpty) {
       print('got users');
-      var list = <UserModel>[];
+      var list = <FollowerModel>[];
       for (var user in users) {
-        print(UserModel.fromMap(user).toString());
-        list.add(UserModel.fromMap(user));
+        print(FollowerModel.fromMap(user).toString());
+        list.add(FollowerModel.fromMap(user));
       }
       return list;
     }

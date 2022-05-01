@@ -127,6 +127,7 @@ class _FeedPageState extends State<FeedPage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: ((context) => VisitingProfile(
+                                        idVisiting: _conUserId.text,
                                         user: stories[index - 1]))));
                           },
                           child: ClipOval(

@@ -4,14 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
 import 'package:week/models/UserModel.dart';
+import 'package:week/models/follower_model.dart';
 import 'package:week/utils/bottom_nav_bar_widget.dart';
 import 'package:week/utils/outfit_widget.dart';
 import 'package:week/widgets/numbersWidget.dart';
 import 'package:week/widgets/profileWidget.dart';
 
 class VisitingProfile extends StatefulWidget {
+  final String idVisiting;
   final UserModel user;
-  const VisitingProfile({Key? key, required this.user}) : super(key: key);
+  const VisitingProfile(
+      {Key? key, required this.user, required this.idVisiting})
+      : super(key: key);
 
   @override
   State<VisitingProfile> createState() => _VisitingProfileState();
@@ -47,6 +51,13 @@ class _VisitingProfileState extends State<VisitingProfile> {
       _conPassword.text = sp.getString("password")!;
       loading = false;
     });
+  }
+
+  Future<void> startFollowing() async {
+    String date = DateTime.now().toString();
+    FollowerModel fmodel =
+        FollowerModel(widget.idVisiting, widget.user.user_id, date);
+    await dbHelper.follow(fmodel);
   }
 
   @override
@@ -89,6 +100,17 @@ class _VisitingProfileState extends State<VisitingProfile> {
                   height: 48,
                 ),
                 buildAbout(widget.user),
+                const SizedBox(
+                  height: 48,
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      textStyle: const TextStyle(fontSize: 20)),
+                  onPressed: () {
+                    startFollowing();
+                  },
+                  child: const Text('Follow'),
+                ),
                 const SizedBox(
                   height: 48,
                 ),
