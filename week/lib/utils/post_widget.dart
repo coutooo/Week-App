@@ -1,11 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:week/models/UserModel.dart';
+import 'package:week/models/posts_model.dart';
 
 import '../models/post_model.dart';
 import '../screens/postScreen.dart';
 
 class PostWidget extends StatefulWidget {
-  final int index;
-  const PostWidget({Key? key, required this.index}) : super(key: key);
+  final UserModel user;
+  final Publication pub;
+  final Photo photo;
+  const PostWidget(
+      {Key? key, required this.user, required this.pub, required this.photo})
+      : super(key: key);
 
   @override
   State<PostWidget> createState() => _PostWidgetState();
@@ -18,6 +26,7 @@ class _PostWidgetState extends State<PostWidget> {
   void initState() {
     super.initState();
     liked = false;
+    debugPrint(widget.photo.image.toString());
   }
 
   @override
@@ -52,18 +61,21 @@ class _PostWidgetState extends State<PostWidget> {
                             child: Image(
                               height: 50,
                               width: 50,
-                              image: AssetImage(
-                                  posts[widget.index].authorImageUrl),
+                              image: widget.user.imagePath == null
+                                  ? AssetImage('assets/images/flutter_logo.png')
+                                      as ImageProvider
+                                  : FileImage(
+                                      File(widget.user.imagePath.toString())),
                               fit: BoxFit.cover,
                             ),
                           )),
                         ),
                         title: Text(
-                          posts[widget.index].authorName,
+                          widget.user.user_name,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(
-                          posts[widget.index].timeAgo,
+                          widget.user.email,
                         ),
                         trailing: IconButton(
                             color: Colors.black,
@@ -78,13 +90,13 @@ class _PostWidgetState extends State<PostWidget> {
                           });
                         },
                         onTap: () {
-                          
+                          /*
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (_) => PostScreen(
                                         post: posts[widget.index],
-                                      )));
+                                      )));*/
                         },
                         child: Container(
                           margin: const EdgeInsets.all(10),
@@ -99,7 +111,8 @@ class _PostWidgetState extends State<PostWidget> {
                                     blurRadius: 8)
                               ],
                               image: DecorationImage(
-                                image: AssetImage(posts[widget.index].imageUrl),
+                                image: FileImage(
+                                    File(widget.photo.image.toString())),
                                 fit: BoxFit.fitWidth,
                               )),
                         )),
@@ -136,13 +149,14 @@ class _PostWidgetState extends State<PostWidget> {
                                 children: [
                                   IconButton(
                                     onPressed: () {
+                                      /*
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (_) => PostScreen(
                                               post: posts[widget.index],
                                             ),
-                                          ));
+                                          ));*/
                                     },
                                     icon: const Icon(Icons.chat),
                                     iconSize: 30,

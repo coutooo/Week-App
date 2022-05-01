@@ -56,7 +56,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
       var followersInfo = <UserModel>[];
       listF = res;
       for (var i = 0; i < res.length; i++) {
-        followersInfo.add(await dbHelper.getUserInfo(res[i].user_id));
+        followersInfo.add(await dbHelper.getUserInfo(res[i].followerID));
       }
 
       setState(() {
@@ -140,7 +140,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
                                 ),
                               ),
                               title: Text(list[index - 1].user_name),
-                              subtitle: Text(list[index - 1].about),
+                              subtitle: Text(list[index - 1].about.toString()),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,

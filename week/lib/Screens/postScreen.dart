@@ -76,42 +76,43 @@ class _PostScreenState extends State<PostScreen> {
                                       width: MediaQuery.of(context).size.width *
                                           0.8,
                                       child: ListTile(
-                                          leading: Container(
-                                            width: 50,
-                                            height: 50,
-                                            decoration: const BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                      color: Colors.black45,
-                                                      offset: Offset(0, 2),
-                                                      blurRadius: 6)
-                                                ]),
-                                            child: CircleAvatar(
-                                                child: ClipOval(
-                                              child: Image(
-                                                height: 50,
-                                                width: 50,
-                                                image: AssetImage(
-                                                    widget.post.authorImageUrl),
-                                                fit: BoxFit.cover,
-                                              ),
-                                            )),
-                                          ),
-                                          title: Text(
-                                            widget.post.authorName,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          subtitle: Text(
-                                            widget.post.timeAgo,
-                                          ),
+                                        leading: Container(
+                                          width: 50,
+                                          height: 50,
+                                          decoration: const BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    color: Colors.black45,
+                                                    offset: Offset(0, 2),
+                                                    blurRadius: 6)
+                                              ]),
+                                          child: CircleAvatar(
+                                              child: ClipOval(
+                                            child: Image(
+                                              height: 50,
+                                              width: 50,
+                                              image: AssetImage(
+                                                  widget.post.authorImageUrl),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          )),
+                                        ),
+                                        title: Text(
+                                          widget.post.authorName,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        subtitle: Text(
+                                          widget.post.timeAgo,
+                                        ), /*
                                           trailing: IconButton(
                                               color: Colors.black,
                                               onPressed: () => print('More'),
                                               icon: const Icon(
                                                 Icons.more_horiz,
-                                              ))))
+                                              ))*/
+                                      ))
                                 ]),
                             InkWell(
                                 onTap: () {

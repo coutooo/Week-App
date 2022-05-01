@@ -17,7 +17,7 @@ class DbHelper {
   static final DbHelper instance = DbHelper.initDb();
   DbHelper.initDb();
 
-  static const DB_Name = 'app11.db';
+  static const DB_Name = 'app12.db';
   static const String Table_User = 'user';
   static const String tableFollowers = 'follower';
   static const String tablePhotos = 'photo';
@@ -60,10 +60,10 @@ class DbHelper {
         ")");
 
     await db.execute("CREATE TABLE $tableFollowers ("
+        " followID TEXT PRIMARY KEY, "
         " $C_UserID TEXT, "
         " $followerID TEXT,"
-        " date TEXT,"
-        " PRIMARY KEY ($C_UserID)"
+        " date TEXT"
         ")");
 
     await db.execute("CREATE TABLE $tableOutfit ("
@@ -129,10 +129,11 @@ class DbHelper {
 
   Future<UserModel?> getUserInfo(String userId) async {
     var dbClient = await db;
+    debugPrint('Searching for pub of: ' + userId);
     var res = await dbClient!.rawQuery("SELECT * FROM $Table_User WHERE "
         "$C_UserID = '$userId'");
 
-    if (res.length > 0) {
+    if (res.isNotEmpty) {
       return UserModel.fromMap(res.first);
     }
 
@@ -162,7 +163,7 @@ class DbHelper {
   // photos db
   Future<Photo?> photoToday(String uid, String date, String nextDay) async {
     var dbClient = await db;
-    print('userid: ' + uid);
+    debugPrint('userid: ' + uid);
     final List<Map<String, dynamic>> pub = await dbClient!.rawQuery(
         "SELECT * FROM publication WHERE $C_UserID = ('$uid') and date >= date('$date') and date < date('$nextDay')");
 
@@ -258,6 +259,19 @@ class DbHelper {
     return null;
   }
 
+  Future<Publication?> getPub(String uid, String date, String nextDay) async {
+    final List<Map<String, dynamic>> pub = await _db!.rawQuery(
+        "SELECT * FROM publication WHERE $C_UserID='$uid' and date >= date('$date') and date < date('$nextDay') ORDER BY date DESC LIMIT 1");
+
+    if (pub.isNotEmpty) {
+      debugPrint('got posts!!!');
+      debugPrint(Publication.fromMap(pub.first).toString());
+      return Publication.fromMap(pub.first);
+    }
+
+    return null;
+  }
+
   Future<String?> getLastPhotoID() async {
     /*
     final List<Map<String, dynamic>> id =
@@ -272,6 +286,17 @@ class DbHelper {
 
     if (id.isNotEmpty) {
       return id.first['max_id'].toString();
+    }
+
+    return null;
+  }
+
+  Future<Photo?> getPhoto(String photoID) async {
+    final List<Map<String, dynamic>> photo =
+        await _db!.rawQuery("SELECT * FROM photo WHERE photoID='$photoID'");
+
+    if (photo.isNotEmpty) {
+      return Photo.fromMap(photo.first);
     }
 
     return null;

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
 import 'package:week/models/UserModel.dart';
+import 'package:week/models/posts_model.dart';
 import 'package:week/screens/following_screen.dart';
 import 'package:week/screens/visiting_profile.dart';
 import 'package:week/utils/bottom_nav_bar_widget.dart';
@@ -26,6 +28,9 @@ class _FeedPageState extends State<FeedPage> {
   var dbHelper;
   var user;
   var stories;
+  var pubs = [];
+  var pubsInfo = [];
+  var photos = [];
 
   bool loading = true;
 
@@ -34,6 +39,7 @@ class _FeedPageState extends State<FeedPage> {
     super.initState();
     dbHelper = DbHelper.instance;
     getUserData();
+    getPosts();
   }
 
   Future<void> getUserData() async {
@@ -49,7 +55,39 @@ class _FeedPageState extends State<FeedPage> {
       user = res;
       stories = res2;
       loading = false;
-      print("got an user: " + user.toString());
+      debugPrint("got an user: " + user.toString());
+    });
+  }
+
+  Future<void> getPosts() async {
+    final SharedPreferences sp = await _pref;
+    var followers = await dbHelper.getFollowers(sp.getString("user_id")!);
+    var posts = <Publication>[];
+    var temp;
+
+    var dateTime = DateTime.now();
+    var currDate = DateFormat("yyyy-MM-dd").format(dateTime);
+    final nextDay =
+        DateFormat("yyyy-MM-dd").format(dateTime.add(const Duration(days: 1)));
+
+    if (followers != null) {
+      debugPrint('Got followers: ' + followers.length.toString());
+      for (var i = 0; i < followers.length; i++) {
+        debugPrint(followers[i].toString());
+        temp =
+            await dbHelper.getPub(followers[i].followerID, currDate, nextDay);
+        if (temp != null) {
+          posts.add(temp);
+          pubsInfo.add(await dbHelper.getUserInfo(followers[i].followerID));
+          photos.add(await dbHelper.getPhoto(temp.photoId));
+        }
+      }
+    }
+
+    setState(() {
+      pubs = posts;
+      loading = false;
+      debugPrint("got posts: " + pubs.length.toString());
     });
   }
 
@@ -91,7 +129,7 @@ class _FeedPageState extends State<FeedPage> {
         ],
       ),
       body: loading
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : ListView(
@@ -102,7 +140,7 @@ class _FeedPageState extends State<FeedPage> {
                   height: 100.0,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: stories.length + 1,
+                    itemCount: stories == null ? 0 : stories.length + 1,
                     itemBuilder: (BuildContext context, int index) {
                       if (index == 0) {
                         return const SizedBox(width: 10);
@@ -146,8 +184,24 @@ class _FeedPageState extends State<FeedPage> {
                     },
                   ),
                 ),
-                PostWidget(index: 0),
-                PostWidget(index: 1),
+                Container(
+                  width: double.infinity,
+                  height: 700.0,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: pubs.length + 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == 0) {
+                        return const SizedBox(width: 10);
+                      }
+
+                      return PostWidget(
+                          user: pubsInfo[index - 1],
+                          pub: pubs[index - 1],
+                          photo: photos[index - 1]);
+                    },
+                  ),
+                ),
               ],
             ),
       bottomNavigationBar: BottomNavBar(),
