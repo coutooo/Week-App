@@ -64,15 +64,26 @@ class _VisitingProfileState extends State<VisitingProfile> {
     checkFollow();
   }
 
+  Future<void> stopFollowing() async {
+    // ultimo parametro nao vai ser usado nao interessa
+
+    FollowerModel fmodel =
+        FollowerModel(widget.idVisiting, widget.user.user_id,DateTime.now().toString());
+    await dbHelper.unfollow(fmodel);
+    checkFollow();
+  }
+
   Future<void> checkFollow() async {
     bool following =
         await dbHelper.checkIfFollowing(widget.idVisiting, widget.user.user_id);
     print(following);
-    if (following) {
-      isfollowing = "Following";
-    } else {
-      isfollowing = "Follow";
-    }
+    setState(() {
+      if (following) {
+        isfollowing = "Following";
+      } else {
+        isfollowing = "Follow";
+      }
+    });
     print(isfollowing);
   }
 
@@ -123,7 +134,12 @@ class _VisitingProfileState extends State<VisitingProfile> {
                   style: ElevatedButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 20)),
                   onPressed: () {
-                    startFollowing();
+                    if(isfollowing == "Following")
+                    {
+                      stopFollowing();
+                    }else{
+                      startFollowing();
+                    }  
                   },
                   child: Text(isfollowing),
                 ),
