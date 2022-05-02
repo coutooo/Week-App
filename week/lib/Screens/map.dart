@@ -43,7 +43,8 @@ class _mapScreenState extends State<mapScreen> {
                     color: Colors.purple,
                     iconSize: 35.0,
                     onPressed: () {
-                      print('Aveiro In');  
+                      print('Aveiro In'); 
+                      _onButtonPressed('Aveiro In'); 
                     },
                   ),
                 ),
@@ -59,7 +60,8 @@ class _mapScreenState extends State<mapScreen> {
                     color: Colors.purple,
                     iconSize: 35.0,
                     onPressed: () {
-                      print('the north face aveiro');  
+                      print('the north face aveiro');
+                      _onButtonPressed('The North Face Aveiro');  
                     },
                   ),
                 ),
@@ -75,11 +77,14 @@ class _mapScreenState extends State<mapScreen> {
                     color: Colors.purple,
                     iconSize: 35.0,
                     onPressed: () {
-                      print('Lefties');  
+                      print('Lefties');
+                      _onButtonPressed('Lefties');
                     },
                   ),
                 ),
+                
               ),
+              
               // Ana Sousa
               new Marker(
                 width: 45.0,
@@ -92,6 +97,7 @@ class _mapScreenState extends State<mapScreen> {
                     iconSize: 35.0,
                     onPressed: () {
                       print('Ana Sousa');  
+                      _onButtonPressed('Ana Sousa');
                     },
                   ),
                 ),
@@ -107,7 +113,8 @@ class _mapScreenState extends State<mapScreen> {
                     color: Colors.purple,
                     iconSize: 35.0,
                     onPressed: () {
-                      print('Quebra Mar Forum Aveiro');  
+                      print('Quebra Mar Forum Aveiro');
+                      _onButtonPressed('Quebra Mar Forum Aveiro');  
                     },
                   ),
                 ),
@@ -121,9 +128,10 @@ class _mapScreenState extends State<mapScreen> {
                   child: IconButton(
                     icon: Icon(Icons.location_on),
                     color: Colors.purple,
-                    iconSize: 35.0,
+                    iconSize: 30.0,
                     onPressed: () {
                       print('XTREME - OITA');  
+                      _onButtonPressed('XTREME - OITA');
                     },
                   ),
                 ),
@@ -134,4 +142,37 @@ class _mapScreenState extends State<mapScreen> {
       ),
     );
   }
+
+
+void _onButtonPressed(String text) {
+  showModalBottomSheet(
+    context: context, 
+    builder: (context) {
+      return Container(
+        color: Color(0xFF737373),
+        child: Container(
+          height: 60,
+          child: _buildBottomNavigationMenu(text),
+          decoration: BoxDecoration(
+            color: Theme.of(context).canvasColor,
+            borderRadius: BorderRadius.only(
+              topLeft: const Radius.circular(10),
+              topRight: const Radius.circular(10),
+            )
+          ),
+        ),
+      );
+    });
+}
+
+Column _buildBottomNavigationMenu(String text) {
+  return Column(
+      children: <Widget>[
+        ListTile(
+          leading: Icon(Icons.add_business_sharp),
+          title: Text(text),
+        ),
+      ],
+    );
+}
 }
