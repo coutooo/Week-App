@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
 import 'package:week/models/outfit_model.dart';
-import 'package:week/models/posts_model.dart';
 import 'package:week/screens/postScreen.dart';
 import 'package:week/utils/action_button.dart';
 import 'package:week/utils/bottom_nav_bar_widget.dart';
 import 'package:week/utils/expandable_fab.dart';
+import 'dart:math';
 
 class ClosetScreen extends StatefulWidget {
   const ClosetScreen({Key? key}) : super(key: key);
@@ -36,6 +35,7 @@ class _ClosetScreenState extends State<ClosetScreen> {
 
   List<Clothing> items = [];
   List<Clothing> auxItems = [];
+  List<Clothing> allItems = [];
   var dbHelper;
 
   var currUser;
@@ -75,6 +75,7 @@ class _ClosetScreenState extends State<ClosetScreen> {
       debugPrint('got clothes: ' + res.length.toString());
       setState(() {
         items = res;
+        allItems = res;
       });
     }
     var aux = {
@@ -160,6 +161,8 @@ class _ClosetScreenState extends State<ClosetScreen> {
         dropdownValue1 = _value;
         if (auxItems.isNotEmpty) {
           items = auxItems;
+        } else {
+          items = allItems;
         }
       });
     } else {
@@ -178,6 +181,8 @@ class _ClosetScreenState extends State<ClosetScreen> {
         disabledDropDown = true;
         if (auxItems.isNotEmpty) {
           items = auxItems;
+        } else {
+          items = allItems;
         }
       });
     } else {
@@ -185,6 +190,10 @@ class _ClosetScreenState extends State<ClosetScreen> {
       if (auxItems.isNotEmpty) {
         setState(() {
           items = auxItems;
+        });
+      } else {
+        setState(() {
+          items = allItems;
         });
       }
 
@@ -215,6 +224,35 @@ class _ClosetScreenState extends State<ClosetScreen> {
         items = temp;
       });
     }
+  }
+
+  void randomOutfit() {
+    var temp = <Clothing>[];
+    var rng = Random();
+    var index;
+    for (var i = 0; i < 5; i++) {
+      index = rng.nextInt(allItems.length);
+
+      if (!temp.contains(allItems[index])) {
+        temp.add(allItems[index]);
+      }
+    }
+
+    setState(() {
+      items = temp;
+    });
+  }
+
+  void randomOutfitFromTable() {
+    var temp = <Clothing>[];
+    var rng = Random();
+    var index = rng.nextInt(items.length);
+
+    temp.add(items[index]);
+
+    setState(() {
+      items = temp;
+    });
   }
 
   @override
@@ -315,18 +353,16 @@ class _ClosetScreenState extends State<ClosetScreen> {
             ),
           ),
           ActionButton(
-            onPressed: () {},
-            icon: const Icon(Icons.insert_photo),
-          ),
-          ActionButton(
-            onPressed: () {},
-            icon: const Icon(Icons.camera),
+            onPressed: () {
+              randomOutfit();
+            },
+            icon: const Icon(Icons.add_location),
           ),
           ActionButton(
             onPressed: () {
-              _showMyDialog();
+              randomOutfitFromTable();
             },
-            icon: const Icon(Icons.search),
+            icon: const Icon(Icons.cabin),
           ),
         ],
       ),
