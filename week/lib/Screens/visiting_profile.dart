@@ -123,9 +123,9 @@ class _VisitingProfileState extends State<VisitingProfile> {
                   height: 24,
                 ),
                 NumbersWidget(),
-                const SizedBox(
-                  height: 48,
-                ),
+                Padding(
+                  padding: const EdgeInsets.all(25),
+                  child: Column(children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       primary: Colors.purple, // Background color
@@ -143,6 +143,8 @@ class _VisitingProfileState extends State<VisitingProfile> {
                   },
                   child: Text(isfollowing),
                 ),
+                  ]),
+                  ),
                 buildAbout(widget.user),
                 const SizedBox(
                   height: 48,
