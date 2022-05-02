@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
+import 'package:week/Screens/visiting_profile.dart';
 import 'package:week/models/UserModel.dart';
 import 'package:week/models/follower_model.dart';
 import 'package:week/utils/bottom_nav_bar_widget.dart';
@@ -66,6 +67,10 @@ class _FollowingScreenState extends State<FollowingScreen> {
     }
   }
 
+  void getFromList() async {
+
+  }
+
   void unfollow(int index) async {
     await dbHelper.unfollow(listF[index]);
     setState(() {
@@ -122,6 +127,12 @@ class _FollowingScreenState extends State<FollowingScreen> {
                         splashColor: Colors.blue.withAlpha(30),
                         onTap: () {
                           debugPrint('Card tapped.');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) => VisitingProfile(
+                                          idVisiting: (index-1).toString(),
+                                          user: list[index-1]))));
                         },
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
