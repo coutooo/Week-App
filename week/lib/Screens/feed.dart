@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
+import 'package:week/Screens/map.dart';
 import 'package:week/models/UserModel.dart';
 import 'package:week/models/posts_model.dart';
 import 'package:week/screens/following_screen.dart';
@@ -115,15 +116,15 @@ class _FeedPageState extends State<FeedPage> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.portrait),
+            icon: const Icon(Icons.map),
             color: Colors.black,
-            tooltip: 'Profile',
+            tooltip: 'Map',
             onPressed: () {
               /*
               ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('This is a snackbar')));*/
               Navigator.push(context,
-                  MaterialPageRoute(builder: ((context) => ProfilePage())));
+                  MaterialPageRoute(builder: ((context) => mapScreen())));
             },
           ),
         ],
