@@ -346,7 +346,7 @@ class DbHelper {
     return null;
   }
 
-  Future<bool> checkIfFollowing(String followid, String currentid) async {
+  Future<bool> checkIfFollowing(String currentid, String followid) async {
     final List<Map<String, dynamic>> users = await _db!.rawQuery(
         "SELECT * FROM $tableFollowers WHERE $followerID ='$followid' and user_id='$currentid'");
 
