@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class NumbersWidget extends StatelessWidget {
-  const NumbersWidget({Key? key}) : super(key: key);
+  final String nFollowing;
+
+  const NumbersWidget(this.nFollowing,  {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Row(
@@ -9,7 +11,7 @@ class NumbersWidget extends StatelessWidget {
         children: <Widget>[
           buildButton(context, '4.8', 'Ranking'),
           buildDivider(),
-          buildButton(context, '35', 'Following'),
+          buildButton(context, nFollowing, 'Following'),
           buildDivider(),
           buildButton(context, '50', 'Followers'),
         ],

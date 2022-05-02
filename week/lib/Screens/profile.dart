@@ -30,6 +30,8 @@ class _ProfilePageState extends State<ProfilePage> {
   var dbHelper;
   var user;
 
+  
+  int nFollowings = 0;
   bool loading = true;
 
   @override
@@ -37,6 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     dbHelper = DbHelper.instance;
     getUserData();
+    getNFollowingers();
   }
 
   Future<void> getUserData() async {
@@ -52,6 +55,15 @@ class _ProfilePageState extends State<ProfilePage> {
       loading = false;
       print("got an user: " + user.toString());
     });
+  }
+
+    Future<void> getNFollowingers() async {
+    final SharedPreferences sp = await _pref;
+    int nFollowing = await dbHelper.getNFollowing(
+        sp.getString("user_id")!);
+
+    nFollowings = nFollowing;
+    print("nFollowings"+nFollowings.toString());
   }
 
   @override
@@ -110,7 +122,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(
                   height: 24,
                 ),
-                NumbersWidget(),
+                NumbersWidget(nFollowings.toString()),
                 const SizedBox(
                   height: 48,
                 ),
