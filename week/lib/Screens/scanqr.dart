@@ -17,8 +17,6 @@ class _ScanScreenState extends State<ScanScreen> {
 
   var dbHelper;
 
-
-
   @override
   void initState() {
     super.initState();
@@ -43,7 +41,7 @@ class _ScanScreenState extends State<ScanScreen> {
           ),
           ElevatedButton(
             onPressed: scanQR,
-              style: ElevatedButton.styleFrom(
+            style: ElevatedButton.styleFrom(
               primary: Colors.purple, // Background color
               onPrimary: Colors.white, // Text Color (Foreground color)
             ),
@@ -52,7 +50,7 @@ class _ScanScreenState extends State<ScanScreen> {
           SizedBox(width: width),
           ElevatedButton(
             onPressed: getUserScannedData,
-              style: ElevatedButton.styleFrom(
+            style: ElevatedButton.styleFrom(
               primary: Colors.purple, // Background color
               onPrimary: Colors.white, // Text Color (Foreground color)
             ),
@@ -77,16 +75,16 @@ class _ScanScreenState extends State<ScanScreen> {
       });
     }
   }
+
   Future<void> getUserScannedData() async {
     final SharedPreferences sp = await _pref;
-    final res = await dbHelper.getUserInfo(
-        qrString);
-
-    Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                    builder: ((context) => VisitingProfile(
-                        idVisiting: qrString,
-                        user: res))));
+    final res = await dbHelper.getUserInfo(qrString);
+    if (res != null) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: ((context) =>
+                  VisitingProfile(idVisiting: qrString, user: res))));
+    }
   }
 }
