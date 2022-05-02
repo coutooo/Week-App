@@ -33,6 +33,10 @@ class _qrScreen extends State<qrScreen> {
                   ),
                 );
               },
+              style: ElevatedButton.styleFrom(
+              primary: Colors.purple, // Background color
+              onPrimary: Colors.white, // Text Color (Foreground color)
+            ),
               child: Text("Generate QR"),
             ),
             ElevatedButton(
@@ -44,6 +48,10 @@ class _qrScreen extends State<qrScreen> {
                   ),
                 );
               },
+              style: ElevatedButton.styleFrom(
+              primary: Colors.purple, // Background color
+              onPrimary: Colors.white, // Text Color (Foreground color)
+            ),
               child: Text("Scan QR"),
             ),
           ],

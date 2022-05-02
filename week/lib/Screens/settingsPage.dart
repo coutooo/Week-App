@@ -109,7 +109,6 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           buildAccountOption(context, 'Account Settings'),
           buildQrCodeOption(context, 'QrCode'),
-          buildAccountOption(context, 'Language'),
           const SizedBox(
             height: 40,
           ),

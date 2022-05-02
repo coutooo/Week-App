@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:week/Screens/visiting_profile.dart';
+
+import '../DatabaseHandler/DbHelper.dart';
 
 class ScanScreen extends StatefulWidget {
   @override
@@ -7,7 +11,20 @@ class ScanScreen extends StatefulWidget {
 }
 
 class _ScanScreenState extends State<ScanScreen> {
+  Future<SharedPreferences> _pref = SharedPreferences.getInstance();
   String qrString = "Not Scanned";
+  var stories;
+
+  var dbHelper;
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    dbHelper = DbHelper.instance;
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -22,13 +39,25 @@ class _ScanScreenState extends State<ScanScreen> {
         children: [
           Text(
             qrString,
-            style: TextStyle(color: Colors.blue, fontSize: 30),
+            style: TextStyle(color: Colors.purple, fontSize: 30),
           ),
           ElevatedButton(
             onPressed: scanQR,
+              style: ElevatedButton.styleFrom(
+              primary: Colors.purple, // Background color
+              onPrimary: Colors.white, // Text Color (Foreground color)
+            ),
             child: Text("Scan QR Code"),
           ),
           SizedBox(width: width),
+          ElevatedButton(
+            onPressed: getUserScannedData,
+              style: ElevatedButton.styleFrom(
+              primary: Colors.purple, // Background color
+              onPrimary: Colors.white, // Text Color (Foreground color)
+            ),
+            child: Text("Visit Profile"),
+          ),
         ],
       ),
     );
@@ -47,5 +76,17 @@ class _ScanScreenState extends State<ScanScreen> {
         qrString = "unable to read the qr";
       });
     }
+  }
+  Future<void> getUserScannedData() async {
+    final SharedPreferences sp = await _pref;
+    final res = await dbHelper.getUserInfo(
+        qrString);
+
+    Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                    builder: ((context) => VisitingProfile(
+                        idVisiting: qrString,
+                        user: res))));
   }
 }
