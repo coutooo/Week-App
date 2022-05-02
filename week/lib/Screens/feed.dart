@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
+import 'package:week/Screens/following_screen.dart';
 import 'package:week/Screens/map.dart';
+import 'package:week/Screens/visiting_profile.dart';
 import 'package:week/models/UserModel.dart';
 import 'package:week/models/posts_model.dart';
-import 'package:week/screens/following_screen.dart';
-import 'package:week/screens/visiting_profile.dart';
 import 'package:week/utils/bottom_nav_bar_widget.dart';
 import 'profile.dart';
 import '../utils/post_widget.dart';
@@ -108,10 +108,10 @@ class _FeedPageState extends State<FeedPage> {
         leading: IconButton(
           icon: const Icon(Icons.people),
           color: Colors.black,
-          tooltip: 'Show Snackbar',
+          tooltip: 'Friends List',
           onPressed: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: ((context) => FollowingScreen())));
+                MaterialPageRoute(builder: ((context) => FollowingScreen(user_id: _conUserId.text))));
           },
         ),
         actions: <Widget>[

@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../Screens/following_screen.dart';
+
 class NumbersWidget extends StatelessWidget {
-  const NumbersWidget({Key? key}) : super(key: key);
+  final String nFollowing;
+  final bool profile;
+  final String user_id;
+
+  const NumbersWidget(this.nFollowing, this.profile,this.user_id,  {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Row(
@@ -9,9 +15,9 @@ class NumbersWidget extends StatelessWidget {
         children: <Widget>[
           buildButton(context, '4.8', 'Ranking'),
           buildDivider(),
-          buildButton(context, '35', 'Following'),
+          buildButton(context, nFollowing, 'Following'),
           buildDivider(),
-          buildButton(context, '50', 'Followers'),
+          buildButton(context, '2', 'Followers'),
         ],
       );
   Widget buildDivider() => Container(
@@ -22,7 +28,21 @@ class NumbersWidget extends StatelessWidget {
   Widget buildButton(BuildContext context, String value, String text) =>
       MaterialButton(
         padding: EdgeInsets.symmetric(vertical: 4),
-        onPressed: () {},
+        onPressed: () {
+          if(profile)
+          {
+            print("true profile");
+            Navigator.push(context,
+                MaterialPageRoute(builder: ((context) => FollowingScreen(user_id: user_id,))));
+          }
+          else
+          {
+            print("false profile");
+            Navigator.push(context,
+                MaterialPageRoute(builder: ((context) => FollowingScreen(user_id: user_id,))));
+
+          }
+        },
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         child: Column(
           mainAxisSize: MainAxisSize.min,

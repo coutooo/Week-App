@@ -9,6 +9,7 @@ import 'package:week/utils/bottom_nav_bar_widget.dart';
 import 'package:week/utils/outfit_widget.dart';
 import 'package:week/widgets/numbersWidget.dart';
 import 'package:week/widgets/profileWidget.dart';
+import '../Screens/following_screen.dart';
 
 class VisitingProfile extends StatefulWidget {
   final String idVisiting;
@@ -35,12 +36,15 @@ class _VisitingProfileState extends State<VisitingProfile> {
 
   bool loading = true;
 
+  int nFollowings = 0;
+
   @override
   void initState() {
     super.initState();
     dbHelper = DbHelper.instance;
     getUserData();
     checkFollow();
+    getNFollowingers();
   }
 
   Future<void> getUserData() async {
@@ -54,6 +58,14 @@ class _VisitingProfileState extends State<VisitingProfile> {
       _conPassword.text = sp.getString("password")!;
       loading = false;
     });
+  }
+  Future<void> getNFollowingers() async {
+    final SharedPreferences sp = await _pref;
+    int nFollowing = await dbHelper.getNFollowing(
+        widget.user.user_id);
+
+    nFollowings = nFollowing;
+    print("nFollowings"+nFollowings.toString());
   }
 
   Future<void> startFollowing() async {
@@ -122,7 +134,7 @@ class _VisitingProfileState extends State<VisitingProfile> {
                 const SizedBox(
                   height: 24,
                 ),
-                NumbersWidget(),
+                NumbersWidget(nFollowings.toString(),false,widget.user.user_id),
                 Padding(
                   padding: const EdgeInsets.all(25),
                   child: Column(children: [
