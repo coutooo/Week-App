@@ -17,20 +17,33 @@ class ClosetScreen extends StatefulWidget {
 }
 
 class _ClosetScreenState extends State<ClosetScreen> {
-  final columns = ['Type', 'Color', 'Season', 'Brand', 'Store', 'Date'];
+  final columns = <String>['Type', 'Color', 'Season', 'Brand', 'Store', 'Date'];
+  final columns2 = <String>[
+    'Type',
+    'Color',
+    'Season',
+    'Brand',
+    'Store',
+    'Date',
+    'Reset'
+  ];
 
   bool loading = true;
 
   Future<SharedPreferences> _pref = SharedPreferences.getInstance();
   final _conUserId = TextEditingController();
+  String dropdownValue1 = 'Type';
 
   List<Clothing> items = [];
+  List<Clothing> auxItems = [];
   var dbHelper;
 
   var currUser;
   var pubPhoto;
   var pubUser;
   var randomPub;
+
+  var map;
 
   int? sortColumnIndex;
   bool isAscending = false;
@@ -64,8 +77,38 @@ class _ClosetScreenState extends State<ClosetScreen> {
         items = res;
       });
     }
+    var aux = {
+      "Type": [],
+      "Brand": [],
+      "Season": [],
+      "Store": [],
+      "Color": [],
+      "Date": []
+    };
+    var temp1 = [];
+    var temp2 = [];
+    var temp3 = [];
+    var temp4 = [];
+    var temp5 = [];
+    var temp6 = [];
+    for (var i = 0; i < res.length; i++) {
+      debugPrint(res[i].clothType);
+      temp1.add(res[i].clothType);
+      temp2.add(res[i].brand);
+      temp3.add(res[i].season);
+      temp4.add(res[i].store);
+      temp5.add(res[i].color);
+      temp6.add(res[i].date);
+    }
+    aux["Type"] = temp1;
+    aux["Brand"] = temp2;
+    aux["Season"] = temp3;
+    aux["Store"] = temp4;
+    aux["Color"] = temp5;
+    aux["Date"] = temp6;
     setState(() {
       loading = false;
+      map = aux;
     });
   }
 
@@ -93,9 +136,89 @@ class _ClosetScreenState extends State<ClosetScreen> {
     });
   }
 
+  List<DropdownMenuItem<String>> menuItems = [];
+  bool disabledDropDown = true;
+
+  void populate(String key) {
+    for (var item in map[key]) {
+      debugPrint(item);
+      menuItems.add(DropdownMenuItem(
+        child: Text(item),
+        value: item,
+      ));
+    }
+    menuItems.add(const DropdownMenuItem(
+      child: Text('Reset'),
+      value: 'Reset',
+    ));
+  }
+
+  void valueChanged(_value) {
+    menuItems = [];
+    if (_value == 'Reset') {
+      setState(() {
+        dropdownValue1 = _value;
+        if (auxItems.isNotEmpty) {
+          items = auxItems;
+        }
+      });
+    } else {
+      populate(_value.toString());
+      setState(() {
+        dropdownValue1 = _value;
+        disabledDropDown = false;
+      });
+    }
+  }
+
+  void secondValueChanged(_value) {
+    if (_value == 'Reset') {
+      setState(() {
+        dropdownValue1 = _value;
+        disabledDropDown = true;
+        if (auxItems.isNotEmpty) {
+          items = auxItems;
+        }
+      });
+    } else {
+      var temp = <Clothing>[];
+      if (auxItems.isNotEmpty) {
+        setState(() {
+          items = auxItems;
+        });
+      }
+
+      for (var i = 0; i < items.length; i++) {
+        var t = items[i].toMap();
+        debugPrint(t.toString());
+        var s;
+        if (dropdownValue1 == "Type") {
+          s = "clothType";
+        } else if (dropdownValue1 == "Brand") {
+          s = "brand";
+        } else if (dropdownValue1 == "Season") {
+          s = "season";
+        } else if (dropdownValue1 == "Store") {
+          s = "store";
+        } else if (dropdownValue1 == "Color") {
+          s = "color";
+        } else if (dropdownValue1 == "Date") {
+          s = "date";
+        }
+        if (t[s] == _value) {
+          temp.add(items[i]);
+        }
+      }
+
+      setState(() {
+        auxItems = items;
+        items = temp;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    String dropdownValue = 'One';
     return Scaffold(
       backgroundColor: const Color(0xFFEDF0F6),
       appBar: AppBar(
@@ -116,6 +239,40 @@ class _ClosetScreenState extends State<ClosetScreen> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          DropdownButton<String>(
+            value: dropdownValue1,
+            icon: const Icon(Icons.arrow_downward),
+            elevation: 16,
+            style: const TextStyle(color: Colors.deepPurple),
+            underline: Container(
+              height: 2,
+              color: Colors.deepPurpleAccent,
+            ),
+            onChanged: (_value) => valueChanged(_value),
+            items: columns2.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+          DropdownButton<String>(
+            hint: const Text('Select One'),
+            disabledHint: const Text("Select Column"),
+            icon: const Icon(Icons.arrow_downward),
+            elevation: 16,
+            style: const TextStyle(color: Colors.deepPurple),
+            underline: Container(
+              height: 2,
+              color: Colors.deepPurpleAccent,
+            ),
+            onChanged: disabledDropDown
+                ? null
+                : (_value) => secondValueChanged(_value),
+            items: menuItems,
+          )
+        ],
       ),
       body: loading
           ? const Center(
@@ -125,42 +282,10 @@ class _ClosetScreenState extends State<ClosetScreen> {
               physics: BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  child: Container(
-                    child: Column(
-                      children: [
-                        Row(children: [
-                          DropdownButton<String>(
-                            value: dropdownValue,
-                            icon: const Icon(Icons.arrow_downward),
-                            elevation: 16,
-                            style: const TextStyle(color: Colors.deepPurple),
-                            underline: Container(
-                              height: 2,
-                              color: Colors.deepPurpleAccent,
-                            ),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                dropdownValue = newValue!;
-                              });
-                            },
-                            items: <String>['One', 'Two', 'Free', 'Four']
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                        ]),
-                        buildDataTable(items),
-                      ],
-                    ),
-                  )),
+                physics: BouncingScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                child: buildDataTable(items),
+              ),
             ),
       floatingActionButton: ExpandableFab(
         inCloset: true,
