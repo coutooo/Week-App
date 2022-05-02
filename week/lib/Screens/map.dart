@@ -14,7 +14,8 @@ class _mapScreenState extends State<mapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new AppBar(title: new Text('Maps')),
+      appBar: new AppBar(title: new Text('Maps'),
+      backgroundColor: Color.fromARGB(255, 100, 6, 113),),
       body: new FlutterMap(
         options: new MapOptions(
           center: new LatLng(40.64427,-8.64554),
