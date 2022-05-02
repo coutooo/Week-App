@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:week/utils/expanding_action_button.dart';
 
 class ExpandableFab extends StatefulWidget {
-  const ExpandableFab({
+  bool inCloset;
+  ExpandableFab({
     Key? key,
     this.initialOpen,
     required this.distance,
     required this.children,
+    required this.inCloset,
   }) : super(key: key);
 
   final bool? initialOpen;
@@ -133,7 +135,9 @@ class _ExpandableFabState extends State<ExpandableFab>
           child: FloatingActionButton(
             backgroundColor: Colors.purple,
             onPressed: _toggle,
-            child: const Icon(Icons.create),
+            child: !widget.inCloset
+                ? const Icon(Icons.create)
+                : const Icon(Icons.star),
           ),
         ),
       ),

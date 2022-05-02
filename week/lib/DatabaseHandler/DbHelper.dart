@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -402,6 +403,19 @@ class DbHelper {
     return null;
   }
 
+  Future<Publication?> getRandomPost(String uid) async {
+    final List<Map<String, dynamic>> pub = await _db!.rawQuery(
+        "SELECT * FROM publication WHERE $C_UserID!='$uid' ORDER BY RANDOM() LIMIT 1");
+
+    if (pub.isNotEmpty) {
+      debugPrint('got post!!!');
+      debugPrint(Publication.fromMap(pub.first).toString());
+      return Publication.fromMap(pub.first);
+    }
+
+    return null;
+  }
+
   void insertPublication(Publication publication) async {
     await _db!.insert(
       'publication',
@@ -445,8 +459,8 @@ class DbHelper {
 
   Future<List<Clothing>?> getAllClothingFromUser(String uid) async {
     var dbClient = await db;
-    final List<Map<String, dynamic>> clothing = await dbClient!.rawQuery(
-        "SELECT * FROM $tableOutfit WHERE $C_UserID='$uid'");
+    final List<Map<String, dynamic>> clothing = await dbClient!
+        .rawQuery("SELECT * FROM $tableOutfit WHERE $C_UserID='$uid'");
     debugPrint('uid: ' + uid);
 
     if (clothing.isNotEmpty) {
@@ -454,7 +468,19 @@ class DbHelper {
       var list = <Clothing>[];
       for (var item in clothing) {
         debugPrint(Clothing.fromMap(item).toString());
-        list.add(Clothing.fromMap(item));
+        var aux = Clothing.fromMap(item);
+        Clothing temp = Clothing(
+            user_id: aux.user_id,
+            photoID: aux.photoID,
+            date: DateFormat("dd-MM-yyyy")
+                .format(DateTime.parse(aux.date))
+                .toString(),
+            clothType: aux.clothType,
+            brand: aux.brand,
+            season: aux.season,
+            store: aux.store,
+            color: aux.color);
+        list.add(temp);
       }
       return list;
     }

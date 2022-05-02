@@ -342,6 +342,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
               ),
             ),
             floatingActionButton: ExpandableFab(
+              inCloset: false,
               distance: 112.0,
               children: [
                 ActionButton(
@@ -511,6 +512,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 onClicked: () => removeItem(index),
               )),
       floatingActionButton: ExpandableFab(
+        inCloset: false,
         distance: 112.0,
         children: [
           ActionButton(
