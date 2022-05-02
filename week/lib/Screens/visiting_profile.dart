@@ -126,13 +126,13 @@ class _VisitingProfileState extends State<VisitingProfile> {
                 const SizedBox(
                   height: 48,
                 ),
-                buildAbout(widget.user),
-                const SizedBox(
-                  height: 48,
-                ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      textStyle: const TextStyle(fontSize: 20)),
+                      primary: Colors.purple, // Background color
+                      onPrimary: Colors.white, // Text Color (Foreground color)
+                      textStyle: const TextStyle(fontSize: 20)
+                      
+                      ),
                   onPressed: () {
                     if(isfollowing == "Following")
                     {
@@ -142,6 +142,10 @@ class _VisitingProfileState extends State<VisitingProfile> {
                     }  
                   },
                   child: Text(isfollowing),
+                ),
+                buildAbout(widget.user),
+                const SizedBox(
+                  height: 48,
                 ),
                 const SizedBox(
                   height: 48,
