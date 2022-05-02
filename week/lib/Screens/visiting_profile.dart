@@ -31,6 +31,8 @@ class _VisitingProfileState extends State<VisitingProfile> {
   File? image;
   var dbHelper;
 
+  String isfollowing = "Follow";
+
   bool loading = true;
 
   @override
@@ -38,6 +40,7 @@ class _VisitingProfileState extends State<VisitingProfile> {
     super.initState();
     dbHelper = DbHelper.instance;
     getUserData();
+    checkFollow();
   }
 
   Future<void> getUserData() async {
@@ -58,6 +61,20 @@ class _VisitingProfileState extends State<VisitingProfile> {
     FollowerModel fmodel =
         FollowerModel(widget.idVisiting, widget.user.user_id, date);
     await dbHelper.follow(fmodel);
+    checkFollow();
+  }
+
+  Future<void> checkFollow() async {
+    bool following = await dbHelper.checkIfFollowing(widget.idVisiting,widget.user.user_id);
+    print(following);
+    if(following)
+    {
+      isfollowing = "Following";
+    }
+    else{
+      isfollowing = "Follow";
+    }
+       
   }
 
   @override
@@ -109,7 +126,7 @@ class _VisitingProfileState extends State<VisitingProfile> {
                   onPressed: () {
                     startFollowing();
                   },
-                  child: const Text('Follow'),
+                  child: Text(isfollowing),
                 ),
                 const SizedBox(
                   height: 48,
