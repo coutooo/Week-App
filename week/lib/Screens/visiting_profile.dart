@@ -65,16 +65,15 @@ class _VisitingProfileState extends State<VisitingProfile> {
   }
 
   Future<void> checkFollow() async {
-    bool following = await dbHelper.checkIfFollowing(widget.idVisiting,widget.user.user_id);
+    bool following =
+        await dbHelper.checkIfFollowing(widget.user.user_id, widget.idVisiting);
     print(following);
-    if(following)
-    {
+    if (following) {
       isfollowing = "Following";
-    }
-    else{
+    } else {
       isfollowing = "Follow";
     }
-       
+    print(isfollowing);
   }
 
   @override
