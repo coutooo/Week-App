@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
 import 'package:week/models/UserModel.dart';
+import 'package:week/models/comment_model.dart';
+import 'package:week/models/like_model.dart';
 import 'package:week/models/outfit_model.dart';
 import 'package:week/models/posts_model.dart';
 import 'package:week/models/user.dart';
@@ -32,27 +34,61 @@ class _PostScreenState extends State<PostScreen> {
   User user = UserPreferences.myUser;
   Future<SharedPreferences> _pref = SharedPreferences.getInstance();
   final _conUserId = TextEditingController();
-
-  bool liked = false;
+  bool loading = true;
+  var liked = false;
+  var nLikes;
   bool showList = false;
   var dbHelper;
 
-  final listKey = GlobalKey<AnimatedListState>();
+  //final listKey = GlobalKey<AnimatedListState>();
   List<Clothing> items = [];
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  //GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  List<Comment> coms = [];
+
+  final myController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    myController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
     dbHelper = DbHelper.instance;
     getUserData();
+    getLike();
+    getNLike();
     getList();
+    getComs();
   }
 
   Future<void> getUserData() async {
     final SharedPreferences sp = await _pref;
     setState(() {
       _conUserId.text = sp.getString("user_id")!;
+    });
+  }
+
+  void getLike() async {
+    debugPrint('getting like');
+    var res = await dbHelper.getLike(
+        widget.currentUser.user_id, widget.pub.publicationID.toString());
+
+    setState(() {
+      liked = res;
+    });
+  }
+
+  void getNLike() async {
+    debugPrint('getting like');
+    var res = await dbHelper.getNLikes(widget.pub.publicationID.toString());
+
+    setState(() {
+      nLikes = res;
     });
   }
 
@@ -68,6 +104,56 @@ class _PostScreenState extends State<PostScreen> {
     }
   }
 
+  void getComs() async {
+    debugPrint('getting coms');
+    var res = await dbHelper.getComments(widget.pub.publicationID);
+    if (res != null) {
+      debugPrint('got coms: ' + res.length.toString());
+      for (var i = 0; i < res.length; i++) {
+        debugPrint('' + res[i].toString());
+      }
+      setState(() {
+        coms = res;
+      });
+    }
+    setState(() {
+      loading = false;
+    });
+  }
+
+  void addComment() async {
+    debugPrint('adding comment');
+    Comment com = Comment(
+        user_id: _conUserId.text,
+        publicationID: widget.pub.publicationID.toString(),
+        commentText: myController.text);
+    await dbHelper.addComment(com);
+    var res = await dbHelper.getComments(widget.pub.publicationID);
+
+    if (res != null) {
+      debugPrint('got coms: ' + res.length.toString());
+      setState(() {
+        coms = res;
+      });
+    }
+    myController.clear();
+  }
+
+  void likePost() async {
+    debugPrint('liking post');
+    var val = 0;
+    if (liked) {
+      val = 1;
+    }
+    debugPrint('valor: ' + val.toString());
+
+    LikeModel like = LikeModel(
+        _conUserId.text, widget.pub.publicationID.toString(), val.toString());
+
+    await dbHelper.addLike(like);
+    getNLike();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,174 +162,194 @@ class _PostScreenState extends State<PostScreen> {
           physics: AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              Container(
-                  padding: const EdgeInsets.only(top: 40),
-                  width: double.infinity,
-                  height: 600,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(25)),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Column(
-                          children: [
-                            Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  IconButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    iconSize: 30,
-                                    icon: const Icon(Icons.arrow_back),
-                                    color: Colors.black,
-                                  ),
-                                  Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.8,
-                                      child: ListTile(
-                                        leading: Container(
-                                          width: 50,
-                                          height: 50,
-                                          decoration: const BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    color: Colors.black45,
-                                                    offset: Offset(0, 2),
-                                                    blurRadius: 6)
-                                              ]),
-                                          child: CircleAvatar(
-                                              child: ClipOval(
-                                            child: Image(
-                                              height: 50,
+              loading
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Container(
+                      padding: const EdgeInsets.only(top: 40),
+                      width: double.infinity,
+                      height: 600,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25)),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Column(
+                              children: [
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        iconSize: 30,
+                                        icon: const Icon(Icons.arrow_back),
+                                        color: Colors.black,
+                                      ),
+                                      Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.8,
+                                          child: ListTile(
+                                            leading: Container(
                                               width: 50,
-                                              image: widget.user.imagePath ==
-                                                      null
-                                                  ? const AssetImage(
-                                                          'assets/images/flutter_logo.png')
-                                                      as ImageProvider
-                                                  : FileImage(File(widget
-                                                      .user.imagePath
-                                                      .toString())),
-                                              fit: BoxFit.cover,
+                                              height: 50,
+                                              decoration: const BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        color: Colors.black45,
+                                                        offset: Offset(0, 2),
+                                                        blurRadius: 6)
+                                                  ]),
+                                              child: CircleAvatar(
+                                                  child: ClipOval(
+                                                child: Image(
+                                                  height: 50,
+                                                  width: 50,
+                                                  image: widget
+                                                              .user.imagePath ==
+                                                          null
+                                                      ? const AssetImage(
+                                                              'assets/images/flutter_logo.png')
+                                                          as ImageProvider
+                                                      : FileImage(File(widget
+                                                          .user.imagePath
+                                                          .toString())),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              )),
                                             ),
-                                          )),
-                                        ),
-                                        title: Text(
-                                          widget.user.user_name,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        subtitle: Text(
-                                          widget.user.email,
-                                        ), /*
+                                            title: Text(
+                                              widget.user.user_name,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            subtitle: Text(
+                                              widget.user.email,
+                                            ), /*
                                           trailing: IconButton(
                                               color: Colors.black,
                                               onPressed: () => print('More'),
                                               icon: const Icon(
                                                 Icons.more_horiz,
                                               ))*/
-                                      ))
-                                ]),
-                            InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    showList = !showList;
-                                    getList();
-                                  });
-                                },
-                                onDoubleTap: () {
-                                  setState(() {
-                                    liked = !liked;
-                                  });
-                                },
-                                child: /*showList
+                                          ))
+                                    ]),
+                                InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        showList = !showList;
+                                        getList();
+                                      });
+                                    },
+                                    onDoubleTap: () {
+                                      setState(() {
+                                        liked = !liked;
+                                      });
+                                      likePost();
+                                    },
+                                    child: /*showList
                                     ? Container()
                                     :*/
-                                    Container(
-                                  margin: const EdgeInsets.all(10),
-                                  width: double.infinity,
-                                  height: 400,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(25),
-                                      boxShadow: const [
-                                        BoxShadow(
-                                            color: Colors.black45,
-                                            offset: Offset(0, 5),
-                                            blurRadius: 8)
-                                      ],
-                                      image: DecorationImage(
-                                          image: FileImage(File(
-                                              widget.photo.image.toString())),
-                                          fit: BoxFit.fitWidth)),
-                                )),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
+                                        Container(
+                                      margin: const EdgeInsets.all(10),
+                                      width: double.infinity,
+                                      height: 400,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          boxShadow: const [
+                                            BoxShadow(
+                                                color: Colors.black45,
+                                                offset: Offset(0, 5),
+                                                blurRadius: 8)
+                                          ],
+                                          image: DecorationImage(
+                                              image: FileImage(File(widget
+                                                  .photo.image
+                                                  .toString())),
+                                              fit: BoxFit.fitWidth)),
+                                    )),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Row(
                                         children: [
-                                          IconButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                liked = !liked;
-                                              });
-                                            },
-                                            icon: liked
-                                                ? Icon(Icons.favorite_outlined)
-                                                : Icon(Icons.favorite_border),
-                                            iconSize: 30,
+                                          Row(
+                                            children: [
+                                              IconButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    liked = !liked;
+                                                  });
+                                                  likePost();
+                                                },
+                                                icon: liked
+                                                    ? Icon(
+                                                        Icons.favorite_outlined)
+                                                    : Icon(
+                                                        Icons.favorite_border),
+                                                iconSize: 30,
+                                              ),
+                                              Text(
+                                                nLikes,
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              )
+                                            ],
                                           ),
-                                          const Text(
-                                            '2,515',
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600),
-                                          )
+                                          const SizedBox(width: 20),
+                                          Row(
+                                            children: [
+                                              IconButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    showList = !showList;
+                                                    getList();
+                                                  });
+                                                },
+                                                icon: const Icon(Icons.chat),
+                                                iconSize: 30,
+                                              ),
+                                              Text(
+                                                coms.length.toString(),
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              )
+                                            ],
+                                          ),
                                         ],
                                       ),
-                                      const SizedBox(width: 20),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            onPressed: () {},
-                                            icon: const Icon(Icons.chat),
-                                            iconSize: 30,
-                                          ),
-                                          const Text(
-                                            '350',
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600),
-                                          )
-                                        ],
+                                      IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            showList = !showList;
+                                          });
+                                        },
+                                        icon: const Icon(Icons.more),
+                                        iconSize: 30,
                                       ),
                                     ],
                                   ),
-                                  IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        showList = !showList;
-                                      });
-                                    },
-                                    icon: const Icon(Icons.more),
-                                    iconSize: 30,
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  )),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      )),
               const SizedBox(
                 height: 10,
               ),
@@ -252,7 +358,6 @@ class _PostScreenState extends State<PostScreen> {
                       height: 400,
                       child: items.isNotEmpty
                           ? AnimatedList(
-                              key: listKey,
                               initialItemCount: items.length,
                               itemBuilder: (context, index, animation) =>
                                   ListItemWidget(
@@ -276,11 +381,19 @@ class _PostScreenState extends State<PostScreen> {
                               topRight: Radius.circular(30))),
                       child: Column(
                         children: [
-                          CommentWidget(index: 0),
-                          CommentWidget(index: 1),
-                          CommentWidget(index: 2),
-                          CommentWidget(index: 3),
-                          CommentWidget(index: 4)
+                          Container(
+                            width: double.infinity,
+                            height: 600.0,
+                            child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              itemCount: coms.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return CommentWidget(
+                                  com: coms[index],
+                                );
+                              },
+                            ),
+                          )
                         ],
                       ),
                     )
@@ -308,6 +421,7 @@ class _PostScreenState extends State<PostScreen> {
                 child: Padding(
                   padding: EdgeInsets.all(12.0),
                   child: TextField(
+                    controller: myController,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       enabledBorder: OutlineInputBorder(
@@ -358,7 +472,9 @@ class _PostScreenState extends State<PostScreen> {
                             borderRadius: BorderRadius.circular(30.0),
                           ),
                           color: const Color(0xFF23B66F),
-                          onPressed: () => print('Post comment'),
+                          onPressed: () {
+                            addComment();
+                          },
                           child: const Icon(
                             Icons.send,
                             size: 25.0,

@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:week/models/comment_model.dart';
 import 'package:week/models/follower_model.dart';
+import 'package:week/models/like_model.dart';
 import 'package:week/models/outfit_model.dart';
 import 'package:week/models/user.dart';
 import 'dart:io' as io;
@@ -17,7 +19,7 @@ class DbHelper {
   static final DbHelper instance = DbHelper.initDb();
   DbHelper.initDb();
 
-  static const DB_Name = 'app14.db';
+  static const DB_Name = 'app19.db';
   static const String Table_User = 'user';
   static const String tableFollowers = 'follower';
   static const String tablePhotos = 'photo';
@@ -101,7 +103,8 @@ class DbHelper {
         ")");
 
     await db.execute("CREATE TABLE comments ("
-        "commentID INTEGER PRIMARY KEY,"
+        "commentID INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "$C_UserID TEXT,"
         "publicationID INTEGER,"
         "commentText TEXT,"
         "FOREIGN KEY(publicationID) REFERENCES publication(publicationID)"
@@ -140,6 +143,90 @@ class DbHelper {
     return null;
   }
 
+  Future<List<Comment>?> getComments(String pubid) async {
+    var dbClient = await db;
+    debugPrint('Searching for comments of: ' + pubid);
+    var res = await dbClient!.rawQuery("SELECT * FROM comments WHERE "
+        "publicationID = $pubid");
+
+    if (res.isNotEmpty) {
+      var list = <Comment>[];
+      for (var com in res) {
+        debugPrint(Comment.fromMap(com).toString());
+        list.add(Comment.fromMap(com));
+      }
+      return list;
+    }
+
+    return null;
+  }
+
+  Future<void> addComment(Comment com) async {
+    debugPrint('adding for comments: ' + com.toString());
+    await _db!.insert(
+      'comments',
+      com.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<String> getNLikes(String pid) async {
+    var dbClient = await db;
+    final List<Map<String, dynamic>> nLikes = await dbClient!
+        .query("likes WHERE publicationID = '$pid' and liked = 1");
+
+    if (nLikes.isNotEmpty) {
+      debugPrint('nLikes: ' + nLikes.length.toString());
+      return nLikes.length.toString();
+    }
+
+    return '0';
+  }
+
+  Future<bool> getLike(String uid, String pid) async {
+    var dbClient = await db;
+    final List<Map<String, dynamic>> like = await dbClient!
+        .query("likes WHERE $C_UserID = '$uid' and publicationID = '$pid'");
+
+    final List<Map<String, dynamic>> likes = await dbClient
+        .query("likes WHERE $C_UserID = '$uid' and publicationID = '$pid'");
+
+    for (var i = 0; i < likes.length; i++) {
+      debugPrint('Like vals: ' + LikeModel.fromMap(likes[i]).liked);
+    }
+
+    if (like.isNotEmpty) {
+      debugPrint('Like val: ' + LikeModel.fromMap(like.last).liked);
+
+      if (LikeModel.fromMap(like.last).liked == '1') {
+        debugPrint('Like val: 1');
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  Future<void> addLike(LikeModel like) async {
+    debugPrint('adding for comments: ' + like.toString());
+    var dbClient = await db;
+/*
+    var res = await getLike(like.user_id, like.publicationID);
+
+    if (res) {
+      debugPrint('here');
+      await dbClient!.update('likes', like.toMap(),
+          where: "'$C_UserID' = ? and publicationID = ?",
+          whereArgs: [like.user_id, like.publicationID]);
+    } else {*/
+    await _db!.insert(
+      'likes',
+      like.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    //}
+  }
+
   Future<int> updateUser(UserModel user) async {
     var dbClient = await db;
     var res = await dbClient!.update(Table_User, user.toMap(),
@@ -171,18 +258,18 @@ class DbHelper {
         await dbClient.rawQuery("SELECT * FROM photo");
 
     for (var i = 0; i < t.length; i++) {
-      print(Photo.fromMap(t[i]).toString());
+      debugPrint(Photo.fromMap(t[i]).toString());
     }
 
     if (pub.isNotEmpty) {
-      print('Publications today: ' + pub.length.toString());
+      debugPrint('Publications today: ' + pub.length.toString());
       String pid = Publication.fromMap(pub.last).photoId.toString();
-      print("Photo ID: " + pid);
+      debugPrint("Photo ID: " + pid);
       final List<Map<String, dynamic>> photo =
           await dbClient.query("photo WHERE photoID=($pid)");
 
       if (photo.isNotEmpty) {
-        print(photo.first.toString());
+        debugPrint(photo.first.toString());
         return Photo.fromMap(photo.first);
       }
     }
@@ -191,7 +278,7 @@ class DbHelper {
   }
 
   void insertPhoto(Photo photo) async {
-    print('photo be inserted: ' + photo.toString());
+    debugPrint('photo be inserted: ' + photo.toString());
     await _db!.insert(
       'photo',
       photo.toMap(),
@@ -200,7 +287,7 @@ class DbHelper {
   }
 
   Future<bool> follow(FollowerModel fmodel) async {
-    print("The user: " +
+    debugPrint("The user: " +
         fmodel.user_id +
         " wants to follow: " +
         fmodel.followerID);

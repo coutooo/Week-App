@@ -58,29 +58,41 @@ class Publication {
   final String user_id;
   final String photoId;
   final String date;
+  String? publicationID;
 
-  const Publication({
+  Publication({
     required this.user_id,
     required this.photoId,
     required this.date,
+    this.publicationID,
   });
 
   Map<String, dynamic> toMap() {
-    return {'user_id': user_id, 'photoId': photoId, 'date': date};
+    return {
+      'user_id': user_id,
+      'photoId': photoId,
+      'date': date,
+      'publicationID': publicationID
+    };
   }
 
   static Publication fromJson(Map<String, Object?> json) => Publication(
       user_id: json['user_id'] as String,
       photoId: json['photoId'] as String,
+      publicationID: json['publicationID'] as String,
       date: json['date'] as String);
 
   static Publication fromMap(Map<String, dynamic> map) {
     var user_id = map['user_id'];
     var photoId = map['photoID'];
     var date = map['date'];
+    var publicationID = map['publicationID'];
 
     return Publication(
-        user_id: user_id, photoId: photoId.toString(), date: date);
+        user_id: user_id,
+        photoId: photoId.toString(),
+        date: date,
+        publicationID: publicationID.toString());
   }
 
   Image imageFromBase64String(String base64String) {
@@ -99,6 +111,6 @@ class Publication {
   // each Publication when using the print statement.
   @override
   String toString() {
-    return 'Publication{user_id: $user_id, photoId: $photoId, date: $date}';
+    return 'Publication{user_id: $user_id, photoId: $photoId, date: $date, publicationID: $publicationID}';
   }
 }
