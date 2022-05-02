@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
 import 'package:week/screens/add_post_screen.dart';
+import 'package:week/screens/closet_screen.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({Key? key}) : super(key: key);
@@ -14,8 +10,6 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
-  
-
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -29,13 +23,18 @@ class _BottomNavBarState extends State<BottomNavBar> {
               size: 30,
               color: Colors.black,
             )),
-        const BottomNavigationBarItem(
+        BottomNavigationBarItem(
             label: '',
-            icon: Icon(
-              Icons.search,
-              size: 30,
-              color: Colors.grey,
-            )),
+            icon: IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => ClosetScreen()));
+                },
+                icon: Icon(
+                  Icons.search,
+                  size: 30,
+                  color: Colors.grey,
+                ))),
         BottomNavigationBarItem(
           icon: Padding(
             padding:
@@ -45,7 +44,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),
               ),
-              color: Color(0xFF23B66F),
+              color: const Color(0xFF23B66F),
               onPressed: () {
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => AddPostScreen()));

@@ -67,6 +67,31 @@ class Clothing {
         color: color);
   }
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Clothing &&
+          runtimeType == other.runtimeType &&
+          user_id == other.user_id &&
+          photoID == other.photoID &&
+          date == other.date &&
+          clothType == other.clothType &&
+          brand == other.brand &&
+          season == other.season &&
+          store == other.store &&
+          color == other.color;
+
+  @override
+  int get hashCode =>
+      user_id.hashCode ^
+      photoID.hashCode ^
+      date.hashCode ^
+      clothType.hashCode ^
+      brand.hashCode ^
+      season.hashCode ^
+      store.hashCode ^
+      color.hashCode;
+
   // Implement toString to make it easier to see information about
   // each Photo when using the print statement.
   @override

@@ -443,6 +443,25 @@ class DbHelper {
     return null;
   }
 
+  Future<List<Clothing>?> getAllClothingFromUser(String uid) async {
+    var dbClient = await db;
+    final List<Map<String, dynamic>> clothing = await dbClient!.rawQuery(
+        "SELECT * FROM $tableOutfit WHERE $C_UserID='$uid'");
+    debugPrint('uid: ' + uid);
+
+    if (clothing.isNotEmpty) {
+      debugPrint('got clothing');
+      var list = <Clothing>[];
+      for (var item in clothing) {
+        debugPrint(Clothing.fromMap(item).toString());
+        list.add(Clothing.fromMap(item));
+      }
+      return list;
+    }
+
+    return null;
+  }
+
   Future<int> deleteUser(String user_id) async {
     var dbClient = await db;
     var res = await dbClient!
