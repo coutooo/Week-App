@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:week/Screens/profile.dart';
 import 'package:week/screens/add_post_screen.dart';
 import 'package:week/screens/closet_screen.dart';
+import 'package:week/screens/visiting_profile.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({Key? key}) : super(key: key);
@@ -65,13 +67,18 @@ class _BottomNavBarState extends State<BottomNavBar> {
               size: 30,
               color: Colors.grey,
             )),
-        const BottomNavigationBarItem(
+        BottomNavigationBarItem(
             label: '',
-            icon: Icon(
-              Icons.person_outline,
-              size: 30,
-              color: Colors.grey,
-            )),
+            icon: IconButton(
+                onPressed: () {
+                    Navigator.push(context,
+                    MaterialPageRoute(builder: ((context) => ProfilePage())));
+                },
+                icon: Icon(
+                  Icons.person_outline,
+                  size: 30,
+                  color: Colors.grey,
+                ))),
       ]),
     );
   }
