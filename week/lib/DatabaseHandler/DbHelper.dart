@@ -346,6 +346,19 @@ class DbHelper {
     return null;
   }
 
+  Future<bool> checkIfFollowing(String followid,String currentid) async {
+    final List<Map<String, dynamic>> users = await _db!.rawQuery(
+        "SELECT * FROM $tableFollowers WHERE $followerID ='$followid' and user_id=user_id");
+
+    if (users.isNotEmpty) {
+      print('got users!!!');
+      
+      return true;
+    }
+
+    return false;
+  }
+
   Future<Publication?> getPub(String uid, String date, String nextDay) async {
     final List<Map<String, dynamic>> pub = await _db!.rawQuery(
         "SELECT * FROM publication WHERE $C_UserID='$uid' and date >= date('$date') and date < date('$nextDay') ORDER BY date DESC LIMIT 1");
