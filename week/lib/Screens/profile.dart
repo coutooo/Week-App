@@ -12,6 +12,7 @@ import '../utils/outfit_widget.dart';
 import '../utils/bottom_nav_bar_widget.dart';
 import '../models/UserModel.dart';
 
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -122,7 +123,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(
                   height: 24,
                 ),
-                NumbersWidget(nFollowings.toString()),
+                NumbersWidget(nFollowings.toString(),true,_conUserId.text),
                 const SizedBox(
                   height: 48,
                 ),

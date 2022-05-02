@@ -9,6 +9,7 @@ import 'package:week/utils/bottom_nav_bar_widget.dart';
 import 'package:week/utils/outfit_widget.dart';
 import 'package:week/widgets/numbersWidget.dart';
 import 'package:week/widgets/profileWidget.dart';
+import '../Screens/following_screen.dart';
 
 class VisitingProfile extends StatefulWidget {
   final String idVisiting;
@@ -133,7 +134,7 @@ class _VisitingProfileState extends State<VisitingProfile> {
                 const SizedBox(
                   height: 24,
                 ),
-                NumbersWidget(nFollowings.toString()),
+                NumbersWidget(nFollowings.toString(),false,widget.user.user_id),
                 Padding(
                   padding: const EdgeInsets.all(25),
                   child: Column(children: [

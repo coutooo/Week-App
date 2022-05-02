@@ -8,7 +8,11 @@ import 'package:week/utils/bottom_nav_bar_widget.dart';
 import 'dart:io';
 
 class FollowingScreen extends StatefulWidget {
-  const FollowingScreen({Key? key}) : super(key: key);
+  final String user_id ; 
+
+  const FollowingScreen({
+    Key? key, required this.user_id
+  }) : super(key: key);
 
   @override
   State<FollowingScreen> createState() => _FollowingScreenState();
@@ -32,7 +36,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
     super.initState();
     dbHelper = DbHelper.instance;
     getUserData();
-    getList();
+    getList(widget.user_id);
   }
 
   Future<void> getUserData() async {
@@ -49,10 +53,11 @@ class _FollowingScreenState extends State<FollowingScreen> {
     });
   }
 
-  void getList() async {
+  void getList(String user_id) async {
+    print("getlist"+user_id);
     final SharedPreferences sp = await _pref;
 
-    var res = await dbHelper.getFollowers(sp.getString("user_id")!);
+    var res = await dbHelper.getFollowers(user_id);
     if (res != null) {
       var followersInfo = <UserModel>[];
       listF = res;
