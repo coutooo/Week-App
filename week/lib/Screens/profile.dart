@@ -40,6 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
     dbHelper = DbHelper.instance;
     getUserData();
     getNFollowingers();
+    getNFollowers();
   }
 
   Future<void> getUserData() async {

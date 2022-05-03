@@ -50,6 +50,7 @@ dependencies:
   flutter_reactive_ble: ^5.0.2
   geolocator: ^8.2.0
   local_auth: ^2.0.0
+  weather: ^2.0.1
   
 
   
