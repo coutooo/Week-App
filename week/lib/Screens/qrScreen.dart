@@ -4,14 +4,14 @@ import 'package:week/Screens/scanqr.dart';
 import 'createqr.dart';
 
 
-class qrScreen extends StatefulWidget {
-  const qrScreen({Key? key}) : super(key: key);
+class QrScreen extends StatefulWidget {
+  const QrScreen({Key? key}) : super(key: key);
 
   @override
-  State<qrScreen> createState() => _qrScreen();
+  State<QrScreen> createState() => _QrScreen();
 }
 
-class _qrScreen extends State<qrScreen> {
+class _QrScreen extends State<QrScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

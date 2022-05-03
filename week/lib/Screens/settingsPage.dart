@@ -4,12 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/Screens/HomeForm.dart';
 import 'package:week/Screens/LoginForm.dart';
-import 'package:week/Screens/feed.dart';
-import 'package:week/Screens/qrScreen.dart';
-
-import '../widgets/profileWidget.dart';
-import '../models/user.dart';
-import '../widgets/numbersWidget.dart';
+import 'package:week/screens/blue_screen.dart';
+import 'package:week/screens/qrScreen.dart';
 
 import 'package:week/utils/user_preferences.dart';
 
@@ -43,16 +39,15 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
-  signout() async{
-
+  signout() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     sp.remove("user_id");
     sp.remove("user_name");
     sp.remove("email");
     sp.remove("password");
-  
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (BuildContext ctx) => LoginForm()));
+
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (BuildContext ctx) => LoginForm()));
   }
 
   @override
@@ -109,6 +104,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           buildAccountOption(context, 'Account Settings'),
           buildQrCodeOption(context, 'QrCode'),
+          buildBlueOption(context, 'Bluetooth'),
           const SizedBox(
             height: 40,
           ),
@@ -191,8 +187,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return GestureDetector(
         onTap: () {
           Navigator.push(
-            context, 
-            MaterialPageRoute(builder: (_) => HomeForm()));
+              context, MaterialPageRoute(builder: (_) => HomeForm()));
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
@@ -210,12 +205,35 @@ class _SettingsPageState extends State<SettingsPage> {
           ]),
         ));
   }
-    GestureDetector buildQrCodeOption(BuildContext context, String title) {
+
+  GestureDetector buildQrCodeOption(BuildContext context, String title) {
     return GestureDetector(
         onTap: () {
           Navigator.push(
-            context, 
-            MaterialPageRoute(builder: (_) => qrScreen()));
+              context, MaterialPageRoute(builder: (_) => QrScreen()));
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text(title,
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[600])),
+            const Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.grey,
+            )
+          ]),
+        ));
+  }
+
+  GestureDetector buildBlueOption(BuildContext context, String title) {
+    return GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => BlueScreen()));
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),

@@ -12,7 +12,6 @@ import '../utils/outfit_widget.dart';
 import '../utils/bottom_nav_bar_widget.dart';
 import '../models/UserModel.dart';
 
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -31,7 +30,6 @@ class _ProfilePageState extends State<ProfilePage> {
   var dbHelper;
   var user;
 
-  
   int nFollowings = 0;
   bool loading = true;
 
@@ -58,13 +56,12 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-    Future<void> getNFollowingers() async {
+  Future<void> getNFollowingers() async {
     final SharedPreferences sp = await _pref;
-    int nFollowing = await dbHelper.getNFollowing(
-        sp.getString("user_id")!);
+    int nFollowing = await dbHelper.getNFollowing(sp.getString("user_id")!);
 
     nFollowings = nFollowing;
-    print("nFollowings"+nFollowings.toString());
+    print("nFollowings" + nFollowings.toString());
   }
 
   @override
@@ -123,11 +120,22 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(
                   height: 24,
                 ),
-                NumbersWidget(nFollowings.toString(),true,_conUserId.text),
+                NumbersWidget(nFollowings.toString(), true, _conUserId.text),
                 const SizedBox(
                   height: 48,
                 ),
                 buildAbout(user),
+                const SizedBox(
+                  height: 48,
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: Colors.purple, // Background color
+                      onPrimary: Colors.white, // Text Color (Foreground color)
+                      textStyle: const TextStyle(fontSize: 20)),
+                  onPressed: () {},
+                  child: Text('Scan'),
+                ),
                 const SizedBox(
                   height: 48,
                 ),
