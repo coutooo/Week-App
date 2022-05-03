@@ -6,8 +6,9 @@ class NumbersWidget extends StatelessWidget {
   final String nFollowing;
   final bool profile;
   final String user_id;
-
-  const NumbersWidget(this.nFollowing, this.profile,this.user_id,  {Key? key}) : super(key: key);
+  final String nFollowers;
+  
+  const NumbersWidget(this.nFollowing, this.profile,this.user_id, this.nFollowers, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Row(
@@ -17,7 +18,7 @@ class NumbersWidget extends StatelessWidget {
           buildDivider(),
           buildButtonFollowing(context, nFollowing, 'Following'),
           buildDivider(),
-          buildButton(context, '2', 'Followers'),
+          buildButton(context, nFollowers, 'Followers'),
         ],
       );
   Widget buildDivider() => Container(

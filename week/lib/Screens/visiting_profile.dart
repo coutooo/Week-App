@@ -37,6 +37,7 @@ class _VisitingProfileState extends State<VisitingProfile> {
   bool loading = true;
 
   int nFollowings = 0;
+  int nFoll = 0;
 
   @override
   void initState() {
@@ -45,6 +46,7 @@ class _VisitingProfileState extends State<VisitingProfile> {
     getUserData();
     checkFollow();
     getNFollowingers();
+    getNFollowers();
   }
 
   Future<void> getUserData() async {
@@ -66,6 +68,13 @@ class _VisitingProfileState extends State<VisitingProfile> {
 
     nFollowings = nFollowing;
     print("nFollowings"+nFollowings.toString());
+  }
+  Future<void> getNFollowers() async {
+    final SharedPreferences sp = await _pref;
+    int nFollowers = await dbHelper.getNFollowers(sp.getString("user_id")!);
+
+    nFoll = nFollowers;
+    print("nFollowers" + nFollowings.toString());
   }
 
   Future<void> startFollowing() async {
@@ -136,7 +145,7 @@ class _VisitingProfileState extends State<VisitingProfile> {
                 const SizedBox(
                   height: 24,
                 ),
-                NumbersWidget(nFollowings.toString(),false,widget.user.user_id),
+                NumbersWidget(nFollowings.toString(),false,widget.user.user_id,nFoll.toString()),
                 Padding(
                   padding: const EdgeInsets.all(25),
                   child: Column(children: [
