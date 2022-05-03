@@ -5,7 +5,6 @@ import 'package:week/Comm/genLoginSignupHeader.dart';
 import 'package:week/Comm/genTextFormField.dart';
 import 'package:week/screens/SignupForm.dart';
 import 'package:week/models/UserModel.dart';
-import 'package:week/screens/profile.dart';
 import '../DatabaseHandler/DbHelper.dart';
 import 'feed.dart';
 import 'dart:async';
@@ -71,8 +70,8 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
-        backgroundColor: Color.fromARGB(255, 100, 6, 113),
+        title: const Text('Login'),
+        backgroundColor: const Color.fromARGB(255, 100, 6, 113),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -98,23 +97,26 @@ class _LoginFormState extends State<LoginForm> {
                     onPressed: login,
                   ),
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 100, 6, 113),
+                    color: const Color.fromARGB(255, 100, 6, 113),
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Don\'t have an account? '),
-                      FlatButton(
-                        textColor: Color.fromARGB(255, 100, 6, 113),
-                        child: Text('Signup'),
-                        onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => SignupForm()));
-                        },
-                      ), /*
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Don\'t have an account? '),
+                    TextButton(
+                      child: const Text(
+                        'Signup',
+                        style:
+                            TextStyle(color: Color.fromARGB(255, 100, 6, 113)),
+                      ),
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => SignupForm()));
+                      },
+                    ),
+                    /*
                       ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
@@ -127,8 +129,7 @@ class _LoginFormState extends State<LoginForm> {
                                 builder: (context) => FeedPage()));
                           },
                           child: const Text('Feed'))*/
-                    ],
-                  ),
+                  ],
                 ),
               ],
             ),

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/Comm/comHelper.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
 import 'package:week/Screens/LoginForm.dart';
-import 'package:week/Screens/settingsPage.dart';
 import 'package:week/models/UserModel.dart';
-import 'package:week/models/user.dart';
-
+import 'package:local_auth/local_auth.dart';
 import '../Comm/genTextFormField.dart';
 
 class HomeForm extends StatefulWidget {
@@ -108,13 +107,42 @@ class _HomeFormState extends State<HomeForm> {
     }
   }
 
+  final _auth = LocalAuthentication();
+
+  Future<bool> hasBiometrics() async {
+    try {
+      return await _auth.canCheckBiometrics;
+    } on PlatformException catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> authenticate() async {
+    final isAvailable = await hasBiometrics();
+    if (!isAvailable) {
+      return false;
+    }
+    try {
+      return await _auth.authenticate(
+        localizedReason: 'Scan your fingerprint to authenticate',
+        options: const AuthenticationOptions(
+          useErrorDialogs: true,
+          stickyAuth: true,
+          biometricOnly: true,
+        ),
+      );
+    } on PlatformException catch (e) {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Update Account'),
+        title: const Text('Update Account'),
         centerTitle: true,
-        backgroundColor: Color.fromARGB(255, 100, 6, 113),
+        backgroundColor: const Color.fromARGB(255, 100, 6, 113),
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_rounded,
@@ -131,7 +159,7 @@ class _HomeFormState extends State<HomeForm> {
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Container(
-            margin: EdgeInsets.only(top: 20.0),
+            margin: const EdgeInsets.only(top: 20.0),
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -139,28 +167,28 @@ class _HomeFormState extends State<HomeForm> {
                   //update
                   genTextFormField(_conUserId, 'User ID', Icons.person, false,
                       TextInputType.text, true),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                   genTextFormField(_conUserName, 'User Name',
                       Icons.person_outline, false, TextInputType.name, false),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                   genTextFormField(_conEmail, 'Email', Icons.email, false,
                       TextInputType.emailAddress, false),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                   genTextFormField(_conPassword, 'Password', Icons.lock, true,
                       TextInputType.text, false),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                   Container(
-                    margin: EdgeInsets.all(30.0),
+                    margin: const EdgeInsets.all(30.0),
                     width: double.infinity,
                     child: FlatButton(
-                      child: Text(
+                      child: const Text(
                         'Update',
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: update,
                     ),
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 100, 6, 113),
+                      color: const Color.fromARGB(255, 100, 6, 113),
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                   ),
@@ -173,11 +201,16 @@ class _HomeFormState extends State<HomeForm> {
                     margin: EdgeInsets.all(30.0),
                     width: double.infinity,
                     child: FlatButton(
-                      child: Text(
+                      child: const Text(
                         'Delete',
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: delete,
+                      onPressed: () async {
+                        final isAuthenticated = await authenticate();
+                        if (isAuthenticated) {
+                          delete();
+                        }
+                      },
                     ),
                     decoration: BoxDecoration(
                       color: Color.fromARGB(255, 100, 6, 113),

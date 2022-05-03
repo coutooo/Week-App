@@ -49,6 +49,7 @@ dependencies:
   latlong2: ^0.8.1
   flutter_reactive_ble: ^5.0.2
   geolocator: ^8.2.0
+  local_auth: ^2.0.0
   
 
   
