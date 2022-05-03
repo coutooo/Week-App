@@ -48,6 +48,7 @@ dependencies:
   flutter_map: ^0.14.0
   latlong2: ^0.8.1
   flutter_reactive_ble: ^5.0.2
+  geolocator: ^8.2.0
   
 
   

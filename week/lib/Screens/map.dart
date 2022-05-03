@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:geolocator/geolocator.dart';
 
 
 class mapScreen extends StatefulWidget {
@@ -11,29 +12,64 @@ class mapScreen extends StatefulWidget {
 }
 
 class _mapScreenState extends State<mapScreen> {
+
+
+  var latitudee;
+  var longitudee;
+  bool loading = true;
+
+  
+  @override
+  void initState() {
+    super.initState();
+    getCurrentLocation();
+  }
+
+
+  void getCurrentLocation() async {
+
+
+    LocationPermission permission;
+    permission = await Geolocator.requestPermission();
+    
+    var position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high);
+    var lat = position.latitude;
+    var long = position.longitude;
+
+    print(lat.toString()+":::::"+long.toString());
+
+    setState(() {
+      latitudee = lat;
+      longitudee = long;
+      loading = false;
+    });
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new AppBar(title: new Text('Maps'),
+      appBar:  AppBar(title:  Text('Maps'),
       backgroundColor: Color.fromARGB(255, 100, 6, 113),
       ),
-      body: new FlutterMap(
-        options: new MapOptions(
-          center: new LatLng(40.64427,-8.64554),
+      body: loading ? Center(child: CircularProgressIndicator(),):
+          FlutterMap(
+        options:  MapOptions(
+          center:  LatLng(latitudee,longitudee),
           minZoom: 10.0
         ),
         layers: [
-          new TileLayerOptions(
+           TileLayerOptions(
             urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
             subdomains: ['a', 'b', 'c'],
             attributionBuilder: (_) {
               return Text("© OpenStreetMap contributors");
         },
           ),
-          new MarkerLayerOptions(
+           MarkerLayerOptions(
             markers: [
               // Aveiro In
-              new Marker(
+               Marker(
                 width: 45.0,
                 height: 45.0,
                 point: new LatLng(40.64366757852991, -8.652807819262454),
@@ -89,7 +125,7 @@ class _mapScreenState extends State<mapScreen> {
               new Marker(
                 width: 45.0,
                 height: 45.0,
-                point: new LatLng(40.6421339222342, -8.649997402499066),
+                point: new LatLng(40.64236578487401, -8.650131417273986),
                 builder: (context) => new Container(
                   child: IconButton(
                     icon: Icon(Icons.location_on),
@@ -142,6 +178,8 @@ class _mapScreenState extends State<mapScreen> {
       ),
     );
   }
+
+
 
 
 void _onButtonPressed(String text) {
