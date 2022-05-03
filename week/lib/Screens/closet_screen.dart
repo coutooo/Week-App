@@ -92,14 +92,16 @@ class _ClosetScreenState extends State<ClosetScreen> {
     var temp4 = [];
     var temp5 = [];
     var temp6 = [];
-    for (var i = 0; i < res.length; i++) {
-      debugPrint(res[i].clothType);
-      temp1.add(res[i].clothType);
-      temp2.add(res[i].brand);
-      temp3.add(res[i].season);
-      temp4.add(res[i].store);
-      temp5.add(res[i].color);
-      temp6.add(res[i].date);
+    if (res != null) {
+      for (var i = 0; i < res.length; i++) {
+        debugPrint(res[i].clothType);
+        temp1.add(res[i].clothType);
+        temp2.add(res[i].brand);
+        temp3.add(res[i].season);
+        temp4.add(res[i].store);
+        temp5.add(res[i].color);
+        temp6.add(res[i].date);
+      }
     }
     aux["Type"] = temp1;
     aux["Brand"] = temp2;
