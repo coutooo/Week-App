@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/Screens/HomeForm.dart';
 import 'package:week/Screens/LoginForm.dart';
+import 'package:week/Screens/createqr.dart';
 import 'package:week/screens/blue_screen.dart';
-import 'package:week/screens/qrScreen.dart';
 
 import 'package:week/utils/user_preferences.dart';
 
@@ -210,7 +210,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return GestureDetector(
         onTap: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (_) => QrScreen()));
+              context, MaterialPageRoute(builder: (_) => CreateScreen()));
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),

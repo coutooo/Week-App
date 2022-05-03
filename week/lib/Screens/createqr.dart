@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
+import 'package:week/Screens/visiting_profile.dart';
 
 class CreateScreen extends StatefulWidget {
   @override
@@ -51,6 +53,22 @@ class _CreateScreenState extends State<CreateScreen> {
             width: 250,
             barcode: Barcode.qrCode(),
           ),
+          ElevatedButton(
+              onPressed: () {
+                print("tapped on scan QR button.");
+                scanQR();
+                /*Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (ctx) => ScanScreen(),
+                  ),
+                );*/
+              },
+              style: ElevatedButton.styleFrom(
+              primary: Colors.purple, // Background color
+              onPrimary: Colors.white, // Text Color (Foreground color)
+            ),
+              child: Text("Scan QR"),
+            ),
           // link
           /*  usava para gerar outros qrs consoante o q a pessoa queria
           Container(
@@ -79,5 +97,32 @@ class _CreateScreenState extends State<CreateScreen> {
         ],
       ),
     );
+  }
+  Future<void> scanQR() async {
+    try {
+      FlutterBarcodeScanner.scanBarcode("#2A99CF", "Cancel", true, ScanMode.QR)
+          .then((value) {
+        setState(() {
+          qrString = value;
+          getUserScannedData();
+        });
+      });
+    } catch (e) {
+      setState(() {
+        qrString = "unable to read the qr";
+      });
+    }
+  }
+
+  Future<void> getUserScannedData() async {
+    final SharedPreferences sp = await _pref;
+    final res = await dbHelper.getUserInfo(qrString);
+    if (res != null) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: ((context) =>
+                  VisitingProfile(idVisiting: qrString, user: res))));
+    }
   }
 }

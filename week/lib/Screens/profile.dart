@@ -131,6 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(
                   height: 48,
                 ),
+                /*
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       primary: Colors.purple, // Background color
@@ -139,9 +140,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   onPressed: () {},
                   child: Text('Scan'),
                 ),
+                
                 const SizedBox(
                   height: 48,
                 ),
+                */
                 OutfitWidget(),
               ],
       ),
