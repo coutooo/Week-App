@@ -15,7 +15,7 @@ class NumbersWidget extends StatelessWidget {
         children: <Widget>[
           buildButton(context, '4.8', 'Ranking'),
           buildDivider(),
-          buildButton(context, nFollowing, 'Following'),
+          buildButtonFollowing(context, nFollowing, 'Following'),
           buildDivider(),
           buildButton(context, '2', 'Followers'),
         ],
@@ -25,7 +25,7 @@ class NumbersWidget extends StatelessWidget {
         child: VerticalDivider(),
       );
 
-  Widget buildButton(BuildContext context, String value, String text) =>
+  Widget buildButtonFollowing(BuildContext context, String value, String text) =>
       MaterialButton(
         padding: EdgeInsets.symmetric(vertical: 4),
         onPressed: () {
@@ -42,6 +42,42 @@ class NumbersWidget extends StatelessWidget {
                 MaterialPageRoute(builder: ((context) => FollowingScreen(user_id: user_id,))));
 
           }
+        },
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              value,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            ),
+            SizedBox(height: 2),
+            Text(
+              text,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      );
+Widget buildButton(BuildContext context, String value, String text) =>
+      MaterialButton(
+        padding: EdgeInsets.symmetric(vertical: 4),
+        onPressed: () {
+          /*if(profile)
+          {
+            print("true profile");
+            Navigator.push(context,
+                MaterialPageRoute(builder: ((context) => FollowingScreen(user_id: user_id,))));
+          }
+          else
+          {
+            print("false profile");
+            Navigator.push(context,
+                MaterialPageRoute(builder: ((context) => FollowingScreen(user_id: user_id,))));
+
+          }
+          */
         },
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         child: Column(

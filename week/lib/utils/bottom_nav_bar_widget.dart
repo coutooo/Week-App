@@ -46,7 +46,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),
               ),
-              color: const Color(0xFF23B66F),
+              color: const Color.fromARGB(255, 100, 6, 113),
               onPressed: () {
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => AddPostScreen()));

@@ -87,9 +87,11 @@ class _FollowingScreenState extends State<FollowingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEDF0F6),
+      backgroundColor: Color.fromARGB(255, 132, 132, 132),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        title: Text('Following List'),
+        centerTitle: true,
+        backgroundColor: Color.fromARGB(255, 100, 6, 113),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
@@ -111,7 +113,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
               children: [
                 Container(
                   width: double.infinity,
-                  height: 150.0,
+                  height: 500,
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
                     itemCount: list.length + 1,
@@ -129,7 +131,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
 
                       return Card(
                           child: InkWell(
-                        splashColor: Colors.blue.withAlpha(30),
+                        splashColor: Colors.purple.withAlpha(30),
                         onTap: () {
                           debugPrint('Card tapped.');
                               Navigator.push(
@@ -162,7 +164,12 @@ class _FollowingScreenState extends State<FollowingScreen> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 TextButton(
-                                  child: const Text('Unfollow'),
+                                  child: const Text('Unfollow',
+                                              style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.purple,
+                                              ),
+                                              ),
                                   onPressed: () {
                                     unfollow(index - 1);
                                   },

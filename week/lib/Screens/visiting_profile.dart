@@ -103,7 +103,9 @@ class _VisitingProfileState extends State<VisitingProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        title: Text('Profile'),
+        centerTitle: true,
+        backgroundColor: Color.fromARGB(255, 100, 6, 113),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
@@ -187,21 +189,21 @@ class _VisitingProfileState extends State<VisitingProfile> {
         ],
       );
 
-  Widget buildAbout(UserModel user) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 48),
+  Widget buildAbout(UserModel user) => Center(
+      child: Card(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'About',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              user.about == null ? ('') : user.about.toString(),
-              style: const TextStyle(fontSize: 16, height: 1.4),
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+             ListTile(
+              leading: Icon(Icons.auto_awesome ),
+              title: Text('ABOUT', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+              subtitle: Text(
+                      user.about == null ? ('') : user.about.toString(),
+                      style: const TextStyle(fontSize: 16, height: 1.4),
+              ),
             ),
           ],
         ),
-      );
+      ),
+    );
 }

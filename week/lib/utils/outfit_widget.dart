@@ -194,7 +194,7 @@ class _OutfitWidgetState extends State<OutfitWidget> {
           width: 100,
           child: Card(
               child: InkWell(
-            splashColor: Colors.blue.withAlpha(30),
+            splashColor: Colors.purple.withAlpha(30),
             onTap: () {
               debugPrint('Card tapped.');
             },

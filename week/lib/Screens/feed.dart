@@ -95,11 +95,11 @@ class _FeedPageState extends State<FeedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEDF0F6),
+      backgroundColor: Color.fromARGB(255, 148, 63, 163),
       appBar: AppBar(
         title: const Text(
           'Week',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
