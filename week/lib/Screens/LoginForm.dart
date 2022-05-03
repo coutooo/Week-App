@@ -23,7 +23,6 @@ class _LoginFormState extends State<LoginForm> {
   final _conPassword = TextEditingController();
 
   var dbHelper;
-
   @override
   void initState() {
     super.initState();

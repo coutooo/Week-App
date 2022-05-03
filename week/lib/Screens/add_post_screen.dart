@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:proximity_sensor/proximity_sensor.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
 import 'package:week/models/posts_model.dart';
 import 'package:week/models/user.dart';
@@ -6,12 +8,14 @@ import 'package:week/utils/action_button.dart';
 import 'package:week/utils/expandable_fab.dart';
 import 'package:week/utils/list_item_widget.dart';
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/models/outfit_model.dart';
+import 'package:flutter/foundation.dart' as foundation;
 
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({Key? key}) : super(key: key);
@@ -37,6 +41,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
     super.initState();
     dbHelper = DbHelper.instance;
     getUserData();
+    listenSensor();
+    setBrightness(1);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _streamSubscription.cancel();
   }
 
   Future<void> getUserData() async {
@@ -98,6 +110,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
     }
     debugPrint('Publication published');
     debugPrint('uid: ' + _conUserId.text + '\nPhotoID: ' + photoID.toString());
+    resetBrightness();
   }
 
   final listKey = GlobalKey<AnimatedListState>();
@@ -128,6 +141,42 @@ class _AddPostScreenState extends State<AddPostScreen> {
         index,
         (context, animation) => ListItemWidget(
             item: removedItem, animation: animation, onClicked: () {}));
+  }
+
+  late StreamSubscription<dynamic> _streamSubscription;
+
+  Future<void> setBrightness(double brightness) async {
+    try {
+      await ScreenBrightness().setScreenBrightness(brightness);
+    } catch (e) {
+      debugPrint(e.toString());
+      throw 'Failed to set brightness';
+    }
+  }
+
+  Future<void> resetBrightness() async {
+    try {
+      await ScreenBrightness().resetScreenBrightness();
+    } catch (e) {
+      debugPrint(e.toString());
+      throw 'Failed to reset brightness';
+    }
+  }
+
+  Future<void> listenSensor() async {
+    FlutterError.onError = (FlutterErrorDetails details) {
+      if (foundation.kDebugMode) {
+        FlutterError.dumpErrorToConsole(details);
+      }
+    };
+    _streamSubscription = ProximitySensor.events.listen((int event) {
+      debugPrint(event.toString());
+      if (event > 0) {
+        setBrightness(0);
+      } else {
+        resetBrightness();
+      }
+    });
   }
 
   Future<void> _showMyDialog(BuildContext context) async {
