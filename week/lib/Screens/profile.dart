@@ -31,6 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
   var user;
 
   int nFollowings = 0;
+  int nFoll = 0;
   bool loading = true;
 
   @override
@@ -62,6 +63,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
     nFollowings = nFollowing;
     print("nFollowings" + nFollowings.toString());
+  }
+
+  Future<void> getNFollowers() async {
+    final SharedPreferences sp = await _pref;
+    int nFollowers = await dbHelper.getNFollowers(sp.getString("user_id")!);
+
+    nFoll = nFollowers;
+    print("nFollowers" + nFollowings.toString());
   }
 
   @override
@@ -123,7 +132,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(
                   height: 24,
                 ),
-                NumbersWidget(nFollowings.toString(), true, _conUserId.text),
+                NumbersWidget(nFollowings.toString(), true, _conUserId.text,nFoll.toString()),
                 const SizedBox(
                   height: 48,
                 ),
@@ -131,6 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(
                   height: 48,
                 ),
+                /*
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       primary: Colors.purple, // Background color
@@ -139,9 +149,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   onPressed: () {},
                   child: Text('Scan'),
                 ),
+                
                 const SizedBox(
                   height: 48,
                 ),
+                */
                 OutfitWidget(),
               ],
       ),
