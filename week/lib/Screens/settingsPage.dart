@@ -62,10 +62,10 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: const Text(
           'Settings',
-          style: TextStyle(fontSize: 22, color: Colors.black),
+          style: TextStyle(fontSize: 22, color: Colors.white),
         ),
         centerTitle: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color.fromARGB(255, 100, 6, 113),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
@@ -89,7 +89,7 @@ class _SettingsPageState extends State<SettingsPage> {
             children: const [
               Icon(
                 Icons.person,
-                color: Colors.blue,
+                color: Color.fromARGB(255, 100, 6, 113),
               ),
               SizedBox(
                 width: 10,
@@ -116,7 +116,7 @@ class _SettingsPageState extends State<SettingsPage> {
             children: const [
               Icon(
                 Icons.volume_up_outlined,
-                color: Colors.blue,
+                color: Color.fromARGB(255, 100, 6, 113),
               ),
               SizedBox(
                 height: 10,

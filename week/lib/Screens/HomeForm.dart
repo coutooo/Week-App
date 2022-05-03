@@ -113,6 +113,7 @@ class _HomeFormState extends State<HomeForm> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Update Account'),
+        centerTitle: true,
         backgroundColor: Color.fromARGB(255, 100, 6, 113),
         leading: IconButton(
           icon: const Icon(

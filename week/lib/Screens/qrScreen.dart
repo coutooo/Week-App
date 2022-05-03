@@ -18,6 +18,7 @@ class _qrScreen extends State<qrScreen> {
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 100, 6, 113),
         title: Text('Qr Code'),
+        centerTitle: true,
       ),
       body: Center(
         child: Column(

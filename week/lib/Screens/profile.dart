@@ -72,8 +72,11 @@ class _ProfilePageState extends State<ProfilePage> {
     //final user = UserPreferences.myUser;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        title: Text('Profile'),
+        centerTitle: true,
+        backgroundColor: Color.fromARGB(255, 100, 6, 113),
         elevation: 0,
+
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_rounded,
@@ -144,6 +147,7 @@ class _ProfilePageState extends State<ProfilePage> {
             user.user_name,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
           ),
+
           const SizedBox(
             height: 4,
           ),
@@ -154,21 +158,21 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       );
 
-  Widget buildAbout(UserModel user) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 48),
+  Widget buildAbout(UserModel user) => Center(
+      child: Card(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'About',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              user.about == null ? ('') : user.about.toString(),
-              style: const TextStyle(fontSize: 16, height: 1.4),
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+             ListTile(
+              leading: Icon(Icons.auto_awesome ),
+              title: Text('ABOUT', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+              subtitle: Text(
+                      user.about == null ? ('') : user.about.toString(),
+                      style: const TextStyle(fontSize: 16, height: 1.4),
+              ),
             ),
           ],
         ),
-      );
-}
+      ),
+    );
+  }

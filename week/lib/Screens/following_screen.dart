@@ -89,6 +89,8 @@ class _FollowingScreenState extends State<FollowingScreen> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 132, 132, 132),
       appBar: AppBar(
+        title: Text('Following List'),
+        centerTitle: true,
         backgroundColor: Color.fromARGB(255, 100, 6, 113),
         elevation: 0,
         leading: IconButton(
