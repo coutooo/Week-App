@@ -337,6 +337,13 @@ class DbHelper {
     return users.length;
   }
 
+  Future<int> getNFollowers(String uid) async {
+    final List<Map<String, dynamic>> users = await _db!
+        .rawQuery("SELECT * FROM $tableFollowers WHERE $followerID=('$uid')");
+    print("followers length"+users.length.toString());   
+    return users.length;
+  }
+
   Future<List<UserModel>?> getRandomUsers(String uid) async {
     final List<Map<String, dynamic>> users = await _db!.rawQuery(
         "SELECT * FROM $Table_User WHERE $C_UserID!='$uid' ORDER BY RANDOM() LIMIT 5");
