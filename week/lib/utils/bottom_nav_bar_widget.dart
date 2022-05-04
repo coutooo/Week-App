@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:week/Screens/feed.dart';
 import 'package:week/Screens/profile.dart';
 import 'package:week/screens/add_post_screen.dart';
 import 'package:week/screens/closet_screen.dart';
@@ -18,13 +19,18 @@ class _BottomNavBarState extends State<BottomNavBar> {
       borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(30), topRight: Radius.circular(30)),
       child: BottomNavigationBar(type: BottomNavigationBarType.fixed, items: [
-        const BottomNavigationBarItem(
+        BottomNavigationBarItem(
             label: '',
+            icon: IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => FeedPage()));
+                },
             icon: Icon(
               Icons.dashboard,
               size: 30,
               color: Colors.black,
-            )),
+            ))),
         BottomNavigationBarItem(
             label: '',
             icon: IconButton(

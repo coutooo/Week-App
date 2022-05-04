@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:week/utils/closet_icons.dart';
 import 'package:week/utils/expanding_action_button.dart';
 
 class ExpandableFab extends StatefulWidget {
@@ -137,7 +138,7 @@ class _ExpandableFabState extends State<ExpandableFab>
             onPressed: _toggle,
             child: !widget.inCloset
                 ? const Icon(Icons.create)
-                : const Icon(Icons.star),
+                : const Icon(Closet.clover),
           ),
         ),
       ),

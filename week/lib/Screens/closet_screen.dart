@@ -9,6 +9,7 @@ import 'package:week/models/posts_model.dart';
 import 'package:week/screens/postScreen.dart';
 import 'package:week/utils/action_button.dart';
 import 'package:week/utils/bottom_nav_bar_widget.dart';
+import 'package:week/utils/closet_icons.dart';
 import 'package:week/utils/expandable_fab.dart';
 import 'dart:math';
 
@@ -395,13 +396,14 @@ class _ClosetScreenState extends State<ClosetScreen> {
   void randomOutfitFromTable() {
     var temp = <Clothing>[];
     var rng = Random();
-    var index = rng.nextInt(items.length);
+    if (items.isNotEmpty) {
+      var index = rng.nextInt(items.length);
+      temp.add(items[index]);
 
-    temp.add(items[index]);
-
-    setState(() {
-      items = temp;
-    });
+      setState(() {
+        items = temp;
+      });
+    }
   }
 
   @override
@@ -411,10 +413,10 @@ class _ClosetScreenState extends State<ClosetScreen> {
       appBar: AppBar(
         title: const Text(
           'Closet',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.white),
         ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
+        centerTitle: false,
+        backgroundColor: Color.fromARGB(255, 100, 6, 113),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
@@ -426,12 +428,13 @@ class _ClosetScreenState extends State<ClosetScreen> {
             Navigator.pop(context);
           },
         ),
+        
         actions: [
           DropdownButton<String>(
             value: dropdownValue1,
-            icon: const Icon(Icons.arrow_downward),
+            icon: const Icon(Icons.arrow_downward, color: Colors.black),
             elevation: 16,
-            style: const TextStyle(color: Colors.deepPurple),
+            style: const TextStyle(color: Colors.black),
             underline: Container(
               height: 2,
               color: Colors.deepPurpleAccent,
@@ -447,9 +450,9 @@ class _ClosetScreenState extends State<ClosetScreen> {
           DropdownButton<String>(
             hint: const Text('Select One'),
             disabledHint: const Text("Select Column"),
-            icon: const Icon(Icons.arrow_downward),
+            icon: const Icon(Icons.arrow_downward, color: Colors.black),
             elevation: 16,
-            style: const TextStyle(color: Colors.deepPurple),
+            style: const TextStyle(color: Colors.black),
             underline: Container(
               height: 2,
               color: Colors.deepPurpleAccent,
@@ -497,7 +500,7 @@ class _ClosetScreenState extends State<ClosetScreen> {
               });
             },
             icon: const Icon(
-              Icons.abc,
+              Closet.clover,
               color: Colors.white,
             ),
           ),
@@ -505,24 +508,24 @@ class _ClosetScreenState extends State<ClosetScreen> {
             onPressed: () {
               randomOutfit();
             },
-            icon: const Icon(Icons.add_location),
+            icon: const Icon(Closet.random),
           ),
           ActionButton(
             onPressed: () {
               randomOutfitFromTable();
             },
-            icon: const Icon(Icons.cabin),
+            icon: const Icon(Closet.shuffle),
           ),
           ActionButton(
               onPressed: () {
                 outfitByWeather();
               },
-              icon: const Icon(Icons.light_sharp)),
+              icon: const Icon(Closet.cloud_sun)),
           ActionButton(
               onPressed: () {
                 tableByWeather();
               },
-              icon: const Icon(Icons.money)),
+              icon: const Icon(Closet.moon_sun)),
         ],
       ),
       bottomNavigationBar: BottomNavBar(),
