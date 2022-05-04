@@ -174,7 +174,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
       if (event > 0) {
         setBrightness(0);
       } else {
-        resetBrightness();
+        setBrightness(1);
       }
     });
   }
