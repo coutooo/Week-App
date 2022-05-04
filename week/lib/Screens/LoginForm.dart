@@ -91,9 +91,9 @@ class _LoginFormState extends State<LoginForm> {
                             photo: pho,
                             currentUser: UserII)));
                             */
-    print("before notification"+weather+"|"+body);
+    print("before notification" + weather + "|" + body);
     NotificationService().showNotification(1, weather, body, 6);
-   // }
+    // }
   }
 
   Future<String> getWeatherTitle() async {
@@ -119,7 +119,11 @@ class _LoginFormState extends State<LoginForm> {
     print(weattherr.toString());
     print(celsius.toString());
 
-    String finalBody = ("Weather: "+weattherr.toString() + " | Temperature: "+celsius.toString()+"º");
+    String finalBody = ("Weather: " +
+        weattherr.toString() +
+        " | Temperature: " +
+        celsius.toString() +
+        "º");
 
     return finalBody;
   }
@@ -143,30 +147,30 @@ class _LoginFormState extends State<LoginForm> {
 
     String? weattherr = w.weatherDescription.toString().toLowerCase();
 
-    print(w.toString());
-    print(weattherr.toString());
-    print(celsius.toString());
+    debugPrint(w.toString());
+    debugPrint(weattherr.toString());
+    debugPrint(celsius.toString());
 
     if (weattherr.contains("thunderstorm")) {
-      return "Dont get eletrocuted!";
+      return "Don't get eletrocuted! ⛈️";
     } else if (weattherr.contains("drizzle")) {
-      return "Grab a jacket!";
+      return "Don't let a little rain ruin you day, so grab a jacket! 🌦️";
     } else if (weattherr.contains("rain")) {
-      return "Grab a jacket!";
+      return "Grab a jacket and umbrella! ☔";
     } else if (weattherr.contains("snow")) {
-      return "Lets make Snowmans";
+      return "Lets make Snowmans ☃️";
     } else {
       if (celsius! > 20) {
-        return "We all deserve some beach!";
+        return "We all deserve some beach! 🏖️";
       } else if (15 < celsius && celsius < 20) {
-        return "Have a happy day!";
+        return "Have a happy day and remember to Smile 😁";
       } else if (10 < celsius && celsius < 15) {
-        return "Have a happy day!";
+        return "A bit chilly, but have a nice day anyway! 😋";
       } else if (celsius < 10) {
-        return "Grrr its freezing";
+        return "Grrr its freezing 🥶";
       }
     }
-    return "No recommendations today!";
+    return "No recommendations today! 😓";
   }
 
   Future setSP(UserModel user) async {
