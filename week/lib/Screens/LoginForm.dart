@@ -45,7 +45,7 @@ class _LoginFormState extends State<LoginForm> {
       await dbHelper.getLoginUser(uid, passwd).then((userData) {
         if (userData != null) {
           setSP(userData).whenComplete(() {
-            //NotificationService().showNotification(1, "title", "body", 5);
+            NotificationService().showNotification(1, "title", "body", 2);
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (_) => FeedPage()),
