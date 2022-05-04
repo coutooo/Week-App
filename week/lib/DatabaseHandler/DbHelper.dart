@@ -20,7 +20,7 @@ class DbHelper {
   static final DbHelper instance = DbHelper.initDb();
   DbHelper.initDb();
 
-  static const DB_Name = 'app19.db';
+  static const DB_Name = 'app20.db';
   static const String Table_User = 'user';
   static const String tableFollowers = 'follower';
   static const String tablePhotos = 'photo';
@@ -333,14 +333,14 @@ class DbHelper {
   Future<int> getNFollowing(String uid) async {
     final List<Map<String, dynamic>> users = await _db!
         .rawQuery("SELECT * FROM $tableFollowers WHERE $C_UserID=('$uid')");
-    print("users length"+users.length.toString());   
+    print("users length" + users.length.toString());
     return users.length;
   }
 
   Future<int> getNFollowers(String uid) async {
     final List<Map<String, dynamic>> users = await _db!
         .rawQuery("SELECT * FROM $tableFollowers WHERE $followerID=('$uid')");
-    print("followers length"+users.length.toString());   
+    print("followers length" + users.length.toString());
     return users.length;
   }
 
@@ -527,8 +527,9 @@ class DbHelper {
         .delete(Table_User, where: '$C_UserID = ?', whereArgs: [user_id]);
     return res;
   }
+
   Future<List<Map<String, Object?>>> getUser(String user_id) async {
-        var dbClient = await db;
+    var dbClient = await db;
     var res = await dbClient!
         .query(Table_User, where: '$C_UserID = ?', whereArgs: [user_id]);
     return res;

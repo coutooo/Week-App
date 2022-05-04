@@ -457,8 +457,8 @@ class _PostScreenState extends State<PostScreen> {
                                   ? const AssetImage(
                                           'assets/images/flutter_logo.png')
                                       as ImageProvider
-                                  : FileImage(
-                                      File(widget.user.imagePath.toString())),
+                                  : FileImage(File(
+                                      widget.currentUser.imagePath.toString())),
                               fit: BoxFit.cover,
                             ),
                           ),

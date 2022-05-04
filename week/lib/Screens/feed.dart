@@ -32,7 +32,8 @@ class _FeedPageState extends State<FeedPage> {
   var pubs = [];
   var pubsInfo = [];
   var photos = [];
-
+  var coms = [];
+  var nLikes = [];
   bool loading = true;
 
   @override
@@ -110,8 +111,11 @@ class _FeedPageState extends State<FeedPage> {
           color: Colors.black,
           tooltip: 'Friends List',
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: ((context) => FollowingScreen(user_id: _conUserId.text))));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: ((context) =>
+                        FollowingScreen(user_id: _conUserId.text))));
           },
         ),
         actions: <Widget>[

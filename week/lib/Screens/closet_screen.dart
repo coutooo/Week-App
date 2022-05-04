@@ -329,17 +329,17 @@ class _ClosetScreenState extends State<ClosetScreen> {
 
         Photo pho = await dbHelper.getPhoto(idP);
 
-        var UserI = await dbHelper.getUserInfo(idPP);
-        var UserII = await dbHelper.getUserInfo(_conUserId.text);
+        var userI = await dbHelper.getUserInfo(idPP);
+        var userII = await dbHelper.getUserInfo(_conUserId.text);
 
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (_) => PostScreen(
-                    user: UserI,
+                    user: userI,
                     pub: public,
                     photo: pho,
-                    currentUser: UserII)));
+                    currentUser: userII)));
       } else {
         alertDialog(context, 'No outfits for this season');
       }

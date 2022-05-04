@@ -7,6 +7,7 @@ import 'package:week/models/UserModel.dart';
 import 'package:week/models/follower_model.dart';
 import 'package:week/utils/bottom_nav_bar_widget.dart';
 import 'package:week/utils/outfit_widget.dart';
+import 'package:week/utils/outfit_widget_visiting.dart';
 import 'package:week/widgets/numbersWidget.dart';
 import 'package:week/widgets/profileWidget.dart';
 import '../Screens/following_screen.dart';
@@ -61,14 +62,15 @@ class _VisitingProfileState extends State<VisitingProfile> {
       loading = false;
     });
   }
+
   Future<void> getNFollowingers() async {
     final SharedPreferences sp = await _pref;
-    int nFollowing = await dbHelper.getNFollowing(
-        widget.user.user_id);
+    int nFollowing = await dbHelper.getNFollowing(widget.user.user_id);
 
     nFollowings = nFollowing;
-    print("nFollowings"+nFollowings.toString());
+    print("nFollowings" + nFollowings.toString());
   }
+
   Future<void> getNFollowers() async {
     final SharedPreferences sp = await _pref;
     int nFollowers = await dbHelper.getNFollowers(sp.getString("user_id")!);
@@ -88,8 +90,8 @@ class _VisitingProfileState extends State<VisitingProfile> {
   Future<void> stopFollowing() async {
     // ultimo parametro nao vai ser usado nao interessa
 
-    FollowerModel fmodel =
-        FollowerModel(widget.idVisiting, widget.user.user_id,DateTime.now().toString());
+    FollowerModel fmodel = FollowerModel(
+        widget.idVisiting, widget.user.user_id, DateTime.now().toString());
     await dbHelper.unfollow(fmodel);
     checkFollow();
   }
@@ -145,29 +147,28 @@ class _VisitingProfileState extends State<VisitingProfile> {
                 const SizedBox(
                   height: 24,
                 ),
-                NumbersWidget(nFollowings.toString(),false,widget.user.user_id,nFoll.toString()),
+                NumbersWidget(nFollowings.toString(), false,
+                    widget.user.user_id, nFoll.toString()),
                 Padding(
                   padding: const EdgeInsets.all(25),
                   child: Column(children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      primary: Colors.purple, // Background color
-                      onPrimary: Colors.white, // Text Color (Foreground color)
-                      textStyle: const TextStyle(fontSize: 20)
-                      
-                      ),
-                  onPressed: () {
-                    if(isfollowing == "Following")
-                    {
-                      stopFollowing();
-                    }else{
-                      startFollowing();
-                    }  
-                  },
-                  child: Text(isfollowing),
-                ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.purple, // Background color
+                          onPrimary:
+                              Colors.white, // Text Color (Foreground color)
+                          textStyle: const TextStyle(fontSize: 20)),
+                      onPressed: () {
+                        if (isfollowing == "Following") {
+                          stopFollowing();
+                        } else {
+                          startFollowing();
+                        }
+                      },
+                      child: Text(isfollowing),
+                    ),
                   ]),
-                  ),
+                ),
                 buildAbout(widget.user),
                 const SizedBox(
                   height: 48,
@@ -175,7 +176,7 @@ class _VisitingProfileState extends State<VisitingProfile> {
                 const SizedBox(
                   height: 48,
                 ),
-                OutfitWidget(),
+                OutfitWidgetVisiting(user: widget.user),
               ],
       ),
       bottomNavigationBar: BottomNavBar(),
@@ -199,20 +200,23 @@ class _VisitingProfileState extends State<VisitingProfile> {
       );
 
   Widget buildAbout(UserModel user) => Center(
-      child: Card(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-             ListTile(
-              leading: Icon(Icons.auto_awesome ),
-              title: Text('ABOUT', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-              subtitle: Text(
-                      user.about == null ? ('') : user.about.toString(),
-                      style: const TextStyle(fontSize: 16, height: 1.4),
+        child: Card(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.auto_awesome),
+                title: Text(
+                  'ABOUT',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  user.about == null ? ('') : user.about.toString(),
+                  style: const TextStyle(fontSize: 16, height: 1.4),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
 }
