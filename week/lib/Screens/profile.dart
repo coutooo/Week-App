@@ -111,17 +111,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SnackBar(content: Text('This is a snackbar')));*/
             },
           ),
-          IconButton(
-            color: Colors.black,
-            icon: const Icon(
-              Icons.money_off,
-            ),
-            tooltip: 'weather',
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => MainScreen()));
-            },
-          ),
         ],
       ),
       body: ListView(

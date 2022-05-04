@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weather/weather.dart';
 import 'package:week/Comm/comHelper.dart';
 import 'package:week/Comm/genLoginSignupHeader.dart';
 import 'package:week/Comm/genTextFormField.dart';
 import 'package:week/Screens/notificationService.dart';
+import 'package:week/Screens/postScreen.dart';
+import 'package:week/models/posts_model.dart';
 import 'package:week/screens/SignupForm.dart';
 import 'package:week/models/UserModel.dart';
 import '../DatabaseHandler/DbHelper.dart';
@@ -45,7 +49,7 @@ class _LoginFormState extends State<LoginForm> {
       await dbHelper.getLoginUser(uid, passwd).then((userData) {
         if (userData != null) {
           setSP(userData).whenComplete(() {
-            NotificationService().showNotification(1, "title", "body", 2);
+            sendNotification();
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (_) => FeedPage()),
@@ -59,6 +63,102 @@ class _LoginFormState extends State<LoginForm> {
         alertDialog(context, "Error: Login Fail");
       });
     }
+  }
+
+  void sendNotification() async {
+
+    var weather = getWeather.toString();
+
+
+    Publication public = await dbHelper.getClothingBySeason(weather);
+
+    var idP = public.photoId;
+    var idPP = public.user_id;
+
+    Photo pho = await dbHelper.getPhoto(idP);
+
+    var UserI = await dbHelper.getUserInfo(idPP);
+    var UserII = await dbHelper.getUserInfo(_conUserId.text);
+/*
+     Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => PostScreen(
+                            user: UserI,
+                            pub: public,
+                            photo: pho,
+                            currentUser: UserII)));
+                            */
+    
+    NotificationService().showNotification(1, weather, "body", 6);
+  }
+
+
+  Future<String> getWeather() async {
+
+
+    LocationPermission permission;
+    permission = await Geolocator.requestPermission();
+    
+    var position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high);
+
+    var lat = position.latitude;
+    var long = position.longitude;
+
+    String key = '1387528fe461abcf9e77dbd8fdf23b68';
+    WeatherFactory wf = WeatherFactory(key);
+
+    Weather w = await wf.currentWeatherByLocation(lat, long);
+
+    double? celsius = w.temperature?.celsius;
+
+    String? weattherr = w.weatherDescription.toString().toLowerCase();
+
+
+    
+    print("AAAAAAAAAAAAAAAAAAAAAAa"+w.toString());
+    print(weattherr.toString());
+    print(celsius.toString());
+
+    if(weattherr.contains("Thunderstorm")){
+      return "Winter";
+    }
+    else if(weattherr.contains("drizzle"))
+    {
+      return "Winter";
+    }
+    else if(weattherr.contains("drizzle"))
+    {
+      return "Winter";
+    }
+    else if(weattherr.contains("rain"))
+    {
+      return "Winter";
+    }
+    else if(weattherr.contains("snow"))
+    {
+      return "Winter";
+    }
+    else{
+      if(celsius!>20)
+      {
+        return "Summer";
+      }
+      else if (15<celsius && celsius>20)
+      {
+        return "Spring";
+      }
+      else if (10<celsius && celsius<15)
+      {
+        return "Autumn";
+      }
+      else if (celsius<10)
+      {
+        return "Winter";
+      }
+    }
+    return "No recommendations today!";
   }
 
   Future setSP(UserModel user) async {

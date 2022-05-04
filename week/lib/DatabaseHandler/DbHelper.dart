@@ -471,6 +471,25 @@ class DbHelper {
     return null;
   }
 
+  Future<Publication?> getClothingBySeason(String season) async {
+    var dbClient = await db;
+    var clothingg;
+    final List<Map<String, dynamic>> clothing = await dbClient!.rawQuery(
+        "SELECT * FROM $tableOutfit WHERE (season = '$season') LIMIT 1");
+
+    if (clothing.isNotEmpty) {
+      clothingg = Clothing.fromMap(clothing.first);
+
+      var pID = clothingg.photoID;
+
+      final List<Map<String, dynamic>> t = await dbClient
+          .rawQuery("SELECT * FROM $Publication WHERE photoID = '$pID'");
+
+      return Publication.fromMap(t.first);
+    }
+    return null;
+  }
+
   Future<List<Clothing>?> getAllClothingFromUser(String uid) async {
     var dbClient = await db;
     final List<Map<String, dynamic>> clothing = await dbClient!
