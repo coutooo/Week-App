@@ -232,6 +232,33 @@ class _ClosetScreenState extends State<ClosetScreen> {
     }
   }
 
+  void tableByWeather() async {
+    var temp = <Clothing>[];
+
+    var resW = (await getWeatherBody()).toString();
+
+    debugPrint("asdadasdasda: " + resW);
+
+    if (resW != "No recommendations today! 😓") {
+      alertDialog(context, 'Searching clothing pieces for ' + resW + '!');
+
+      for (var item in items) {
+        if (item.season == resW) {
+          temp.add(item);
+        }
+      }
+      if (temp.isEmpty) {
+        alertDialog(context, 'No clothing pieces for ' + resW + ' 😓');
+      }
+
+      setState(() {
+        items = temp;
+      });
+    } else {
+      alertDialog(context, 'No recommendations today! 😓');
+    }
+  }
+
   void randomOutfit() {
     var temp = <Clothing>[];
     var rng = Random();
@@ -489,6 +516,11 @@ class _ClosetScreenState extends State<ClosetScreen> {
                 outfitByWeather();
               },
               icon: const Icon(Icons.light_sharp)),
+          ActionButton(
+              onPressed: () {
+                tableByWeather();
+              },
+              icon: const Icon(Icons.money)),
         ],
       ),
       bottomNavigationBar: BottomNavBar(),
