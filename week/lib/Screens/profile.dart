@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
-import 'package:week/Screens/notificTest.dart';
-import 'package:week/Screens/weatherScreen.dart';
 import 'package:week/screens/editProfilePage.dart';
 import 'dart:io';
 import '../utils/bottom_nav_bar_widget.dart';
