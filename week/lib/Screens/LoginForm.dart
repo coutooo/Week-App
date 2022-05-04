@@ -66,19 +66,19 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void sendNotification() async {
+    var weather = (await getWeather()).toString();
+    var res = await dbHelper.getClothingBySeason(weather);
 
-    var weather = getWeather.toString();
+    if (res != null) {
+      Publication public = res;
 
+      var idP = public.photoId;
+      var idPP = public.user_id;
 
-    Publication public = await dbHelper.getClothingBySeason(weather);
+      Photo pho = await dbHelper.getPhoto(idP);
 
-    var idP = public.photoId;
-    var idPP = public.user_id;
-
-    Photo pho = await dbHelper.getPhoto(idP);
-
-    var UserI = await dbHelper.getUserInfo(idPP);
-    var UserII = await dbHelper.getUserInfo(_conUserId.text);
+      var UserI = await dbHelper.getUserInfo(idPP);
+      var UserII = await dbHelper.getUserInfo(_conUserId.text);
 /*
      Navigator.push(
                     context,
@@ -89,19 +89,17 @@ class _LoginFormState extends State<LoginForm> {
                             photo: pho,
                             currentUser: UserII)));
                             */
-    
-    NotificationService().showNotification(1, weather, "body", 6);
+
+      NotificationService().showNotification(1, weather, "body", 6);
+    }
   }
 
-
   Future<String> getWeather() async {
-
-
     LocationPermission permission;
     permission = await Geolocator.requestPermission();
-    
+
     var position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.high);
 
     var lat = position.latitude;
     var long = position.longitude;
@@ -115,46 +113,28 @@ class _LoginFormState extends State<LoginForm> {
 
     String? weattherr = w.weatherDescription.toString().toLowerCase();
 
-
-    
-    print("AAAAAAAAAAAAAAAAAAAAAAa"+w.toString());
+    print("AAAAAAAAAAAAAAAAAAAAAAa" + w.toString());
     print(weattherr.toString());
     print(celsius.toString());
 
-    if(weattherr.contains("Thunderstorm")){
+    if (weattherr.contains("Thunderstorm")) {
       return "Winter";
-    }
-    else if(weattherr.contains("drizzle"))
-    {
+    } else if (weattherr.contains("drizzle")) {
       return "Winter";
-    }
-    else if(weattherr.contains("drizzle"))
-    {
+    } else if (weattherr.contains("drizzle")) {
       return "Winter";
-    }
-    else if(weattherr.contains("rain"))
-    {
+    } else if (weattherr.contains("rain")) {
       return "Winter";
-    }
-    else if(weattherr.contains("snow"))
-    {
+    } else if (weattherr.contains("snow")) {
       return "Winter";
-    }
-    else{
-      if(celsius!>20)
-      {
+    } else {
+      if (celsius! > 20) {
         return "Summer";
-      }
-      else if (15<celsius && celsius>20)
-      {
+      } else if (15 < celsius && celsius > 20) {
         return "Spring";
-      }
-      else if (10<celsius && celsius<15)
-      {
+      } else if (10 < celsius && celsius < 15) {
         return "Autumn";
-      }
-      else if (celsius<10)
-      {
+      } else if (celsius < 10) {
         return "Winter";
       }
     }

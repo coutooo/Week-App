@@ -475,7 +475,7 @@ class DbHelper {
     var dbClient = await db;
     var clothingg;
     final List<Map<String, dynamic>> clothing = await dbClient!.rawQuery(
-        "SELECT * FROM $tableOutfit WHERE (season = '$season') LIMIT 1");
+        "SELECT * FROM $tableOutfit WHERE season = '$season' LIMIT 1");
 
     if (clothing.isNotEmpty) {
       clothingg = Clothing.fromMap(clothing.first);
