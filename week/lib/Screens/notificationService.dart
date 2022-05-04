@@ -46,7 +46,7 @@ class NotificationService {
           //'Main channel notifications',
           importance: Importance.max,
           priority: Priority.max,
-          icon: '@drawable/ic_flutternotification'
+          icon: '@drawable/background'
         ),
         iOS: IOSNotificationDetails(
           sound: 'default.wav',

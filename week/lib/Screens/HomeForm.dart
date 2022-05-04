@@ -14,7 +14,7 @@ class HomeForm extends StatefulWidget {
 }
 
 class _HomeFormState extends State<HomeForm> {
-  final _formKey = new GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   Future<SharedPreferences> _pref = SharedPreferences.getInstance();
 
   var dbHelper;

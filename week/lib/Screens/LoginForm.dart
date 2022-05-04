@@ -20,7 +20,7 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   Future<SharedPreferences> _pref = SharedPreferences.getInstance();
 
-  final _formKey = new GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   final _conUserId = TextEditingController();
   final _conPassword = TextEditingController();

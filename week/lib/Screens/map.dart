@@ -72,8 +72,8 @@ class _mapScreenState extends State<mapScreen> {
                Marker(
                 width: 45.0,
                 height: 45.0,
-                point: new LatLng(40.64366757852991, -8.652807819262454),
-                builder: (context) => new Container(
+                point: LatLng(40.64366757852991, -8.652807819262454),
+                builder: (context) => Container(
                   child: IconButton(
                     icon: Icon(Icons.location_on),
                     color: Colors.purple,
@@ -86,11 +86,11 @@ class _mapScreenState extends State<mapScreen> {
                 ),
               ),
               // the north face aveiro
-              new Marker(
+              Marker(
                 width: 45.0,
                 height: 45.0,
-                point: new LatLng(40.64006292784546, -8.649616391615382),
-                builder: (context) => new Container(
+                point: LatLng(40.64006292784546, -8.649616391615382),
+                builder: (context) => Container(
                   child: IconButton(
                     icon: Icon(Icons.location_on),
                     color: Colors.purple,
@@ -103,11 +103,11 @@ class _mapScreenState extends State<mapScreen> {
                 ),
               ),
               // Lefties
-              new Marker(
+              Marker(
                 width: 45.0,
                 height: 45.0,
-                point: new LatLng(40.642806116240486, -8.64720790497876),
-                builder: (context) => new Container(
+                point: LatLng(40.642806116240486, -8.64720790497876),
+                builder: (context) => Container(
                   child: IconButton(
                     icon: Icon(Icons.location_on),
                     color: Colors.purple,
@@ -122,11 +122,11 @@ class _mapScreenState extends State<mapScreen> {
               ),
               
               // Ana Sousa
-              new Marker(
+              Marker(
                 width: 45.0,
                 height: 45.0,
-                point: new LatLng(40.64236578487401, -8.650131417273986),
-                builder: (context) => new Container(
+                point: LatLng(40.64236578487401, -8.650131417273986),
+                builder: (context) => Container(
                   child: IconButton(
                     icon: Icon(Icons.location_on),
                     color: Colors.purple,
@@ -139,11 +139,11 @@ class _mapScreenState extends State<mapScreen> {
                 ),
               ),
               // Quebra Mar Forum Aveiro
-              new Marker(
+              Marker(
                 width: 45.0,
                 height: 45.0,
-                point: new LatLng(40.64113153256018, -8.651569071310467),
-                builder: (context) => new Container(
+                point: LatLng(40.64113153256018, -8.651569071310467),
+                builder: (context) => Container(
                   child: IconButton(
                     icon: Icon(Icons.location_on),
                     color: Colors.purple,
@@ -156,11 +156,11 @@ class _mapScreenState extends State<mapScreen> {
                 ),
               ),
               // XTREME - OITA
-              new Marker(
+              Marker(
                 width: 45.0,
                 height: 45.0,
-                point: new LatLng(40.642581934017045, -8.647033780725312),
-                builder: (context) => new Container(
+                point: LatLng(40.642581934017045, -8.647033780725312),
+                builder: (context) => Container(
                   child: IconButton(
                     icon: Icon(Icons.location_on),
                     color: Colors.purple,

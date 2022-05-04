@@ -44,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
             GestureDetector(
               onTap: () {
-                NotificationService().showNotification(1, "title", "body", 10);
+                NotificationService().showNotification(1, "title", "body", 2);
               },
               child: Container(
                 height: 40,
