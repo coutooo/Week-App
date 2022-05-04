@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weather/weather.dart';
+import 'package:week/Comm/comHelper.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
 import 'package:week/models/outfit_model.dart';
+import 'package:week/models/posts_model.dart';
 import 'package:week/screens/postScreen.dart';
 import 'package:week/utils/action_button.dart';
 import 'package:week/utils/bottom_nav_bar_widget.dart';
@@ -245,6 +249,120 @@ class _ClosetScreenState extends State<ClosetScreen> {
     });
   }
 
+  Future<String> getWeatherTitle() async {
+    LocationPermission permission;
+    permission = await Geolocator.requestPermission();
+
+    var position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    var lat = position.latitude;
+    var long = position.longitude;
+
+    String key = '1387528fe461abcf9e77dbd8fdf23b68';
+    WeatherFactory wf = WeatherFactory(key);
+
+    Weather w = await wf.currentWeatherByLocation(lat, long);
+
+    String? celsius = w.temperature?.celsius?.toStringAsFixed(1);
+
+    String? weattherr = w.weatherDescription.toString().toLowerCase();
+
+    debugPrint(w.toString());
+    debugPrint(weattherr.toString());
+    debugPrint(celsius.toString());
+
+    String finalBody = ("Weather: " +
+        weattherr.toString() +
+        " | Temperature: " +
+        celsius.toString() +
+        "º");
+
+    return finalBody;
+  }
+
+  void outfitByWeather() async {
+    alertDialog(context, 'Searching for outfits for this season!');
+
+    var resW = (await getWeatherBody()).toString();
+
+    debugPrint("asdadasdasda: " + resW);
+
+    if (resW != "No recommendations today! 😓") {
+      var res = await dbHelper.getClothingBySeason(resW);
+
+      if (res != null) {
+        Publication public = res;
+
+        var idP = public.photoId;
+        var idPP = public.user_id;
+
+        Photo pho = await dbHelper.getPhoto(idP);
+
+        var UserI = await dbHelper.getUserInfo(idPP);
+        var UserII = await dbHelper.getUserInfo(_conUserId.text);
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (_) => PostScreen(
+                    user: UserI,
+                    pub: public,
+                    photo: pho,
+                    currentUser: UserII)));
+      } else {
+        alertDialog(context, 'No outfits for this season');
+      }
+    } else {
+      alertDialog(context, resW);
+    }
+  }
+
+  Future<String> getWeatherBody() async {
+    LocationPermission permission;
+    permission = await Geolocator.requestPermission();
+
+    var position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    var lat = position.latitude;
+    var long = position.longitude;
+
+    String key = '1387528fe461abcf9e77dbd8fdf23b68';
+    WeatherFactory wf = WeatherFactory(key);
+
+    Weather w = await wf.currentWeatherByLocation(lat, long);
+
+    double? celsius = w.temperature?.celsius;
+
+    String? weattherr = w.weatherDescription.toString().toLowerCase();
+
+    debugPrint(w.toString());
+    debugPrint(weattherr.toString());
+    debugPrint(celsius.toString());
+
+    if (weattherr.contains("thunderstorm")) {
+      return "winter";
+    } else if (weattherr.contains("drizzle")) {
+      return "autumn";
+    } else if (weattherr.contains("rain")) {
+      return "winter";
+    } else if (weattherr.contains("snow")) {
+      return "winter";
+    } else {
+      if (celsius! > 20) {
+        return "summer";
+      } else if (15 < celsius && celsius < 20) {
+        return "summer";
+      } else if (10 < celsius && celsius < 15) {
+        return "spring";
+      } else if (celsius < 10) {
+        return "winter";
+      }
+    }
+    return "No recommendations today! 😓";
+  }
+
   void randomOutfitFromTable() {
     var temp = <Clothing>[];
     var rng = Random();
@@ -366,6 +484,11 @@ class _ClosetScreenState extends State<ClosetScreen> {
             },
             icon: const Icon(Icons.cabin),
           ),
+          ActionButton(
+              onPressed: () {
+                outfitByWeather();
+              },
+              icon: const Icon(Icons.light_sharp)),
         ],
       ),
       bottomNavigationBar: BottomNavBar(),
