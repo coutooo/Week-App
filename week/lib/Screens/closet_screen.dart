@@ -263,17 +263,19 @@ class _ClosetScreenState extends State<ClosetScreen> {
     var temp = <Clothing>[];
     var rng = Random();
     var index;
-    for (var i = 0; i < 5; i++) {
-      index = rng.nextInt(allItems.length);
+    if (allItems.isNotEmpty) {
+      for (var i = 0; i < 5; i++) {
+        index = rng.nextInt(allItems.length);
 
-      if (!temp.contains(allItems[index])) {
-        temp.add(allItems[index]);
+        if (!temp.contains(allItems[index])) {
+          temp.add(allItems[index]);
+        }
       }
-    }
 
-    setState(() {
-      items = temp;
-    });
+      setState(() {
+        items = temp;
+      });
+    }
   }
 
   Future<String> getWeatherTitle() async {
