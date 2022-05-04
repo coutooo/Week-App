@@ -66,8 +66,10 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void sendNotification() async {
-    var weather = (await getWeather()).toString();
-    var res = await dbHelper.getClothingBySeason(weather);
+    var weather = (await getWeatherTitle()).toString();
+    var body = (await getWeatherBody()).toString();
+
+    /*var res = await dbHelper.getClothingBySeason(weather);
 
     if (res != null) {
       Publication public = res;
@@ -79,7 +81,7 @@ class _LoginFormState extends State<LoginForm> {
 
       var UserI = await dbHelper.getUserInfo(idPP);
       var UserII = await dbHelper.getUserInfo(_conUserId.text);
-/*
+
      Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -89,12 +91,40 @@ class _LoginFormState extends State<LoginForm> {
                             photo: pho,
                             currentUser: UserII)));
                             */
-
-      NotificationService().showNotification(1, weather, "body", 6);
-    }
+    print("before notification"+weather+"|"+body);
+    NotificationService().showNotification(1, weather, body, 6);
+   // }
   }
 
-  Future<String> getWeather() async {
+  Future<String> getWeatherTitle() async {
+    LocationPermission permission;
+    permission = await Geolocator.requestPermission();
+
+    var position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    var lat = position.latitude;
+    var long = position.longitude;
+
+    String key = '1387528fe461abcf9e77dbd8fdf23b68';
+    WeatherFactory wf = WeatherFactory(key);
+
+    Weather w = await wf.currentWeatherByLocation(lat, long);
+
+    String? celsius = w.temperature?.celsius?.toStringAsFixed(1);
+
+    String? weattherr = w.weatherDescription.toString().toLowerCase();
+
+    print(w.toString());
+    print(weattherr.toString());
+    print(celsius.toString());
+
+    String finalBody = ("Weather: "+weattherr.toString() + " | Temperature: "+celsius.toString()+"º");
+
+    return finalBody;
+  }
+
+  Future<String> getWeatherBody() async {
     LocationPermission permission;
     permission = await Geolocator.requestPermission();
 
@@ -113,29 +143,27 @@ class _LoginFormState extends State<LoginForm> {
 
     String? weattherr = w.weatherDescription.toString().toLowerCase();
 
-    print("AAAAAAAAAAAAAAAAAAAAAAa" + w.toString());
+    print(w.toString());
     print(weattherr.toString());
     print(celsius.toString());
 
-    if (weattherr.contains("Thunderstorm")) {
-      return "Winter";
+    if (weattherr.contains("thunderstorm")) {
+      return "Dont get eletrocuted!";
     } else if (weattherr.contains("drizzle")) {
-      return "Winter";
-    } else if (weattherr.contains("drizzle")) {
-      return "Winter";
+      return "Grab a jacket!";
     } else if (weattherr.contains("rain")) {
-      return "Winter";
+      return "Grab a jacket!";
     } else if (weattherr.contains("snow")) {
-      return "Winter";
+      return "Lets make Snowmans";
     } else {
       if (celsius! > 20) {
-        return "Summer";
-      } else if (15 < celsius && celsius > 20) {
-        return "Spring";
+        return "We all deserve some beach!";
+      } else if (15 < celsius && celsius < 20) {
+        return "Have a happy day!";
       } else if (10 < celsius && celsius < 15) {
-        return "Autumn";
+        return "Have a happy day!";
       } else if (celsius < 10) {
-        return "Winter";
+        return "Grrr its freezing";
       }
     }
     return "No recommendations today!";
