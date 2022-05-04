@@ -3,11 +3,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/Comm/comHelper.dart';
 import 'package:week/Comm/genLoginSignupHeader.dart';
 import 'package:week/Comm/genTextFormField.dart';
+import 'package:week/Screens/notificationService.dart';
 import 'package:week/screens/SignupForm.dart';
 import 'package:week/models/UserModel.dart';
 import '../DatabaseHandler/DbHelper.dart';
 import 'feed.dart';
 import 'dart:async';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 
 class LoginForm extends StatefulWidget {
   @override
@@ -23,11 +26,11 @@ class _LoginFormState extends State<LoginForm> {
   final _conPassword = TextEditingController();
 
   var dbHelper;
-
   @override
   void initState() {
     super.initState();
     dbHelper = DbHelper.instance;
+    tz.initializeTimeZones();
   }
 
   login() async {
@@ -42,6 +45,7 @@ class _LoginFormState extends State<LoginForm> {
       await dbHelper.getLoginUser(uid, passwd).then((userData) {
         if (userData != null) {
           setSP(userData).whenComplete(() {
+            //NotificationService().showNotification(1, "title", "body", 5);
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (_) => FeedPage()),

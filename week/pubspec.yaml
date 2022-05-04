@@ -51,6 +51,10 @@ dependencies:
   geolocator: ^8.2.0
   local_auth: ^2.0.0
   weather: ^2.0.1
+  proximity_sensor: ^1.0.2
+  screen_brightness: ^0.2.0
+  flutter_local_notifications: ^9.5.0
+  timezone: ^0.8.0
   
 
   

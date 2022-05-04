@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
+import 'package:week/Screens/notificTest.dart';
+import 'package:week/Screens/weatherScreen.dart';
 import 'package:week/screens/editProfilePage.dart';
 import 'dart:io';
 import '../utils/bottom_nav_bar_widget.dart';
@@ -109,6 +111,18 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SnackBar(content: Text('This is a snackbar')));*/
             },
           ),
+          /*
+          IconButton(
+            color: Colors.black,
+            icon: const Icon(
+              Icons.money_off,
+            ),
+            tooltip: 'weather',
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => MainScreen()));
+            },
+          ),*/
         ],
       ),
       body: ListView(
