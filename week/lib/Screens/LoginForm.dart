@@ -161,7 +161,7 @@ class _LoginFormState extends State<LoginForm> {
       } else if (15 < celsius && celsius < 20) {
         return "Have a happy day!";
       } else if (10 < celsius && celsius < 15) {
-        return "Have a happy day!";
+        return "Remember to smile!";
       } else if (celsius < 10) {
         return "Grrr its freezing";
       }
