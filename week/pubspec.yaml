@@ -56,7 +56,7 @@ dependencies:
   flutter_local_notifications: ^9.5.0
   timezone: ^0.8.0
   provider: ^6.0.2
-  
+  connectivity_plus: ^2.3.0
 
   
 

@@ -15,6 +15,7 @@ import 'feed.dart';
 import 'dart:async';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -66,8 +67,21 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void sendNotification() async {
-    var weather = (await getWeatherTitle()).toString();
-    var body = (await getWeatherBody()).toString();
+    final ConnectivityResult result = await Connectivity().checkConnectivity();
+
+    if (result == ConnectivityResult.wifi) {
+      var weather = (await getWeatherTitle()).toString();
+      var body = (await getWeatherBody()).toString();
+      print("before notification" + weather + "|" + body);
+      NotificationService().showNotification(1, weather, body, 6);
+    } else if (result == ConnectivityResult.mobile) {
+      var weather = (await getWeatherTitle()).toString();
+      var body = (await getWeatherBody()).toString();
+      print("before notification" + weather + "|" + body);
+      NotificationService().showNotification(1, weather, body, 6);
+    } else {
+      debugPrint('Not connected to any network');
+    }
 
     /*var res = await dbHelper.getClothingBySeason(weather);
 
@@ -91,8 +105,7 @@ class _LoginFormState extends State<LoginForm> {
                             photo: pho,
                             currentUser: UserII)));
                             */
-    print("before notification" + weather + "|" + body);
-    NotificationService().showNotification(1, weather, body, 6);
+
     // }
   }
 
