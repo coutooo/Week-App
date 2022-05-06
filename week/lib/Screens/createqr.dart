@@ -102,7 +102,7 @@ class _CreateScreenState extends State<CreateScreen> {
   }
   Future<void> scanQR() async {
     print("entrei");
-   // try {
+    try {
     String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
                                                   "#6a0dad", 
                                                   "Cancel", 
@@ -116,12 +116,12 @@ class _CreateScreenState extends State<CreateScreen> {
       getUserScannedData();
     });
      // });
-/*    } catch (e) {
+    } catch (e) {
       setState(() {
         print("ja bateste");  
         scanned = "unable to read the qr";
       });
-    }*/
+    }
   }
 
   Future<void> getUserScannedData() async {
