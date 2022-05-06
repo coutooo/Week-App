@@ -18,6 +18,8 @@ class _CreateScreenState extends State<CreateScreen> {
 
   String qrString = "wait";
 
+  String scanned = "wait";
+
   @override
   void initState() {
     super.initState();
@@ -99,24 +101,32 @@ class _CreateScreenState extends State<CreateScreen> {
     );
   }
   Future<void> scanQR() async {
-    try {
-      FlutterBarcodeScanner.scanBarcode("#2A99CF", "Cancel", true, ScanMode.QR)
-          .then((value) {
-        setState(() {
-          qrString = value;
-          getUserScannedData();
-        });
-      });
-    } catch (e) {
+    print("entrei");
+   // try {
+    String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+                                                  "#6a0dad", 
+                                                  "Cancel", 
+                                                  true, 
+                                                  ScanMode.QR);
+    //FlutterBarcodeScanner.scanBarcode("#2A99CF", "Cancel", true, ScanMode.QR)
+    //    .then((value) {
+    print(barcodeScanRes);
+    setState(() {
+      scanned = barcodeScanRes;
+      getUserScannedData();
+    });
+     // });
+/*    } catch (e) {
       setState(() {
-        qrString = "unable to read the qr";
+        print("ja bateste");  
+        scanned = "unable to read the qr";
       });
-    }
+    }*/
   }
 
   Future<void> getUserScannedData() async {
     final SharedPreferences sp = await _pref;
-    final res = await dbHelper.getUserInfo(qrString);
+    final res = await dbHelper.getUserInfo(scanned);
     if (res != null) {
       Navigator.push(
           context,
