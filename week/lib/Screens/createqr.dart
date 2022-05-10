@@ -57,7 +57,7 @@ class _CreateScreenState extends State<CreateScreen> {
           ),
           ElevatedButton(
               onPressed: () {
-                print("tapped on scan QR button.");
+                //print("tapped on scan QR button.");
                 scanQR();
                 /*Navigator.of(context).push(
                   MaterialPageRoute(
@@ -101,7 +101,7 @@ class _CreateScreenState extends State<CreateScreen> {
     );
   }
   Future<void> scanQR() async {
-    print("entrei");
+    //print("entrei");
     try {
     String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
                                                   "#6a0dad", 
@@ -110,7 +110,7 @@ class _CreateScreenState extends State<CreateScreen> {
                                                   ScanMode.QR);
     //FlutterBarcodeScanner.scanBarcode("#2A99CF", "Cancel", true, ScanMode.QR)
     //    .then((value) {
-    print(barcodeScanRes);
+    //print(barcodeScanRes);
     setState(() {
       scanned = barcodeScanRes;
       getUserScannedData();
@@ -118,7 +118,7 @@ class _CreateScreenState extends State<CreateScreen> {
      // });
     } catch (e) {
       setState(() {
-        print("ja bateste");  
+        //print("ja bateste");  
         scanned = "unable to read the qr";
       });
     }

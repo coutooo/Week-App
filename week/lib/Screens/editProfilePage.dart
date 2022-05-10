@@ -75,11 +75,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
           widget.user.imagePath,
           controllerAbout.text);
     }
-
+/*
     print('about: ' + controllerAbout.text);
     print('name: ' + controllerUserName.text);
     print('email: ' + controllerEmail.text);
-    print('image: ' + image.toString());
+    print('image: ' + image.toString());*/
     dbHelper.updateUser(u);
     Navigator.pop(context);
   }

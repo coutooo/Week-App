@@ -7,13 +7,11 @@ import 'package:week/models/comment_model.dart';
 import 'package:week/models/follower_model.dart';
 import 'package:week/models/like_model.dart';
 import 'package:week/models/outfit_model.dart';
-import 'package:week/models/user.dart';
 import 'dart:io' as io;
 
 import '../models/UserModel.dart';
 import '../models/posts_model.dart';
 
-//https://docs.google.com/document/d/1dWfVb4_8pQdX5RpuxDcfvnejCCUxqhnqpXJjzThzb6A/edit
 
 class DbHelper {
   static Database? _db;
@@ -318,10 +316,10 @@ class DbHelper {
         .rawQuery("SELECT * FROM $tableFollowers WHERE $C_UserID=('$uid')");
 
     if (users.isNotEmpty) {
-      print('got users');
+      //print('got users');
       var list = <FollowerModel>[];
       for (var user in users) {
-        print(FollowerModel.fromMap(user).toString());
+        //print(FollowerModel.fromMap(user).toString());
         list.add(FollowerModel.fromMap(user));
       }
       return list;
@@ -333,14 +331,14 @@ class DbHelper {
   Future<int> getNFollowing(String uid) async {
     final List<Map<String, dynamic>> users = await _db!
         .rawQuery("SELECT * FROM $tableFollowers WHERE $C_UserID=('$uid')");
-    print("users length" + users.length.toString());
+    //print("users length" + users.length.toString());
     return users.length;
   }
 
   Future<int> getNFollowers(String uid) async {
     final List<Map<String, dynamic>> users = await _db!
         .rawQuery("SELECT * FROM $tableFollowers WHERE $followerID=('$uid')");
-    print("followers length" + users.length.toString());
+    //print("followers length" + users.length.toString());
     return users.length;
   }
 
@@ -349,10 +347,10 @@ class DbHelper {
         "SELECT * FROM $Table_User WHERE $C_UserID!='$uid' ORDER BY RANDOM() LIMIT 5");
 
     if (users.isNotEmpty) {
-      print('got users!!!');
+      //print('got users!!!');
       var list = <UserModel>[];
       for (var user in users) {
-        print(UserModel.fromMap(user).toString());
+        //print(UserModel.fromMap(user).toString());
         list.add(UserModel.fromMap(user));
       }
       return list;
@@ -366,7 +364,7 @@ class DbHelper {
         "SELECT * FROM $tableFollowers WHERE $followerID ='$followid' and user_id='$currentid'");
 
     if (users.isNotEmpty) {
-      print('got users!!!');
+      //print('got users!!!');
 
       return true;
     }

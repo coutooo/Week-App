@@ -3,16 +3,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
 import 'package:week/Screens/visiting_profile.dart';
 import 'package:week/models/UserModel.dart';
-import 'package:week/models/follower_model.dart';
 import 'package:week/utils/bottom_nav_bar_widget.dart';
 import 'dart:io';
 
 class FollowingScreen extends StatefulWidget {
-  final String user_id ; 
+  final String user_id;
 
-  const FollowingScreen({
-    Key? key, required this.user_id
-  }) : super(key: key);
+  const FollowingScreen({Key? key, required this.user_id}) : super(key: key);
 
   @override
   State<FollowingScreen> createState() => _FollowingScreenState();
@@ -49,12 +46,12 @@ class _FollowingScreenState extends State<FollowingScreen> {
       _conEmail.text = sp.getString("email")!;
       _conPassword.text = sp.getString("password")!;
       user = res;
-      print("got an user: " + user.toString());
+      //print("got an user: " + user.toString());
     });
   }
 
   void getList(String user_id) async {
-    print("getlist"+user_id);
+    //print("getlist"+user_id);
     final SharedPreferences sp = await _pref;
 
     var res = await dbHelper.getFollowers(user_id);
@@ -72,9 +69,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
     }
   }
 
-  void getFromList() async {
-
-  }
+  void getFromList() async {}
 
   void unfollow(int index) async {
     await dbHelper.unfollow(listF[index]);
@@ -134,12 +129,12 @@ class _FollowingScreenState extends State<FollowingScreen> {
                         splashColor: Colors.purple.withAlpha(30),
                         onTap: () {
                           debugPrint('Card tapped.');
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: ((context) => VisitingProfile(
-                                          idVisiting: (index-1).toString(),
-                                          user: list[index-1]))));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) => VisitingProfile(
+                                      idVisiting: (index - 1).toString(),
+                                      user: list[index - 1]))));
                         },
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -164,12 +159,13 @@ class _FollowingScreenState extends State<FollowingScreen> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 TextButton(
-                                  child: const Text('Unfollow',
-                                              style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.purple,
-                                              ),
-                                              ),
+                                  child: const Text(
+                                    'Unfollow',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.purple,
+                                    ),
+                                  ),
                                   onPressed: () {
                                     unfollow(index - 1);
                                   },

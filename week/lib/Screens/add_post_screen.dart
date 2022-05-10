@@ -3,7 +3,6 @@ import 'package:proximity_sensor/proximity_sensor.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:week/DatabaseHandler/DbHelper.dart';
 import 'package:week/models/posts_model.dart';
-import 'package:week/models/user.dart';
 import 'package:week/utils/action_button.dart';
 import 'package:week/utils/expandable_fab.dart';
 import 'package:week/utils/list_item_widget.dart';

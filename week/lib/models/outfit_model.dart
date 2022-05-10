@@ -1,7 +1,3 @@
-import 'dart:convert';
-import 'dart:typed_data';
-import 'package:flutter/widgets.dart';
-
 class Clothing {
   final String user_id;
   String photoID;

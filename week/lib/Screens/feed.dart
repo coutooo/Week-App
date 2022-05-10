@@ -5,10 +5,8 @@ import 'package:week/DatabaseHandler/DbHelper.dart';
 import 'package:week/Screens/following_screen.dart';
 import 'package:week/Screens/map.dart';
 import 'package:week/Screens/visiting_profile.dart';
-import 'package:week/models/UserModel.dart';
 import 'package:week/models/posts_model.dart';
 import 'package:week/utils/bottom_nav_bar_widget.dart';
-import 'profile.dart';
 import '../utils/post_widget.dart';
 import 'dart:io';
 
